@@ -1,4 +1,4 @@
-from dr.envs.warehouse import Warehouse
+from dr.envs.warehouse import Warehouse, event_field
 from dr.types import Action
 
 
@@ -13,9 +13,9 @@ def test_store_expects_first_empty_shelf():
 def test_store_places_stock_on_the_shelf_the_agent_chose():
     env = Warehouse(horizon=5, seed=3)
     env.reset()
-    sku = env.observe().text.split()[-1]
-    env.apply(Action(name="Store", args={"shelf": 42, "sku": sku, "qty": 5}))
-    assert env.shelves[42] == (sku, 5)
+    sku = event_field(env.observe().text, "sku")
+    env.apply(Action(name="Store", args={"shelf": 42, "sku": sku, "units": 5, "lot": "L-1"}))
+    assert env.shelves[42] == (sku, 5, "L-1")
 
 
 def test_ship_expects_a_shelf_that_actually_holds_the_sku():
@@ -23,14 +23,14 @@ def test_ship_expects_a_shelf_that_actually_holds_the_sku():
     # no de una posicion fija: esa es la demanda de memoria que mide el entorno.
     env = Warehouse(horizon=30, seed=11)
     env.reset()
-    sku = env.observe().text.split()[-1]
-    env.apply(Action(name="Store", args={"shelf": 99, "sku": sku, "qty": 5}))
-    assert env.shelves[99] == (sku, 5)
-    while not env.done and not env.observe().text.startswith("order received"):
+    sku = event_field(env.observe().text, "sku")
+    env.apply(Action(name="Store", args={"shelf": 99, "sku": sku, "units": 5, "lot": "L-1"}))
+    assert env.shelves[99] == (sku, 5, "L-1")
+    while not env.done and not env.observe().text.startswith("EVENT outbound_order"):
         env.apply(env.expected_action())
     if not env.done:
         expected = env.expected_action()
-        ordered_sku = env.observe().text.split()[-1]
+        ordered_sku = event_field(env.observe().text, "sku")
         assert env.shelves[expected.args["shelf"]][0] == ordered_sku
 
 
@@ -53,7 +53,7 @@ def test_done_after_horizon():
 
 def _first_order_step(env) -> int:
     for index, observation in enumerate(env.script):
-        if observation.text.startswith("order received"):
+        if observation.text.startswith("EVENT outbound_order"):
             return index
     raise AssertionError("el guion no contiene ninguna orden")
 
@@ -65,7 +65,7 @@ def test_ship_expects_the_lowest_numbered_shelf_holding_the_sku():
     env.reset()
     index = _first_order_step(env)
     env.step_index = index
-    sku = env.observe().text.split()[-1]
+    sku = event_field(env.observe().text, "sku")
     # El diccionario se construye en orden inverso a proposito: la respuesta no
     # puede depender del orden de iteracion, solo del numero de estanteria.
     env.shelves = {i: None for i in reversed(range(500))}

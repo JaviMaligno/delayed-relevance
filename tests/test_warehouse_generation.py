@@ -19,7 +19,7 @@ def test_script_has_exactly_horizon_events():
 
 def test_first_event_is_always_a_store():
     # No se puede pedir un envio antes de haber almacenado nada.
-    assert Warehouse(horizon=10, seed=3).script[0].text.startswith("incoming pallet")
+    assert Warehouse(horizon=10, seed=3).script[0].text.startswith("EVENT inbound_pallet")
 
 
 def test_shelf_count_is_500():
@@ -33,7 +33,7 @@ def _canonical_orders(horizon: int, seed: int):
     orders = unsatisfiable = 0
     while not env.done:
         observation = env.observe()
-        if observation.text.startswith("order received"):
+        if observation.text.startswith("EVENT outbound_order"):
             orders += 1
             if env.expected_action().name == "Wait":
                 unsatisfiable += 1
