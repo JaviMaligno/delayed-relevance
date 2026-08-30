@@ -36,3 +36,13 @@ def test_summary_is_refreshed_with_a_separate_call():
     _run(runtime, 5)
     summarising_calls = [call for call in client.calls if "Summarise" in call[0]]
     assert len(summarising_calls) >= 1
+
+
+def test_no_prompt_mentions_a_domain_the_runtime_should_not_know():
+    # El runtime no sabe nada del dominio (contrato de runtimes/base.py): el dominio
+    # solo puede entrar por `spec` o por la observacion, nunca por texto del runtime.
+    client = FakeClient(responses=["Action: Wait({})"] * 6 + ["resumen"] * 6)
+    runtime = MemoryRuntime(client=client, spec="ESPEC")
+    _run(runtime, 6)
+    for system, user in client.calls:
+        assert "warehouse" not in (system + user).lower()

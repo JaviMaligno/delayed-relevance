@@ -35,7 +35,9 @@ class MemoryRuntime:
         if not dropped:
             return []
         summary_completion = self.client.complete(
-            system="Summarise the warehouse execution so far. Be terse and factual.",
+            # Sin nombrar el dominio: el runtime no lo conoce, y los proximos entornos
+            # (Software Repository, tau-Bench) no son un almacen.
+            system="Summarise the execution so far. Be terse and factual.",
             user=f"Previous summary:\n{self.summary}\n\nNewly dropped turns:\n" + "\n".join(dropped),
         )
         self.summary = summary_completion.text
