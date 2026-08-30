@@ -8,6 +8,7 @@ from pathlib import Path
 
 import anthropic
 
+from dr.config import load_env
 from dr.envs.warehouse import Warehouse
 from dr.llm import AnthropicClient
 from dr.metrics import aggregate, score
@@ -38,6 +39,8 @@ def main() -> None:
     parser.add_argument("--model", default="claude-haiku-4-5")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
+
+    load_env()
 
     client = AnthropicClient(model=args.model)
     Path(args.out).mkdir(exist_ok=True)
