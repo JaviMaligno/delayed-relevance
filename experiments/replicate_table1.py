@@ -37,12 +37,14 @@ def main() -> None:
     parser.add_argument("--horizon", type=int, required=True)
     parser.add_argument("--seeds", type=int, default=5)
     parser.add_argument("--model", default="claude-haiku-4-5")
+    parser.add_argument("--provider", default="auto", choices=["auto", "api", "foundry"])
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
     load_env()
 
-    client = AnthropicClient(model=args.model)
+    client = AnthropicClient(model=args.model, provider=args.provider)
+    print(f"proveedor: {client.provider}  modelo: {args.model}")
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
 
@@ -80,7 +82,9 @@ def main() -> None:
                 "overflowed_seeds": overflowed,
             }
 
-    path = Path(args.out) / f"table1_T{args.horizon}_{args.model}.json"
+    table["_meta"] = {"provider": client.provider, "model": args.model,
+                      "horizon": args.horizon, "seeds": args.seeds}
+    path = Path(args.out) / f"table1_T{args.horizon}_{args.model}_{client.provider}.json"
     path.write_text(json.dumps(table, indent=2))
     print(f"escrito {path}")
 

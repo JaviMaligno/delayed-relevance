@@ -84,3 +84,54 @@ def test_sdk_create_signature_has_no_temperature():
     assert "api_key" in parameters
     create = anthropic.resources.messages.Messages.create
     assert "temperature" not in inspect.signature(create).parameters
+
+
+class _StubFoundry:
+    def __init__(self, *args, **kwargs) -> None:
+        self.messages = _StubMessages()
+
+
+def test_provider_auto_picks_foundry_when_foundry_credentials_exist(monkeypatch):
+    import dr.llm as llm
+
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_API_KEY", "ficticia")
+    monkeypatch.setattr(llm.anthropic, "AnthropicFoundry", _StubFoundry)
+    assert llm.AnthropicClient().provider == "foundry"
+
+
+def test_provider_auto_falls_back_to_first_party(monkeypatch):
+    import dr.llm as llm
+
+    monkeypatch.delenv("ANTHROPIC_FOUNDRY_API_KEY", raising=False)
+    monkeypatch.setattr(llm.anthropic, "Anthropic", _StubAnthropic)
+    assert llm.AnthropicClient().provider == "api"
+
+
+def test_provider_can_be_forced(monkeypatch):
+    import dr.llm as llm
+
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_API_KEY", "ficticia")
+    monkeypatch.setattr(llm.anthropic, "Anthropic", _StubAnthropic)
+    assert llm.AnthropicClient(provider="api").provider == "api"
+
+
+def test_unknown_provider_is_rejected(monkeypatch):
+    import dr.llm as llm
+
+    try:
+        llm.AnthropicClient(provider="vertex")
+    except ValueError:
+        return
+    raise AssertionError("deberia haber lanzado ValueError")
+
+
+def test_foundry_client_sends_the_same_request_shape(monkeypatch):
+    import dr.llm as llm
+
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_API_KEY", "ficticia")
+    monkeypatch.setattr(llm.anthropic, "AnthropicFoundry", _StubFoundry)
+    client = llm.AnthropicClient(model="claude-haiku-4-5")
+    client.complete(system="s", user="u")
+    sent = client._client.messages.kwargs
+    assert sent["model"] == "claude-haiku-4-5"
+    assert "temperature" not in sent
