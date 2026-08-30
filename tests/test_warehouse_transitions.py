@@ -49,3 +49,32 @@ def test_done_after_horizon():
     for _ in range(3):
         env.apply(env.expected_action())
     assert env.done is True
+
+
+def _first_order_step(env) -> int:
+    for index, observation in enumerate(env.script):
+        if observation.text.startswith("order received"):
+            return index
+    raise AssertionError("el guion no contiene ninguna orden")
+
+
+def test_ship_expects_the_lowest_numbered_shelf_holding_the_sku():
+    # Con dos estanterias validas el desempate no puede ser un accidente del orden
+    # de iteracion: es una regla que P declara y el agente puede seguir.
+    env = Warehouse(horizon=40, seed=11)
+    env.reset()
+    index = _first_order_step(env)
+    env.step_index = index
+    sku = env.observe().text.split()[-1]
+    # El diccionario se construye en orden inverso a proposito: la respuesta no
+    # puede depender del orden de iteracion, solo del numero de estanteria.
+    env.shelves = {i: None for i in reversed(range(500))}
+    env.shelves[7] = (sku, 4)
+    env.shelves[3] = (sku, 9)
+    expected = env.expected_action()
+    assert expected.name == "Ship"
+    assert expected.args["shelf"] == 3
+
+
+def test_spec_declares_the_tie_break_rule_for_ship():
+    assert "lowest-numbered" in Warehouse(horizon=10, seed=1).spec().split("Ship(")[1]

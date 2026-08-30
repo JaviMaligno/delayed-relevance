@@ -70,7 +70,9 @@ class Warehouse:
         raise RuntimeError("almacen lleno")
 
     def _shelf_holding(self, sku: str) -> int | None:
-        for index, content in self.shelves.items():
+        """Estanteria de numero mas bajo que contiene el SKU. La regla esta en spec()."""
+        for index in range(SHELF_COUNT):
+            content = self.shelves.get(index)
             if content is not None and content[0] == sku:
                 return index
         return None
@@ -118,7 +120,8 @@ class Warehouse:
             '  Store({"shelf": <int>, "sku": "<str>", "qty": <int>}) '
             "- put an incoming pallet on the lowest-numbered empty shelf.\n"
             '  Ship({"shelf": <int>, "sku": "<str>"}) '
-            "- fulfil an order from the shelf where that SKU is currently stored.\n"
+            "- fulfil an order from the shelf where that SKU is currently stored; "
+            "if several shelves hold it, ship from the lowest-numbered one.\n"
             '  Move({"from": <int>, "to": <int>}) - relocate stock.\n'
             '  Wait({}) - the event needs no action.\n'
             "If the ordered SKU is not currently in stock, reply Wait({}).\n"
