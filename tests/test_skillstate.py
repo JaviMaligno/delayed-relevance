@@ -92,3 +92,55 @@ def test_patch_with_a_key_outside_the_schema_is_invalid():
     assert "inventado" not in runtime.state
     assert runtime.state == {"a": 2}
     assert runtime.invalid_patches == 1
+
+
+def _nested(patch: dict) -> str:
+    import json as _json
+
+    body = _json.dumps({"state_patch": patch, "action": "Wait({})"})
+    return f"razonamiento\n```json\n{body}\n```"
+
+
+def test_deep_merge_keeps_sibling_subkeys():
+    # El fallo diagnosticado en la corrida de humo: tocar una estanteria borraba las demas.
+    client = FakeClient(responses=[
+        _nested({"shelf_contents": {"0": "SKU-G"}}),
+        _nested({"shelf_contents": {"1": "SKU-E"}}),
+    ])
+    rt = SkillStateRuntime(client, "ESPEC", ["shelf_contents"], deep_merge=True)
+    rt.act(Observation(step=0, text="uno", actionable=False))
+    rt.act(Observation(step=1, text="dos", actionable=False))
+    assert rt.state["shelf_contents"] == {"0": "SKU-G", "1": "SKU-E"}
+
+
+def test_shallow_merge_destroys_sibling_subkeys():
+    # La variante se conserva a proposito: es la que fabrica el borrado prematuro.
+    client = FakeClient(responses=[
+        _nested({"shelf_contents": {"0": "SKU-G"}}),
+        _nested({"shelf_contents": {"1": "SKU-E"}}),
+    ])
+    rt = SkillStateRuntime(client, "ESPEC", ["shelf_contents"], deep_merge=False)
+    rt.act(Observation(step=0, text="uno", actionable=False))
+    rt.act(Observation(step=1, text="dos", actionable=False))
+    assert rt.state["shelf_contents"] == {"1": "SKU-E"}
+
+
+def test_null_deletes_a_nested_subkey_under_deep_merge():
+    client = FakeClient(responses=[
+        _nested({"shelf_contents": {"0": "SKU-G", "1": "SKU-E"}}),
+        _nested({"shelf_contents": {"1": None}}),
+    ])
+    rt = SkillStateRuntime(client, "ESPEC", ["shelf_contents"], deep_merge=True)
+    rt.act(Observation(step=0, text="uno", actionable=False))
+    rt.act(Observation(step=1, text="dos", actionable=False))
+    assert rt.state["shelf_contents"] == {"0": "SKU-G"}
+
+
+def test_prompt_states_the_merge_semantics():
+    client = FakeClient(responses=[_nested({})] * 2)
+    deep = SkillStateRuntime(client, "ESPEC", ["a"], deep_merge=True)
+    deep.act(Observation(step=0, text="x", actionable=False))
+    assert "only the sub-keys that changed" in client.calls[-1][1]
+    shallow = SkillStateRuntime(client, "ESPEC", ["a"], deep_merge=False)
+    shallow.act(Observation(step=1, text="x", actionable=False))
+    assert "must be COMPLETE" in client.calls[-1][1]
