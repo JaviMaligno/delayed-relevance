@@ -31,13 +31,35 @@ class FakeClient:
         )
 
 
+FOUNDRY_ENV_VARS = (
+    "ANTHROPIC_FOUNDRY_API_KEY",
+    "ANTHROPIC_FOUNDRY_RESOURCE",
+    "ANTHROPIC_FOUNDRY_BASE_URL",
+)
+AZURE_SCOPE = "https://cognitiveservices.azure.com/.default"
+
+
 def resolve_provider(requested: str = "auto") -> str:
-    """Decide la plataforma. 'auto' usa Foundry si hay credenciales de Foundry."""
+    """Decide la plataforma. 'auto' usa Foundry si hay cualquier ajuste de Foundry."""
     if requested != "auto":
         return requested
-    if os.environ.get("ANTHROPIC_FOUNDRY_API_KEY"):
+    if any(os.environ.get(name) for name in FOUNDRY_ENV_VARS):
         return "foundry"
     return "api"
+
+
+def build_foundry_client():
+    """Cliente de Foundry, con clave de API si la hay y con Entra ID si no.
+
+    Con `az login` hecho no hace falta ninguna clave: DefaultAzureCredential toma el
+    token del CLI. Es la via preferible aqui, porque no deja secretos en disco.
+    """
+    if os.environ.get("ANTHROPIC_FOUNDRY_API_KEY"):
+        return anthropic.AnthropicFoundry()
+    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+
+    provider = get_bearer_token_provider(DefaultAzureCredential(), AZURE_SCOPE)
+    return anthropic.AnthropicFoundry(azure_ad_token_provider=provider)
 
 
 class AnthropicClient:
@@ -63,7 +85,7 @@ class AnthropicClient:
         self.max_tokens = max_tokens
         self.provider = resolve_provider(provider)
         if self.provider == "foundry":
-            self._client = anthropic.AnthropicFoundry()
+            self._client = build_foundry_client()
         elif self.provider == "api":
             self._client = anthropic.Anthropic()
         else:

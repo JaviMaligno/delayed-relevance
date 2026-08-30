@@ -102,7 +102,8 @@ def test_provider_auto_picks_foundry_when_foundry_credentials_exist(monkeypatch)
 def test_provider_auto_falls_back_to_first_party(monkeypatch):
     import dr.llm as llm
 
-    monkeypatch.delenv("ANTHROPIC_FOUNDRY_API_KEY", raising=False)
+    for name in llm.FOUNDRY_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
     monkeypatch.setattr(llm.anthropic, "Anthropic", _StubAnthropic)
     assert llm.AnthropicClient().provider == "api"
 
@@ -135,3 +136,31 @@ def test_foundry_client_sends_the_same_request_shape(monkeypatch):
     sent = client._client.messages.kwargs
     assert sent["model"] == "claude-haiku-4-5"
     assert "temperature" not in sent
+
+
+def test_resource_without_api_key_still_selects_foundry(monkeypatch):
+    # Con `az login` hecho no hay clave: basta el recurso.
+    import dr.llm as llm
+
+    for name in llm.FOUNDRY_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_RESOURCE", "un-recurso")
+    assert llm.resolve_provider("auto") == "foundry"
+
+
+def test_foundry_without_api_key_uses_entra_id(monkeypatch):
+    import dr.llm as llm
+
+    for name in llm.FOUNDRY_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_RESOURCE", "un-recurso")
+    captured = {}
+
+    def _fake_foundry(**kwargs):
+        captured.update(kwargs)
+        return _StubFoundry()
+
+    monkeypatch.setattr(llm.anthropic, "AnthropicFoundry", _fake_foundry)
+    llm.build_foundry_client()
+    assert "azure_ad_token_provider" in captured
+    assert callable(captured["azure_ad_token_provider"])
