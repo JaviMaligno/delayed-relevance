@@ -13,8 +13,12 @@ class Runtime(Protocol):
     No sabe nada del dominio: recibe observaciones y devuelve acciones.
     """
 
-    def act(self, observation: Observation) -> tuple[Action | None, Completion]:
-        """Consulta al modelo y devuelve la accion elegida y el consumo del paso."""
+    def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
+        """Consulta al modelo y devuelve la accion elegida y TODAS las completions del paso.
+
+        La lista incluye las llamadas auxiliares (resumenes, reintentos): el coste es
+        una metrica del estudio, no puede quedarse fuera de la contabilidad.
+        """
 
     def state_size(self) -> int:
         """Tamano del estado explicito en caracteres. Cero si el runtime no tiene."""

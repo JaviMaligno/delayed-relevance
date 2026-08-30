@@ -15,7 +15,7 @@ class MemoryRuntime:
         self.summary = "(empty)"
         self.recent: list[str] = []
 
-    def act(self, observation: Observation) -> tuple[Action | None, Completion]:
+    def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
         recent_block = "\n".join(self.recent[-WINDOW * 2 :])
         user = (
             f"Summarized History:\n{self.summary}\n\n"
@@ -26,19 +26,21 @@ class MemoryRuntime:
         completion = self.client.complete(system=f"Instructions:\n{self.spec}", user=user)
         self.recent.append(f"Observation: {observation.render()}")
         self.recent.append(f"Response: {completion.text}")
-        self._refresh_summary()
-        return Action.parse(completion.text), completion
+        completions = [completion, *self._refresh_summary()]
+        return Action.parse(completion.text), completions
 
-    def _refresh_summary(self) -> None:
+    def _refresh_summary(self) -> list[Completion]:
+        """Devuelve las completions gastadas en resumir, para que el runner las sume."""
         dropped = self.recent[: -WINDOW * 2]
         if not dropped:
-            return
+            return []
         summary_completion = self.client.complete(
             system="Summarise the warehouse execution so far. Be terse and factual.",
             user=f"Previous summary:\n{self.summary}\n\nNewly dropped turns:\n" + "\n".join(dropped),
         )
         self.summary = summary_completion.text
         self.recent = self.recent[-WINDOW * 2 :]
+        return [summary_completion]
 
     def state_size(self) -> int:
         return 0

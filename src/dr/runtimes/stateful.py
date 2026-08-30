@@ -18,7 +18,7 @@ class StatefulRuntime:
         self.state: dict[str, Any] = {}
         self.history: list[str] = []
 
-    def act(self, observation: Observation) -> tuple[Action | None, Completion]:
+    def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
         history_block = "\n".join(self.history)
         user = (
             f"Current State:\n{json.dumps(self.state, indent=2)}\n\n"
@@ -31,7 +31,7 @@ class StatefulRuntime:
         self._apply_state_update(completion.text)
         self.history.append(f"Observation: {observation.render()}")
         self.history.append(f"Response: {completion.text}")
-        return Action.parse(completion.text), completion
+        return Action.parse(completion.text), [completion]
 
     def _apply_state_update(self, text: str) -> None:
         match = re.search(r"StateUpdate:\s*(\{.*?\})", text, re.DOTALL)

@@ -47,3 +47,30 @@ def test_runner_records_token_usage():
     runtime = SkillStateRuntime(client=client, spec=env.spec(), schema_fields=env.schema_fields())
     results = run_episode(env, runtime)
     assert all(result.prompt_tokens > 0 for result in results)
+
+
+def _tokens_really_spent(client) -> int:
+    """Tokens de prompt de TODAS las llamadas, contados como los cuenta FakeClient."""
+    return sum(len(system.split()) + len(user.split()) for system, user in client.calls)
+
+
+def test_runner_counts_the_summary_calls_of_memory():
+    from dr.runtimes.memory import MemoryRuntime
+
+    env = Warehouse(horizon=10, seed=2)
+    client = FakeClient(responses=["Action: Wait({})"] * 10 + ["resumen"] * 10)
+    results = run_episode(env, MemoryRuntime(client=client, spec=env.spec()))
+    assert len(client.calls) > 10  # hubo llamadas de resumen
+    assert sum(r.prompt_tokens for r in results) == _tokens_really_spent(client)
+
+
+def test_runner_counts_the_retries_of_skillstate():
+    env = Warehouse(horizon=2, seed=2)
+    client = FakeClient(
+        responses=["patch invalido", _patch_response("Wait({})"), _patch_response("Wait({})")]
+    )
+    runtime = SkillStateRuntime(client=client, spec=env.spec(), schema_fields=env.schema_fields())
+    results = run_episode(env, runtime)
+    assert runtime.invalid_patches == 1
+    assert len(client.calls) == 3
+    assert sum(r.prompt_tokens for r in results) == _tokens_really_spent(client)

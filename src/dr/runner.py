@@ -10,15 +10,15 @@ def run_episode(env, runtime) -> list[StepResult]:
     while not env.done:
         observation = env.observe()
         expected = env.expected_action()
-        action, completion = runtime.act(observation)
+        action, completions = runtime.act(observation)
         correct = action is not None and action.render() == expected.render()
         results.append(
             StepResult(
                 step=observation.step,
                 actionable=observation.actionable,
                 correct=correct,
-                prompt_tokens=completion.prompt_tokens if completion else 0,
-                output_tokens=completion.output_tokens if completion else 0,
+                prompt_tokens=sum(c.prompt_tokens for c in completions),
+                output_tokens=sum(c.output_tokens for c in completions),
                 state_size=runtime.state_size(),
             )
         )

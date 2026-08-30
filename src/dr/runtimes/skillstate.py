@@ -33,19 +33,20 @@ class SkillStateRuntime:
             '"action": "<string: the exact command you want to execute>" }'
         )
 
-    def act(self, observation: Observation) -> tuple[Action | None, Completion]:
-        completion = None
+    def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
+        completions: list[Completion] = []
         for _ in range(MAX_RETRIES + 1):
             completion = self.client.complete(
                 system=f"Instructions:\n{self.spec}", user=self._prompt(observation)
             )
+            completions.append(completion)
             parsed = self._parse(completion.text)
             if parsed is not None:
                 patch, action_text = parsed
                 self._merge(patch)
-                return Action.parse(action_text), completion
+                return Action.parse(action_text), completions
             self.invalid_patches += 1
-        return None, completion
+        return None, completions
 
     @staticmethod
     def _parse(text: str) -> tuple[dict[str, Any], str] | None:
