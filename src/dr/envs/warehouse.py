@@ -107,8 +107,16 @@ class Warehouse:
                 self.shelves[shelf] = None
         elif action.name == "Move":
             source, target = action.args.get("from"), action.args.get("to")
-            if isinstance(source, int) and isinstance(target, int):
-                self.shelves[target] = self.shelves.get(source)
+            in_range = (
+                isinstance(source, int)
+                and isinstance(target, int)
+                and 0 <= source < SHELF_COUNT
+                and 0 <= target < SHELF_COUNT
+            )
+            # Sin validacion, un indice fuera de rango creaba estanterias fantasma y un
+            # destino ocupado borraba stock en silencio.
+            if in_range and self.shelves[source] is not None and self.shelves[target] is None:
+                self.shelves[target] = self.shelves[source]
                 self.shelves[source] = None
         self.step_index += 1
 

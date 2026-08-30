@@ -78,3 +78,40 @@ def test_ship_expects_the_lowest_numbered_shelf_holding_the_sku():
 
 def test_spec_declares_the_tie_break_rule_for_ship():
     assert "lowest-numbered" in Warehouse(horizon=10, seed=1).spec().split("Ship(")[1]
+
+
+def _stocked_env() -> Warehouse:
+    env = Warehouse(horizon=10, seed=3)
+    env.reset()
+    env.shelves[0] = ("SKU-A", 5)
+    env.shelves[1] = ("SKU-B", 7)
+    return env
+
+
+def test_move_out_of_range_is_a_no_op_and_keeps_500_shelves():
+    env = _stocked_env()
+    before = dict(env.shelves)
+    env.apply(Action(name="Move", args={"from": 9999, "to": -3}))
+    assert len(env.shelves) == 500
+    assert env.shelves == before
+
+
+def test_move_to_an_occupied_shelf_does_not_destroy_stock():
+    env = _stocked_env()
+    env.apply(Action(name="Move", args={"from": 0, "to": 1}))
+    assert env.shelves[1] == ("SKU-B", 7)
+    assert env.shelves[0] == ("SKU-A", 5)
+
+
+def test_move_from_an_empty_shelf_is_a_no_op():
+    env = _stocked_env()
+    env.apply(Action(name="Move", args={"from": 250, "to": 251}))
+    assert env.shelves[251] is None
+
+
+def test_move_relocates_stock_when_it_is_valid():
+    env = _stocked_env()
+    env.apply(Action(name="Move", args={"from": 0, "to": 300}))
+    assert env.shelves[300] == ("SKU-A", 5)
+    assert env.shelves[0] is None
+    assert len(env.shelves) == 500
