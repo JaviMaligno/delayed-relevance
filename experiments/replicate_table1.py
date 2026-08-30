@@ -44,7 +44,7 @@ def main() -> None:
     load_env()
 
     client = AnthropicClient(model=args.model, provider=args.provider)
-    print(f"proveedor: {client.provider}  modelo: {args.model}")
+    print(f"proveedor: {client.provider}  modelo: {args.model}", flush=True)
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
 
@@ -58,13 +58,13 @@ def main() -> None:
             except anthropic.BadRequestError as error:
                 if "prompt is too long" not in str(error).lower():
                     raise
-                print(f"{name} seed={seed} DESBORDA la ventana de contexto")
+                print(f"{name} seed={seed} DESBORDA la ventana de contexto", flush=True)
                 overflowed.append(seed)
                 continue
             scores.append(score(results))
             prompts.append(sum(r.prompt_tokens for r in results) / len(results))
             totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
-            print(f"{name} seed={seed} score={scores[-1]:.2f} tokens={totals[-1]}")
+            print(f"{name} seed={seed} score={scores[-1]:.2f} tokens={totals[-1]}", flush=True)
         if scores:
             table[name] = {
                 "score_mean": finite(aggregate(scores).mean),
@@ -86,7 +86,7 @@ def main() -> None:
                       "horizon": args.horizon, "seeds": args.seeds}
     path = Path(args.out) / f"table1_T{args.horizon}_{args.model}_{client.provider}.json"
     path.write_text(json.dumps(table, indent=2))
-    print(f"escrito {path}")
+    print(f"escrito {path}", flush=True)
 
 
 if __name__ == "__main__":
