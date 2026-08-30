@@ -60,3 +60,35 @@ def test_prompt_size_is_flat_across_steps():
         runtime.act(Observation(step=step, text="evento", actionable=False))
     sizes = [len(call[1]) for call in client.calls]
     assert max(sizes) - min(sizes) < 40
+
+
+def test_prompt_shows_the_state_schema():
+    # Sin esquema en el prompt, Sigma es de campos libres: eso es la escotilla del
+    # brazo 4, no la condicion "sin escotilla" que replica al paper (SPEC 4.4).
+    client = FakeClient(responses=[_patch({"shelf_contents": {}})])
+    runtime = SkillStateRuntime(
+        client=client, spec="ESPEC", schema_fields=["shelf_contents", "last_event"]
+    )
+    runtime.act(Observation(step=0, text="evento", actionable=False))
+    _, user = client.calls[0]
+    assert "shelf_contents" in user
+    assert "last_event" in user
+
+
+def test_different_schemas_produce_different_prompts():
+    prompts = []
+    for fields in (["shelf_contents"], ["branches"]):
+        client = FakeClient(responses=[_patch({fields[0]: 1})])
+        runtime = SkillStateRuntime(client=client, spec="ESPEC", schema_fields=fields)
+        runtime.act(Observation(step=0, text="evento", actionable=False))
+        prompts.append(client.calls[0][1])
+    assert prompts[0] != prompts[1]
+
+
+def test_patch_with_a_key_outside_the_schema_is_invalid():
+    client = FakeClient(responses=[_patch({"inventado": 1}), _patch({"a": 2})])
+    runtime = SkillStateRuntime(client=client, spec="ESPEC", schema_fields=["a"])
+    runtime.act(Observation(step=0, text="evento", actionable=False))
+    assert "inventado" not in runtime.state
+    assert runtime.state == {"a": 2}
+    assert runtime.invalid_patches == 1

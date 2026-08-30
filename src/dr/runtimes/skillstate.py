@@ -24,6 +24,7 @@ class SkillStateRuntime:
         return (
             "Skill Execution State:\n"
             f"```json\n{json.dumps(self.state, separators=(',', ':'))}\n```\n"
+            f"State schema (only these keys are valid): {', '.join(self.schema_fields)}\n"
             f"Latest Observation: {observation.render()}\n\n"
             "Provide your response with:\n"
             "1. Step-by-step reasoning (will be discarded after execution)\n"
@@ -41,7 +42,7 @@ class SkillStateRuntime:
             )
             completions.append(completion)
             parsed = self._parse(completion.text)
-            if parsed is not None:
+            if parsed is not None and self._within_schema(parsed[0]):
                 patch, action_text = parsed
                 self._merge(patch)
                 return Action.parse(action_text), completions
@@ -62,6 +63,10 @@ class SkillStateRuntime:
         if not isinstance(patch, dict) or not isinstance(action, str):
             return None
         return patch, action
+
+    def _within_schema(self, patch: dict[str, Any]) -> bool:
+        """Un parche con claves fuera del esquema es invalido: Sigma no es de campos libres."""
+        return all(key in self.schema_fields for key in patch)
 
     def _merge(self, patch: dict[str, Any]) -> None:
         for key, value in patch.items():

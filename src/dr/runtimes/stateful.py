@@ -21,7 +21,8 @@ class StatefulRuntime:
     def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
         history_block = "\n".join(self.history)
         user = (
-            f"Current State:\n{json.dumps(self.state, indent=2)}\n\n"
+            f"Current State:\n{json.dumps(self.state, indent=2)}\n"
+            f"State schema (only these keys are valid): {', '.join(self.schema_fields)}\n\n"
             f"History:\n{history_block}\n\n"
             f"Latest Observation: {observation.render()}\n"
             "Update the state if necessary, provide reasoning, and output 'Action: <cmd>'.\n"
@@ -42,7 +43,9 @@ class StatefulRuntime:
         except json.JSONDecodeError:
             return
         if isinstance(update, dict):
-            self.state.update(update)
+            # Mismo esquema fijo que el brazo de estado. Este runtime no tiene bucle de
+            # validacion, asi que las claves ajenas se descartan en vez de reintentarse.
+            self.state.update({k: v for k, v in update.items() if k in self.schema_fields})
 
     def state_size(self) -> int:
         return len(json.dumps(self.state))

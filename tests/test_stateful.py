@@ -32,3 +32,21 @@ def test_malformed_state_update_leaves_state_untouched():
     runtime = StatefulRuntime(client=client, spec="ESPEC", schema_fields=["shelf_contents"])
     runtime.act(Observation(step=0, text="evento", actionable=False))
     assert runtime.state == {}
+
+
+def test_prompt_shows_the_state_schema():
+    client = FakeClient(responses=["Action: Wait({})"])
+    runtime = StatefulRuntime(
+        client=client, spec="ESPEC", schema_fields=["shelf_contents", "last_event"]
+    )
+    runtime.act(Observation(step=0, text="evento", actionable=False))
+    _, user = client.calls[0]
+    assert "shelf_contents" in user
+    assert "last_event" in user
+
+
+def test_state_update_outside_the_schema_is_ignored():
+    client = FakeClient(responses=['StateUpdate: {"inventado": 1, "shelf_contents": "0:SKU-A"}'])
+    runtime = StatefulRuntime(client=client, spec="ESPEC", schema_fields=["shelf_contents"])
+    runtime.act(Observation(step=0, text="evento", actionable=False))
+    assert runtime.state == {"shelf_contents": "0:SKU-A"}
