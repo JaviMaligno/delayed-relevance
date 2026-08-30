@@ -64,21 +64,23 @@ def _client(monkeypatch, **kwargs):
     return llm.AnthropicClient(**kwargs)
 
 
-def test_haiku_runs_at_temperature_zero(monkeypatch):
-    client = _client(monkeypatch, model="claude-haiku-4-5")
-    client.complete(system="s", user="u")
-    assert client._client.messages.kwargs["temperature"] == 0
+def test_no_model_ever_receives_a_temperature_parameter(monkeypatch):
+    # El SDK anthropic 1.x elimino `temperature` de Messages.create(): no esta
+    # disponible para ningun modelo. La reproducibilidad es estadistica (spec 8).
+    for model in ("claude-haiku-4-5", "claude-sonnet-5"):
+        client = _client(monkeypatch, model=model)
+        client.complete(system="s", user="u")
+        assert "temperature" not in client._client.messages.kwargs
 
 
-def test_reasoning_model_gets_no_temperature_parameter(monkeypatch):
-    # SPEC 8: Sonnet 5 corre con su muestreo por defecto; temperatura no esta
-    # disponible en modelos de razonamiento.
-    client = _client(monkeypatch, model="claude-sonnet-5")
-    client.complete(system="s", user="u")
-    assert "temperature" not in client._client.messages.kwargs
+def test_sdk_create_signature_has_no_temperature():
+    # Test de regresion contra el entorno: si una version futura del SDK
+    # reintrodujera temperature, esta decision hay que revisarla a conciencia.
+    import inspect
 
+    import anthropic
 
-def test_temperature_can_be_forced_explicitly(monkeypatch):
-    client = _client(monkeypatch, model="claude-sonnet-5", temperature=0)
-    client.complete(system="s", user="u")
-    assert client._client.messages.kwargs["temperature"] == 0
+    parameters = inspect.signature(anthropic.Anthropic.__init__).parameters
+    assert "api_key" in parameters
+    create = anthropic.resources.messages.Messages.create
+    assert "temperature" not in inspect.signature(create).parameters

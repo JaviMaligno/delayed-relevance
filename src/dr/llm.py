@@ -29,41 +29,26 @@ class FakeClient:
         )
 
 
-TEMPERATURE_ZERO_MODELS = ("claude-haiku-4-5",)
-_AUTO = object()
-
-
 class AnthropicClient:
     """Cliente real.
 
-    Temperatura 0 solo donde esta disponible (Haiku 4.5). En modelos de razonamiento
-    no lo esta, y el spec declara que Sonnet 5 corre con su muestreo por defecto, asi
-    que el parametro se omite del todo en vez de enviarse.
+    No se envia `temperature`: el SDK `anthropic` 1.x lo ha eliminado de
+    `Messages.create()`, asi que no esta disponible para ningun modelo, no solo para
+    los de razonamiento. La reproducibilidad del experimento es estadistica —
+    seeds, varianza reportada y ruido de muestreo medido aparte — segun spec §8.
     """
 
-    def __init__(
-        self,
-        model: str = "claude-haiku-4-5",
-        max_tokens: int = 2048,
-        temperature: float | None | object = _AUTO,
-    ) -> None:
+    def __init__(self, model: str = "claude-haiku-4-5", max_tokens: int = 2048) -> None:
         self.model = model
         self.max_tokens = max_tokens
-        if temperature is _AUTO:
-            temperature = 0 if model.startswith(TEMPERATURE_ZERO_MODELS) else None
-        self.temperature: float | None = temperature  # type: ignore[assignment]
         self._client = anthropic.Anthropic()
 
     def complete(self, system: str, user: str) -> Completion:
-        kwargs: dict = {}
-        if self.temperature is not None:
-            kwargs["temperature"] = self.temperature
         response = self._client.messages.create(
             model=self.model,
             max_tokens=self.max_tokens,
             system=system,
             messages=[{"role": "user", "content": user}],
-            **kwargs,
         )
         text = "".join(block.text for block in response.content if block.type == "text")
         return Completion(
