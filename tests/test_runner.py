@@ -74,3 +74,15 @@ def test_runner_counts_the_retries_of_skillstate():
     assert runtime.invalid_patches == 1
     assert len(client.calls) == 3
     assert sum(r.prompt_tokens for r in results) == _tokens_really_spent(client)
+
+
+def test_unparseable_answers_never_repair_the_world():
+    # Inyectar la accion correcta cuando el runtime no produce ninguna deja al
+    # brazo que falla en la trayectoria de oro y hace inmedible la sonda C.
+    from dr.runtimes.react import ReActRuntime
+
+    env = Warehouse(horizon=6, seed=2)
+    client = FakeClient(responses=["no se que hacer"] * 6)
+    results = run_episode(env, ReActRuntime(client=client, spec=env.spec()))
+    assert len(results) == 6
+    assert all(content is None for content in env.shelves.values())

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from dr.types import StepResult
+from dr.types import Action, StepResult
+
+NO_OP = Action(name="NoOp")
 
 
 def run_episode(env, runtime) -> list[StepResult]:
@@ -22,5 +24,7 @@ def run_episode(env, runtime) -> list[StepResult]:
                 state_size=runtime.state_size(),
             )
         )
-        env.apply(action if action is not None else expected)
+        # Un fallo de parseo es una accion nula, nunca la correcta: inyectar
+        # `expected` repararia gratis el mundo del brazo que falla.
+        env.apply(action if action is not None else NO_OP)
     return results
