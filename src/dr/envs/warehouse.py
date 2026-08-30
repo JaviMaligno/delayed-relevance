@@ -33,7 +33,11 @@ class Warehouse:
                 text = f"incoming pallet of {qty} units of {sku}"
                 script.append(Observation(step=step, text=text, actionable=True))
             elif kind == "ship":
+                # `stored` es el multiconjunto de stock que deja la trayectoria de
+                # ground truth: se retira el SKU al emitir su orden, para que ninguna
+                # orden pida mercancia que ya salio del almacen.
                 sku = rng.choice(stored)
+                stored.remove(sku)
                 text = f"order received for {sku}"
                 script.append(Observation(step=step, text=text, actionable=True))
             else:
@@ -117,6 +121,7 @@ class Warehouse:
             "- fulfil an order from the shelf where that SKU is currently stored.\n"
             '  Move({"from": <int>, "to": <int>}) - relocate stock.\n'
             '  Wait({}) - the event needs no action.\n'
+            "If the ordered SKU is not currently in stock, reply Wait({}).\n"
         )
 
     def schema_fields(self) -> list[str]:
