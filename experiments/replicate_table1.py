@@ -48,10 +48,30 @@ def main() -> None:
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
 
+    # Checkpoint por episodio: una corrida larga que se cae por un fallo de red no
+    # puede perder todo lo ya pagado. Al relanzar, los episodios ya hechos se saltan.
+    stem = f"T{args.horizon}_{args.model}_{client.provider}"
+    partial_path = Path(args.out) / f"partial_{stem}.json"
+    done: dict[str, dict] = {}
+    if partial_path.exists():
+        done = json.loads(partial_path.read_text())
+        print(f"reanudando: {len(done)} episodios ya completados", flush=True)
+
     for name, build in RUNTIMES.items():
         scores, prompts, totals = [], [], []
         overflowed: list[int] = []
         for seed in range(args.seeds):
+            key = f"{name}:{seed}"
+            if key in done:
+                cached = done[key]
+                if cached.get("overflowed"):
+                    overflowed.append(seed)
+                else:
+                    scores.append(cached["score"])
+                    prompts.append(cached["avg_prompt"])
+                    totals.append(cached["total"])
+                print(f"{name} seed={seed} (cacheado)", flush=True)
+                continue
             env = Warehouse(horizon=args.horizon, seed=seed)
             try:
                 results = run_episode(env, build(client, env))
@@ -60,10 +80,19 @@ def main() -> None:
                     raise
                 print(f"{name} seed={seed} DESBORDA la ventana de contexto", flush=True)
                 overflowed.append(seed)
+                done[key] = {"overflowed": True}
+                partial_path.write_text(json.dumps(done, indent=2))
                 continue
             scores.append(score(results))
             prompts.append(sum(r.prompt_tokens for r in results) / len(results))
             totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
+            done[key] = {
+                "score": scores[-1],
+                "avg_prompt": prompts[-1],
+                "total": totals[-1],
+                "overflowed": False,
+            }
+            partial_path.write_text(json.dumps(done, indent=2))
             print(f"{name} seed={seed} score={scores[-1]:.2f} tokens={totals[-1]}", flush=True)
         if scores:
             table[name] = {

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 import os
+import time
 
 import anthropic
 
@@ -36,6 +37,7 @@ FOUNDRY_ENV_VARS = (
     "ANTHROPIC_FOUNDRY_RESOURCE",
     "ANTHROPIC_FOUNDRY_BASE_URL",
 )
+RETRY_ATTEMPTS = 6
 AZURE_SCOPE = "https://cognitiveservices.azure.com/.default"
 
 
@@ -55,11 +57,11 @@ def build_foundry_client():
     token del CLI. Es la via preferible aqui, porque no deja secretos en disco.
     """
     if os.environ.get("ANTHROPIC_FOUNDRY_API_KEY"):
-        return anthropic.AnthropicFoundry()
+        return anthropic.AnthropicFoundry(max_retries=4)
     from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 
     provider = get_bearer_token_provider(DefaultAzureCredential(), AZURE_SCOPE)
-    return anthropic.AnthropicFoundry(azure_ad_token_provider=provider)
+    return anthropic.AnthropicFoundry(azure_ad_token_provider=provider, max_retries=4)
 
 
 class AnthropicClient:
@@ -87,11 +89,31 @@ class AnthropicClient:
         if self.provider == "foundry":
             self._client = build_foundry_client()
         elif self.provider == "api":
-            self._client = anthropic.Anthropic()
+            self._client = anthropic.Anthropic(max_retries=4)
         else:
             raise ValueError(f"proveedor desconocido: {self.provider}")
 
     def complete(self, system: str, user: str) -> Completion:
+        """Reintenta los fallos transitorios: una rejilla de una hora no puede morir
+        por un parpadeo de red. Los errores de autenticacion o de peticion invalida
+        NO se reintentan, porque no se arreglan esperando."""
+        delay = 2.0
+        for attempt in range(RETRY_ATTEMPTS):
+            try:
+                return self._create(system, user)
+            except (anthropic.APIConnectionError, anthropic.RateLimitError) as error:
+                if attempt == RETRY_ATTEMPTS - 1:
+                    raise
+                print(
+                    f"  [reintento {attempt + 1}/{RETRY_ATTEMPTS - 1}] "
+                    f"{type(error).__name__}, esperando {delay:.0f}s",
+                    flush=True,
+                )
+                time.sleep(delay)
+                delay = min(delay * 2, 60.0)
+        raise RuntimeError("inalcanzable")
+
+    def _create(self, system: str, user: str) -> Completion:
         response = self._client.messages.create(
             model=self.model,
             max_tokens=self.max_tokens,
