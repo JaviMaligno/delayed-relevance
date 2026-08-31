@@ -28,7 +28,7 @@ class FakeClient:
     responses: list[str]
     calls: list[tuple[str, str]] = field(default_factory=list)
 
-    def complete(self, system: str, user: str) -> Completion:
+    def complete(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
         self.calls.append((system, user))
         text = self.responses.pop(0)
         return Completion(
@@ -99,14 +99,14 @@ class AnthropicClient:
         else:
             raise ValueError(f"proveedor desconocido: {self.provider}")
 
-    def complete(self, system: str, user: str) -> Completion:
+    def complete(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
         """Reintenta los fallos transitorios: una rejilla de una hora no puede morir
         por un parpadeo de red. Los errores de autenticacion o de peticion invalida
         NO se reintentan, porque no se arreglan esperando."""
         delay = 2.0
         for attempt in range(RETRY_ATTEMPTS):
             try:
-                return self._create(system, user)
+                return self._create(system, user, max_tokens)
             except (anthropic.APIConnectionError, anthropic.RateLimitError) as error:
                 if attempt == RETRY_ATTEMPTS - 1:
                     raise
@@ -119,10 +119,10 @@ class AnthropicClient:
                 delay = min(delay * 2, 60.0)
         raise RuntimeError("inalcanzable")
 
-    def _create(self, system: str, user: str) -> Completion:
+    def _create(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
         response = self._client.messages.create(
             model=self.model,
-            max_tokens=self.max_tokens,
+            max_tokens=max_tokens or self.max_tokens,
             system=system,
             messages=[{"role": "user", "content": user}],
         )
