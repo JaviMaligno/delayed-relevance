@@ -88,3 +88,4 @@ class StepResult:
     prompt_tokens: int
     output_tokens: int
     state_size: int = 0
+    truncated: int = 0

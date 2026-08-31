@@ -32,34 +32,44 @@ PAPER_AVG_PROMPT = {
 
 
 class OracleClient:
-    """Devuelve siempre la accion correcta, en el formato de cada runtime."""
+    """Devuelve siempre la accion correcta, en el formato de cada runtime.
 
-    def __init__(self, shape: str) -> None:
+    El razonamiento se rellena hasta `response_tokens`. Esto NO es decorativo: en los
+    runtimes con historia la respuesta del modelo se acumula en el transcript, asi
+    que su longitud pesa tanto como la de las observaciones. La primera version de
+    este script respondia en dos lineas y por eso subestimo la densidad real casi a
+    la mitad, dando por calibrado un entorno que no lo estaba.
+    """
+
+    def __init__(self, shape: str, response_tokens: int) -> None:
         self.shape = shape
         self.prompt_chars: list[int] = []
         self.next_action = "Wait({})"
         self.next_patch: dict = {}
+        self.filler = "The event is parsed and the relevant fields are identified. " * max(
+            1, response_tokens // 12
+        )
 
     def complete(self, system: str, user: str) -> Completion:
         self.prompt_chars.append(len(system) + len(user))
         if self.shape == "plain":
-            text = f"Reasoning about the event.\nAction: {self.next_action}"
+            text = f"{self.filler}\nAction: {self.next_action}"
         elif self.shape == "stateupdate":
             text = (
-                f"Reasoning about the event.\n"
+                f"{self.filler}\n"
                 f"StateUpdate: {json.dumps(self.next_patch)}\n"
                 f"Action: {self.next_action}"
             )
         else:
             body = json.dumps({"state_patch": self.next_patch, "action": self.next_action})
-            text = f"Reasoning about the event.\n```json\n{body}\n```"
+            text = f"{self.filler}\n```json\n{body}\n```"
         return Completion(text=text, prompt_tokens=0, output_tokens=len(text) // 4)
 
 
-def run(name: str, horizon: int, seed: int) -> float:
+def run(name: str, horizon: int, seed: int, response_tokens: int) -> float:
     env = Warehouse(horizon=horizon, seed=seed)
     shape = {"react": "plain", "memory": "plain", "stateful": "stateupdate"}.get(name, "json")
-    client = OracleClient(shape)
+    client = OracleClient(shape, response_tokens)
     runtime = {
         "react": lambda: ReActRuntime(client, env.spec()),
         "memory": lambda: MemoryRuntime(client, env.spec()),
@@ -85,6 +95,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--horizons", nargs="*", type=int, default=[10, 25, 50, 100])
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--response-tokens", type=int, default=250,
+                        help="Longitud tipica de la respuesta del modelo. Pesa en los "
+                             "brazos con historia porque se acumula en el transcript.")
     args = parser.parse_args()
 
     print(f"{'runtime':11} " + " ".join(f"{'T=' + str(h):>18}" for h in args.horizons))
@@ -92,7 +105,7 @@ def main() -> None:
     for name in ["react", "memory", "stateful", "skillstate"]:
         cells = []
         for h in args.horizons:
-            ours = run(name, h, args.seed)
+            ours = run(name, h, args.seed, args.response_tokens)
             theirs = PAPER_AVG_PROMPT[name].get(h)
             ratio = f"{ours / theirs:.2f}x" if theirs else "-"
             cells.append(f"{ours:.0f}/{theirs or '-'} {ratio}".rjust(18))

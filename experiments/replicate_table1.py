@@ -38,12 +38,17 @@ def main() -> None:
     parser.add_argument("--seeds", type=int, default=5)
     parser.add_argument("--model", default="claude-haiku-4-5")
     parser.add_argument("--provider", default="auto", choices=["auto", "api", "foundry"])
+    parser.add_argument("--max-tokens", type=int, default=600,
+                        help="Tope de salida por llamada. Sus totales de la Tabla 1 "
+                             "implican respuestas cortas; 2048 disparaba el coste "
+                             "y, en los brazos con historia, la densidad.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
     load_env()
 
-    client = AnthropicClient(model=args.model, provider=args.provider)
+    client = AnthropicClient(model=args.model, provider=args.provider,
+                             max_tokens=args.max_tokens)
     print(f"proveedor: {client.provider}  modelo: {args.model}", flush=True)
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
@@ -83,6 +88,10 @@ def main() -> None:
                 done[key] = {"overflowed": True}
                 partial_path.write_text(json.dumps(done, indent=2))
                 continue
+            truncs = sum(r.truncated for r in results)
+            if truncs:
+                print(f"  AVISO {name} seed={seed}: {truncs} respuestas truncadas "
+                      f"por el tope de salida", flush=True)
             scores.append(score(results))
             prompts.append(sum(r.prompt_tokens for r in results) / len(results))
             totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
@@ -112,7 +121,8 @@ def main() -> None:
             }
 
     table["_meta"] = {"provider": client.provider, "model": args.model,
-                      "horizon": args.horizon, "seeds": args.seeds}
+                      "horizon": args.horizon, "seeds": args.seeds,
+                      "max_tokens": args.max_tokens}
     path = Path(args.out) / f"table1_T{args.horizon}_{args.model}_{client.provider}.json"
     path.write_text(json.dumps(table, indent=2))
     print(f"escrito {path}", flush=True)

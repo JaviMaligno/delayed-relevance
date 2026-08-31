@@ -47,6 +47,7 @@ class _StubMessages:
         class _Response:
             content = [_Block()]
             usage = _Usage()
+            stop_reason = "end_turn"
 
         return _Response()
 

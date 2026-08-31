@@ -13,6 +13,12 @@ class Completion:
     text: str
     prompt_tokens: int
     output_tokens: int
+    truncated: bool = False
+    """True si la generacion se corto por el tope de salida.
+
+    Importa porque una respuesta truncada parte el bloque JSON del parche y hace que
+    SKILL.state falle por el tope, no por el metodo. Sin contarlo, ese artefacto se
+    lee como un resultado."""
 
 
 @dataclass
@@ -125,4 +131,5 @@ class AnthropicClient:
             text=text,
             prompt_tokens=response.usage.input_tokens,
             output_tokens=response.usage.output_tokens,
+            truncated=response.stop_reason == "max_tokens",
         )
