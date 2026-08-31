@@ -78,6 +78,8 @@ def main() -> None:
     parser.add_argument("--max-tokens", type=int, default=600)
     parser.add_argument("--oracle-schema", action="store_true",
                         help="Dar al esquema un campo para la cuarentena (cota superior).")
+    parser.add_argument("--hatch-schema", action="store_true",
+                        help="Campo `notes` de texto libre: sitio sin decir para que.")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
@@ -85,7 +87,7 @@ def main() -> None:
     load_env()
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
     client = AnthropicClient(model=args.model, provider=args.provider, max_tokens=args.max_tokens)
-    sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "")
+    sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "")
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
     Path(args.out).mkdir(exist_ok=True)
@@ -115,7 +117,8 @@ def main() -> None:
                     continue
                 env = Warehouse(horizon=args.horizon, seed=seed, latent_k=k,
                                 latent_control=args.control,
-                                oracle_schema=args.oracle_schema)
+                                oracle_schema=args.oracle_schema,
+                                hatch_schema=args.hatch_schema)
                 try:
                     resultados, acierto = run_episode_probe(env, build(client, env))
                 except anthropic.BadRequestError as error:
@@ -129,7 +132,11 @@ def main() -> None:
                     print(f"  AVISO {clave}: {truncs} respuestas truncadas", flush=True)
                 scores.append(s)
                 aciertos.append(bool(acierto))
-                done[clave] = {"score": s, "dependiente": bool(acierto)}
+                tam = [r.state_size for r in resultados]
+                done[clave] = {"score": s, "dependiente": bool(acierto),
+                               "sigma_inicial": tam[0] if tam else 0,
+                               "sigma_final": tam[-1] if tam else 0,
+                               "sigma_max": max(tam) if tam else 0}
                 partial_path.write_text(json.dumps(done, indent=2))
                 print(f"{clave} score={s:.2f} paso_dependiente={'OK' if acierto else 'FALLO'}",
                       flush=True)
@@ -143,7 +150,7 @@ def main() -> None:
 
     tabla["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds, "ks": args.ks,
-                      "control": args.control, "oracle_schema": args.oracle_schema,
+                      "control": args.control, "oracle_schema": args.oracle_schema, "hatch_schema": args.hatch_schema,
                       "max_tokens": args.max_tokens}
     path.write_text(json.dumps(tabla, indent=2))
     print(f"escrito {path}", flush=True)

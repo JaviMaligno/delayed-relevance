@@ -89,6 +89,7 @@ class Warehouse:
         latent_k: int | None = None,
         latent_control: bool = False,
         oracle_schema: bool = False,
+        hatch_schema: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -107,6 +108,7 @@ class Warehouse:
         self.latent_k = latent_k
         self.latent_control = latent_control
         self.oracle_schema = oracle_schema
+        self.hatch_schema = hatch_schema
         self.shelves: dict[int, tuple[str, int, str] | None] = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
         self.quarantined_shelf: int | None = None
@@ -461,4 +463,9 @@ class Warehouse:
         campos = ["shelf_contents", "last_event"]
         if self.oracle_schema:
             campos.append("quarantined_shelves")
+        if self.hatch_schema:
+            # Escotilla libre (spec 4.4): da sitio SIN decir para que. Separa "tenia
+            # donde guardarlo" de "le avisamos de que importaba", que el campo con
+            # nombre delator confunde.
+            campos.append("notes")
         return campos
