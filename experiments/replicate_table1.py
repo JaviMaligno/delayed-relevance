@@ -10,6 +10,7 @@ import anthropic
 
 from dr.config import load_env
 from dr.envs.warehouse import Warehouse
+from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
 from dr.metrics import aggregate, score
 from dr.runner import run_episode
@@ -46,6 +47,8 @@ def main() -> None:
     args = parser.parse_args()
 
     load_env()
+    awake = keep_system_awake()
+    print(f"suspension del sistema inhibida: {awake}", flush=True)
 
     client = AnthropicClient(model=args.model, provider=args.provider,
                              max_tokens=args.max_tokens)
@@ -126,6 +129,7 @@ def main() -> None:
     path = Path(args.out) / f"table1_T{args.horizon}_{args.model}_{client.provider}.json"
     path.write_text(json.dumps(table, indent=2))
     print(f"escrito {path}", flush=True)
+    release()
 
 
 if __name__ == "__main__":
