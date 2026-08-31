@@ -88,6 +88,7 @@ class Warehouse:
         seed: int,
         latent_k: int | None = None,
         latent_control: bool = False,
+        oracle_schema: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -105,6 +106,7 @@ class Warehouse:
         self.seed = seed
         self.latent_k = latent_k
         self.latent_control = latent_control
+        self.oracle_schema = oracle_schema
         self.shelves: dict[int, tuple[str, int, str] | None] = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
         self.quarantined_shelf: int | None = None
@@ -448,4 +450,15 @@ class Warehouse:
         )
 
     def schema_fields(self) -> list[str]:
-        return ["shelf_contents", "last_event"]
+        """Campos del esquema de estado.
+
+        `oracle_schema` anade un sitio donde guardar la cuarentena. Es la cota
+        superior del spec (§4.4): mide cuanto del fallo se debe a la distancia y
+        cuanto a que el hecho no tenia donde vivir. El nombre del campo delata que
+        las cuarentenas importan, y eso es deliberado: es lo que la convierte en cota
+        superior y no en una condicion mas.
+        """
+        campos = ["shelf_contents", "last_event"]
+        if self.oracle_schema:
+            campos.append("quarantined_shelves")
+        return campos

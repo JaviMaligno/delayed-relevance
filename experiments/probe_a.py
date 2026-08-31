@@ -76,6 +76,8 @@ def main() -> None:
     parser.add_argument("--model", default="claude-haiku-4-5")
     parser.add_argument("--provider", default="auto", choices=["auto", "api", "foundry"])
     parser.add_argument("--max-tokens", type=int, default=600)
+    parser.add_argument("--oracle-schema", action="store_true",
+                        help="Dar al esquema un campo para la cuarentena (cota superior).")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
@@ -83,7 +85,7 @@ def main() -> None:
     load_env()
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
     client = AnthropicClient(model=args.model, provider=args.provider, max_tokens=args.max_tokens)
-    sufijo = "_control" if args.control else ""
+    sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "")
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
     Path(args.out).mkdir(exist_ok=True)
@@ -97,7 +99,10 @@ def main() -> None:
         done = json.loads(partial_path.read_text())
         print(f"reanudando: {len(done)} episodios ya completados", flush=True)
 
-    tabla: dict[str, dict] = {}
+    # Se parte de lo ya escrito: correr con --only no debe borrar las celdas de los
+    # otros runtimes. Reconstruir la tabla desde cero destruyo la sonda de skillstate.
+    path = Path(args.out) / f"probeA_T{args.horizon}_{args.model}{sufijo}.json"
+    tabla: dict[str, dict] = json.loads(path.read_text()) if path.exists() else {}
     for name, build in runtimes.items():
         for k in args.ks:
             scores, aciertos = [], []
@@ -109,7 +114,8 @@ def main() -> None:
                     print(f"{clave} (cacheado)", flush=True)
                     continue
                 env = Warehouse(horizon=args.horizon, seed=seed, latent_k=k,
-                                latent_control=args.control)
+                                latent_control=args.control,
+                                oracle_schema=args.oracle_schema)
                 try:
                     resultados, acierto = run_episode_probe(env, build(client, env))
                 except anthropic.BadRequestError as error:
@@ -137,8 +143,8 @@ def main() -> None:
 
     tabla["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds, "ks": args.ks,
-                      "control": args.control, "max_tokens": args.max_tokens}
-    path = Path(args.out) / f"probeA_T{args.horizon}_{args.model}{sufijo}.json"
+                      "control": args.control, "oracle_schema": args.oracle_schema,
+                      "max_tokens": args.max_tokens}
     path.write_text(json.dumps(tabla, indent=2))
     print(f"escrito {path}", flush=True)
     release()
