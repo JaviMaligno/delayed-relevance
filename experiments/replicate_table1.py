@@ -25,12 +25,17 @@ def finite(value: float) -> float | None:
     return value if math.isfinite(value) else None
 
 
-RUNTIMES = {
-    "react": lambda client, env: ReActRuntime(client, env.spec()),
-    "memory": lambda client, env: MemoryRuntime(client, env.spec()),
-    "stateful": lambda client, env: StatefulRuntime(client, env.spec(), env.schema_fields()),
-    "skillstate": lambda client, env: SkillStateRuntime(client, env.spec(), env.schema_fields()),
-}
+def build_runtimes(deep_merge: bool) -> dict:
+    """Los dos brazos con estado comparten profundidad de merge: si uno conserva las
+    sub-claves hermanas y el otro no, la comparacion queda sesgada."""
+    return {
+        "react": lambda client, env: ReActRuntime(client, env.spec()),
+        "memory": lambda client, env: MemoryRuntime(client, env.spec()),
+        "stateful": lambda client, env: StatefulRuntime(
+            client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
+        "skillstate": lambda client, env: SkillStateRuntime(
+            client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
+    }
 
 
 def main() -> None:
@@ -43,6 +48,11 @@ def main() -> None:
                         help="Tope de salida por llamada. Sus totales de la Tabla 1 "
                              "implican respuestas cortas; 2048 disparaba el coste "
                              "y, en los brazos con historia, la densidad.")
+    parser.add_argument("--merge", default="deep", choices=["deep", "shallow"],
+                        help="Profundidad del merge de estado. shallow reproduce el "
+                             "borrado prematuro sin que el modelo se equivoque.")
+    parser.add_argument("--only", nargs="*", default=None,
+                        help="Correr solo estos runtimes.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -59,13 +69,18 @@ def main() -> None:
     # Checkpoint por episodio: una corrida larga que se cae por un fallo de red no
     # puede perder todo lo ya pagado. Al relanzar, los episodios ya hechos se saltan.
     stem = f"T{args.horizon}_{args.model}_{client.provider}"
+    if args.merge != "deep":
+        stem += f"_{args.merge}"
     partial_path = Path(args.out) / f"partial_{stem}.json"
     done: dict[str, dict] = {}
     if partial_path.exists():
         done = json.loads(partial_path.read_text())
         print(f"reanudando: {len(done)} episodios ya completados", flush=True)
 
-    for name, build in RUNTIMES.items():
+    runtimes = build_runtimes(args.merge == "deep")
+    if args.only:
+        runtimes = {k: v for k, v in runtimes.items() if k in args.only}
+    for name, build in runtimes.items():
         scores, prompts, totals = [], [], []
         overflowed: list[int] = []
         for seed in range(args.seeds):
@@ -125,8 +140,9 @@ def main() -> None:
 
     table["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds,
-                      "max_tokens": args.max_tokens}
-    path = Path(args.out) / f"table1_T{args.horizon}_{args.model}_{client.provider}.json"
+                      "max_tokens": args.max_tokens,
+                      "merge": args.merge}
+    path = Path(args.out) / f"table1_{stem}.json"
     path.write_text(json.dumps(table, indent=2))
     print(f"escrito {path}", flush=True)
     release()
