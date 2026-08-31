@@ -20,7 +20,11 @@ from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
 from dr.runtimes.stateful import StatefulRuntime
 
-CHARS_PER_TOKEN = 4.0
+# Calibrado contra la corrida real de T=10 con react, stateful y skillstate: el texto
+# del entorno lleva muchos identificadores y numeros, que tokenizan peor que la prosa.
+# Se excluye memory del ajuste: su runtime real acumula resumenes que el oraculo no
+# reproduce, asi que su ratio no mide la tokenizacion sino esa diferencia.
+CHARS_PER_TOKEN = 3.48
 
 # Prompt medio por invocacion en la Tabla 1 del paper (Gemini-3-Flash).
 PAPER_AVG_PROMPT = {
