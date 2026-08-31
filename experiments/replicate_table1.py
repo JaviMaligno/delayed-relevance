@@ -25,7 +25,7 @@ def finite(value: float) -> float | None:
     return value if math.isfinite(value) else None
 
 
-def build_runtimes(deep_merge: bool) -> dict:
+def build_runtimes(deep_merge: bool, declare_merge: bool = True) -> dict:
     """Los dos brazos con estado comparten profundidad de merge: si uno conserva las
     sub-claves hermanas y el otro no, la comparacion queda sesgada."""
     return {
@@ -34,7 +34,8 @@ def build_runtimes(deep_merge: bool) -> dict:
         "stateful": lambda client, env: StatefulRuntime(
             client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
         "skillstate": lambda client, env: SkillStateRuntime(
-            client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
+            client, env.spec(), env.schema_fields(), deep_merge=deep_merge,
+            declare_merge=declare_merge),
     }
 
 
@@ -51,6 +52,9 @@ def main() -> None:
     parser.add_argument("--merge", default="deep", choices=["deep", "shallow"],
                         help="Profundidad del merge de estado. shallow reproduce el "
                              "borrado prematuro sin que el modelo se equivoque.")
+    parser.add_argument("--no-declare-merge", action="store_true",
+                        help="No decir al modelo como funciona el merge. Es la "
+                             "condicion que produjo 0.62 en la corrida de humo.")
     parser.add_argument("--only", nargs="*", default=None,
                         help="Correr solo estos runtimes.")
     parser.add_argument("--out", default="results")
@@ -71,13 +75,15 @@ def main() -> None:
     stem = f"T{args.horizon}_{args.model}_{client.provider}"
     if args.merge != "deep":
         stem += f"_{args.merge}"
+    if args.no_declare_merge:
+        stem += "_undeclared"
     partial_path = Path(args.out) / f"partial_{stem}.json"
     done: dict[str, dict] = {}
     if partial_path.exists():
         done = json.loads(partial_path.read_text())
         print(f"reanudando: {len(done)} episodios ya completados", flush=True)
 
-    runtimes = build_runtimes(args.merge == "deep")
+    runtimes = build_runtimes(args.merge == "deep", not args.no_declare_merge)
     if args.only:
         runtimes = {k: v for k, v in runtimes.items() if k in args.only}
     for name, build in runtimes.items():
@@ -141,7 +147,8 @@ def main() -> None:
     table["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds,
                       "max_tokens": args.max_tokens,
-                      "merge": args.merge}
+                      "merge": args.merge,
+                      "declare_merge": not args.no_declare_merge}
     path = Path(args.out) / f"table1_{stem}.json"
     path.write_text(json.dumps(table, indent=2))
     print(f"escrito {path}", flush=True)

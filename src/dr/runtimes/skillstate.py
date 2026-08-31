@@ -40,11 +40,13 @@ class SkillStateRuntime:
         spec: str,
         schema_fields: list[str],
         deep_merge: bool = True,
+        declare_merge: bool = True,
     ) -> None:
         self.client = client
         self.spec = spec
         self.schema_fields = schema_fields
         self.deep_merge = deep_merge
+        self.declare_merge = declare_merge
         self.state: dict[str, Any] = {}
         self.invalid_patches = 0
 
@@ -64,8 +66,11 @@ class SkillStateRuntime:
             "Skill Execution State:\n"
             f"```json\n{json.dumps(self.state, separators=(',', ':'))}\n```\n"
             f"State schema (only these keys are valid): {', '.join(self.schema_fields)}\n"
-            f"Patch semantics: {self._merge_doc()}\n"
-            f"Latest Observation: {observation.render()}\n\n"
+            # Sin declarar, el modelo no puede saber si el merge desciende en los objetos
+            # anidados. Esa ignorancia es la condicion que hay que medir: el paper no dice
+            # que su prompt declare la semantica, y su formula tampoco fija la profundidad.
+            + (f"Patch semantics: {self._merge_doc()}\n" if self.declare_merge else "")
+            + f"Latest Observation: {observation.render()}\n\n"
             "Provide your response with:\n"
             "1. Step-by-step reasoning (will be discarded after execution)\n"
             "2. A JSON block fenced with ```json ... ``` containing both your State Patch "
