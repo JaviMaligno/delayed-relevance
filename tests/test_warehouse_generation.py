@@ -52,3 +52,46 @@ def test_every_order_is_satisfiable_on_the_canonical_trajectory():
 
 def test_spec_documents_what_to_do_with_an_unstocked_order():
     assert "not currently in stock" in Warehouse(horizon=10, seed=1).spec()
+
+
+def test_latent_rule_moves_only_the_notice_not_the_dependent_step():
+    # k es la variable controlada: el paso dependiente y la estanteria no cambian.
+    envs = {k: Warehouse(horizon=50, seed=0, latent_k=k) for k in (1, 5, 10, 20, 40)}
+    assert len({e.dependent_step for e in envs.values()}) == 1
+    assert len({e.quarantined_shelf for e in envs.values()}) == 1
+    for k, e in envs.items():
+        assert e.dependent_step - e.quarantine_from == k
+
+
+def test_latent_notice_is_not_actionable_when_it_arrives():
+    e = Warehouse(horizon=50, seed=0, latent_k=20)
+    assert e.script[e.quarantine_from].actionable is False
+    assert "facility_notice" in e.script[e.quarantine_from].text
+
+
+def test_latent_rule_changes_the_expected_action_but_the_control_does_not():
+    from dr.types import Action
+
+    def accion_en_el_paso_dependiente(**kw):
+        e = Warehouse(horizon=50, seed=0, **kw)
+        e.reset()
+        objetivo = e.dependent_step
+        while not e.done:
+            exp = e.expected_action()
+            if e.step_index == objetivo:
+                return exp
+            e.apply(exp)
+        return None
+
+    real = accion_en_el_paso_dependiente(latent_k=20)
+    control = accion_en_el_paso_dependiente(latent_k=20, latent_control=True)
+    assert real.args["shelf"] != control.args["shelf"]
+    assert real.args["shelf"] == control.args["shelf"] + 1
+
+
+def test_quarantine_is_not_active_before_the_notice_arrives():
+    e = Warehouse(horizon=50, seed=0, latent_k=20)
+    e.step_index = e.quarantine_from - 1
+    assert e._is_quarantined(e.quarantined_shelf) is False
+    e.step_index = e.quarantine_from
+    assert e._is_quarantined(e.quarantined_shelf) is True

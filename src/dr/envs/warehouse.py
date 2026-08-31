@@ -82,12 +82,99 @@ class Warehouse:
     del paper tiene algo que ganar, y la calibracion mide otra cosa.
     """
 
-    def __init__(self, horizon: int, seed: int) -> None:
+    def __init__(
+        self,
+        horizon: int,
+        seed: int,
+        latent_k: int | None = None,
+        latent_control: bool = False,
+    ) -> None:
+        """`latent_k` activa la sonda de relevancia diferida.
+
+        En el paso `t` el entorno anuncia que una estanteria queda en cuarentena. El
+        aviso es indistinguible del ruido de fondo y no afecta a la accion en curso.
+        En `t + latent_k` esa estanteria es la libre mas baja, asi que la accion
+        correcta es saltarsela. Quien perdio el aviso almacena ahi y falla.
+
+        `latent_control=True` pone en cuarentena una estanteria que nunca llega a ser
+        la libre mas baja: el aviso llega igual pero nunca es portante. Todos los
+        runtimes deben puntuar igual que sin sonda; si no, el efecto medido no es la
+        relevancia diferida sino la presencia del aviso.
+        """
         self.horizon = horizon
         self.seed = seed
+        self.latent_k = latent_k
+        self.latent_control = latent_control
         self.shelves: dict[int, tuple[str, int, str] | None] = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
+        self.quarantined_shelf: int | None = None
+        self.quarantine_from: int | None = None
+        self.dependent_step: int | None = None
         self.script: list[Observation] = self._build_script()
+        if latent_k is not None:
+            self._plant_latent_rule(latent_k)
+
+    def _canonical_first_empty(self) -> list[tuple[int, int]]:
+        """Simula la trayectoria del oraculo y devuelve (paso, estanteria libre mas baja)
+        para cada evento de entrada. Sirve para elegir donde plantar la regla latente."""
+        ocupadas: dict[int, str] = {}
+        puntos: list[tuple[int, int]] = []
+
+        def primera_libre() -> int:
+            i = 0
+            while i in ocupadas:
+                i += 1
+            return i
+
+        for paso, obs in enumerate(self.script):
+            if "inbound_pallet" in obs.text:
+                libre = primera_libre()
+                puntos.append((paso, libre))
+                ocupadas[libre] = event_field(obs.text, "sku") or ""
+            elif "outbound_order" in obs.text:
+                sku = event_field(obs.text, "sku") or ""
+                for i in sorted(ocupadas):
+                    if ocupadas[i] == sku:
+                        del ocupadas[i]
+                        break
+        return puntos
+
+    def _plant_latent_rule(self, k: int) -> None:
+        candidatos = [(p, s) for p, s in self._canonical_first_empty() if p - k >= 0]
+        if not candidatos:
+            raise ValueError(f"horizonte {self.horizon} demasiado corto para k={k}")
+        # El mas tardio deja el maximo de historia antes del aviso.
+        paso_dependiente, estanteria = candidatos[-1]
+        paso_aviso = paso_dependiente - k
+        self.dependent_step = paso_dependiente
+        self.quarantine_from = paso_aviso
+        # En la condicion de control la cuarentena cae sobre una estanteria que nunca
+        # llega a ser la libre mas baja, asi que el aviso nunca es portante.
+        self.quarantined_shelf = SHELF_COUNT - 1 if self.latent_control else estanteria
+        rng = random.Random(self.seed * 7919 + k)
+        self.script[paso_aviso] = Observation(
+            step=paso_aviso,
+            text=(
+                f"EVENT facility_notice | notice_id=FAC-{rng.randint(1000, 9999)} "
+                f"| shelf={self.quarantined_shelf} | status=quarantined "
+                f"| reason=scheduled_maintenance | effective=immediately "
+                f"| do_not_store=true | expires=none\n"
+                f"  raised_by=facilities_{rng.randint(100, 999)} "
+                f"| work_order=WO-{rng.randint(10000, 99999)} "
+                f"| contractor={rng.choice(CARRIERS)} "
+                f"| estimated_duration_days={rng.randint(3, 30)} "
+                f"| access_restricted=true | signage_posted=true"
+                + _audit_block(rng)
+            ),
+            actionable=False,
+        )
+
+    def _is_quarantined(self, shelf: int) -> bool:
+        return (
+            self.quarantined_shelf == shelf
+            and self.quarantine_from is not None
+            and self.step_index >= self.quarantine_from
+        )
 
     def _build_script(self) -> list[Observation]:
         rng = random.Random(self.seed)
@@ -202,7 +289,7 @@ class Warehouse:
 
     def _first_empty_shelf(self) -> int:
         for index in range(SHELF_COUNT):
-            if self.shelves[index] is None:
+            if self.shelves[index] is None and not self._is_quarantined(index):
                 return index
         raise RuntimeError("almacen lleno")
 
