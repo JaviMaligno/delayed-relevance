@@ -354,6 +354,10 @@ class Warehouse:
             "OUTPUT\n"
             "Emit exactly one action per step, in the exact form shown above, with a JSON\n"
             "object as the single argument. Do not emit two actions. Do not omit the JSON.\n"
+            "\n"
+            "Keep your reasoning under 60 words, then emit the action. Brevity is a hard\n"
+            "requirement: a long answer is cut off before the action is written, and a step\n"
+            "without an action counts as a wrong action.\n"
         )
 
     def schema_fields(self) -> list[str]:
