@@ -6,18 +6,34 @@
 estadística (§6). Entorno reimplementado desde la descripción de su §4.1 — SkillExecBench no
 tiene código público; se iguala la **densidad de contexto**, no el contenido literal.
 
-> ⚠️ **Revisión en curso: el ruido de muestreo es mayor de lo asumido.** La misma celda
-> (Sonnet, oráculo, `k=40`, seeds 0–9) medida tres veces con **prompts idénticos byte a byte**
-> dio **70%, 70% y 95%**. Y las dos corridas al 70% fallaron en *seeds distintas*, así que la
-> variación no viene del escenario sino del muestreo del modelo.
->
-> Consecuencia: **cada seed es una tirada, no una réplica**. `n=20 seeds` nunca fue `n=20
-> mediciones` de la condición, y las comparaciones ajustadas de este documento mezclan efecto
-> con ruido. Hay una medición en marcha (misma seed × 8 repeticiones) para cuantificarlo.
->
-> **Aguantan** las diferencias grandes: 0% → 82% (§4), 15% → 100% (§4), 7,54x → 1,39x (§3).
-> **En duda** las ajustadas, marcadas abajo con ⚠️: sobre todo Haiku 100% frente a Sonnet 82%,
-> que se declaró defendible con intervalos que asumían seeds independientes.
+## 0. El suelo de ruido, medido
+
+Antes de leer ninguna tabla. Misma seed, mismo prompt byte a byte, **8 repeticiones**
+(Sonnet, oráculo, `k=40`):
+
+```
+seed 0: 4/8 =  50%   OK X OK X OK X OK X
+seed 1: 6/8 =  75%   X OK OK OK OK OK X OK
+seed 2: 8/8 = 100%   OK OK OK OK OK OK OK OK
+```
+
+**La seed 0 alterna acierto y fallo ocho veces seguidas.** Los intervalos de las tres se
+solapan (22–78%, 41–93%, 68–100%): con ocho repeticiones no se distingue la seed 0 de la
+seed 2. La dispersión entre seeds es de **50 puntos**.
+
+Tres consecuencias que gobiernan todo lo demás:
+
+1. **Una seed es una tirada, no una réplica.** `n=20 seeds` nunca fue `n=20 mediciones` de la
+   condición: mezcla varianza de escenario con varianza de muestreo sin separarlas.
+2. **El suelo de ruido es de decenas de puntos.** Cualquier diferencia menor de ~30 pp medida
+   con seeds distintas es indistinguible de ruido.
+3. **Explica las tres anomalías** que se persiguieron con hipótesis mecánicas: el 1/3 que fue
+   82%, el 0% que fue 15%, y el 70% contra 95% entre dos corredores con prompts idénticos.
+   Ninguna necesitaba explicación.
+
+**Sobrevive** lo que separa decenas de puntos con muestra grande, o lo que no es una tasa de
+acierto: los tres hallazgos centrales (§2, §3, §4). **Se cae** la capa de matices construida
+encima, marcada con ⚠️.
 
 **Tres hallazgos independientes**, cada uno con su experimento y ninguno derivado de los otros:
 
@@ -70,6 +86,12 @@ del Apéndice A.4 no declara su semántica al modelo. Diseño 2×2, SKILL.state 
 |---|---|---|---|
 | **merge profundo** | **1.00 ±0.00** | 0.90 ±0.16 | +0.10 |
 | **merge superficial** | 0.99 ±0.01 | **0.73 ±0.11** | **+0.27** |
+
+⚠️ **Estos números son scores globales, no tasas de acierto de un solo paso**, así que no
+sufren el ruido de §0 con la misma severidad: promedian 172 eventos por episodio y sus
+desviaciones típicas (±0.00 a ±0.16) son mucho menores que el 50% de dispersión del acierto
+puntual. Aun así, con 5 seeds por celda **el efecto principal (+0.27) es sólido y la
+interacción (+0.17) es indicativa**: separar 0.90 de 1.00 pide más muestra.
 
 **Interacción: +0.17.** No declarar el contrato duele siempre, pero cuánto depende de si el
 runtime perdona. Con merge profundo el modelo que asume mal acierta igual; con merge
@@ -129,6 +151,11 @@ En el paso `t` el entorno anuncia una cuarentena de estantería; en `t+k` esa es
 libre más baja y la acción correcta es saltársela. **El paso dependiente y la estantería son
 idénticos para todo `k`**: solo se mueve la distancia entre la información y su uso.
 
+⚠️ **Esta curva no distingue efecto de ruido.** Cada celda son 5 seeds distintas, es decir 5
+tiradas de un proceso cuyo suelo de ruido es de decenas de puntos (§0). Las diferencias entre
+`k` contiguos (60% → 20% → 40% → 20%) están dentro del ruido; lo único legible es el contraste
+entre columnas con muestra grande. Se conserva por transparencia, no como resultado.
+
 Acierto en el paso dependiente, 5 seeds por celda:
 
 | `k` | ReAct (historia) | SKILL.state | + escotilla `notes` | + esquema oráculo |
@@ -148,9 +175,13 @@ Celda decisiva (`k=40`) con muestra ampliada:
 | oráculo | 11 | **100%** | ±0 pp | 0.974 | 265 |
 
 **El fallo no es de atención ni de distancia: es de representación.** El mismo modelo, el mismo
-hecho a la misma distancia, acierta 100% en vez de 15% por tener un campo donde ponerlo. Y un
-campo de texto libre, **sin decir para qué sirve**, recupera la mayor parte del efecto: la
-diferencia entre 60% y 100% es lo que vale saber de antemano qué importa.
+hecho a la misma distancia, acierta 100% en vez de 15% por tener un campo donde ponerlo. Son 85
+puntos con n=20 y n=22: muy por encima del suelo de ruido, y el hallazgo aguanta.
+
+⚠️ La escotilla (60%) **no se distingue del oráculo (100%) ni del resto** con esta muestra: los
+20 puntos que las separan caben en el ruido. Lo que sí se sostiene es que la escotilla está muy
+por encima del 15% sin campo. Es decir: **dar sitio funciona; cuánto importa el nombre del
+campo, no lo sabemos**.
 
 **Σ permanece acotado en las tres condiciones** (~110 → ~350 caracteres, el mismo 3x para todo
 `k`). La escotilla no compra robustez a cambio del O(1): sigue siendo O(1) con una constante
@@ -257,7 +288,17 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
 - **Intervalos:** los normales colapsan a cero con p=0 o p=1 y produjeron un IC de 100–100%,
   imposible. Se usa Wilson.
 
-## 7. Pendiente
+## 7. Cambio de protocolo obligado
+
+El spec fijaba **5 seeds por celda**. Eso no mide lo que dice medir: cada seed es una tirada.
+El protocolo para todo lo que venga es **pocas seeds y muchas repeticiones por seed**, con el
+acierto agregado sobre repeticiones y la dispersión entre seeds reportada aparte. Es más caro
+por celda y es la única forma de separar efecto de ruido.
+
+Regla operativa: **no afirmar una diferencia menor de ~30 puntos porcentuales** medida con
+seeds distintas sin repetir.
+
+## 8. Pendiente
 
 - Sonda A en Sonnet 5 en el resto de celdas (sin campo y escotilla) con muestra suficiente.
 - Por qué Sonnet no alcanza el techo de Haiku con el mismo campo: re-correr registrando los
