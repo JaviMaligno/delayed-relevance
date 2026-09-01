@@ -23,6 +23,8 @@ def run_episode(env, runtime) -> list[StepResult]:
                 output_tokens=sum(c.output_tokens for c in completions),
                 state_size=runtime.state_size(),
                 truncated=sum(1 for c in completions if c.truncated),
+                cache_read=sum(c.cache_read for c in completions),
+                cache_write=sum(c.cache_write for c in completions),
             )
         )
         # Un fallo de parseo es una accion nula, nunca la correcta: inyectar

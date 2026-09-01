@@ -13,6 +13,10 @@ class Completion:
     text: str
     prompt_tokens: int
     output_tokens: int
+    cache_read: int = 0
+    """Tokens servidos desde cache de prefijo. Cuestan 0.1x."""
+    cache_write: int = 0
+    """Tokens escritos a cache. Cuestan 1.25x."""
     truncated: bool = False
     """True si la generacion se corto por el tope de salida.
 
@@ -28,12 +32,19 @@ class FakeClient:
     responses: list[str]
     calls: list[tuple[str, str]] = field(default_factory=list)
 
-    def complete(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
-        self.calls.append((system, user))
+    def complete(self, system: str, user: str, max_tokens: int | None = None,
+                 cache_prefix: str | list[str] | None = None) -> Completion:
+        # El prefijo puede venir troceado en bloques; los tests inspeccionan el prompt
+        # completo, asi que se reconstruye tal como lo veria el modelo.
+        if isinstance(cache_prefix, list):
+            prefijo = "".join(cache_prefix)
+        else:
+            prefijo = cache_prefix or ""
+        self.calls.append((system, prefijo + user))
         text = self.responses.pop(0)
         return Completion(
             text=text,
-            prompt_tokens=len(system.split()) + len(user.split()),
+            prompt_tokens=len((prefijo + user).split()) + len(system.split()),
             output_tokens=len(text.split()),
         )
 
@@ -99,14 +110,15 @@ class AnthropicClient:
         else:
             raise ValueError(f"proveedor desconocido: {self.provider}")
 
-    def complete(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
+    def complete(self, system: str, user: str, max_tokens: int | None = None,
+                 cache_prefix: str | list[str] | None = None) -> Completion:
         """Reintenta los fallos transitorios: una rejilla de una hora no puede morir
         por un parpadeo de red. Los errores de autenticacion o de peticion invalida
         NO se reintentan, porque no se arreglan esperando."""
         delay = 2.0
         for attempt in range(RETRY_ATTEMPTS):
             try:
-                return self._create(system, user, max_tokens)
+                return self._create(system, user, max_tokens, cache_prefix)
             except (anthropic.APIConnectionError, anthropic.RateLimitError) as error:
                 if attempt == RETRY_ATTEMPTS - 1:
                     raise
@@ -119,17 +131,40 @@ class AnthropicClient:
                 delay = min(delay * 2, 60.0)
         raise RuntimeError("inalcanzable")
 
-    def _create(self, system: str, user: str, max_tokens: int | None = None) -> Completion:
+    def _create(self, system: str, user: str, max_tokens: int | None = None,
+                cache_prefix: str | list[str] | None = None) -> Completion:
+        """`cache_prefix` es la parte estable del mensaje y lleva el punto de corte de
+        cache. Para ReAct es la historia acumulada, que es un prefijo append-only y por
+        tanto el caso ideal de cache. Para SKILL.state no hay prefijo estable en el
+        mensaje: su bloque de estado muta en cada paso e invalida la cache desde ahi.
+        Esa asimetria es justo lo que hay que medir, no algo que corregir."""
+        contenido: list[dict] = []
+        if cache_prefix:
+            # El cache casa por BLOQUES, no por caracteres. Un unico bloque que crece
+            # nunca coincide con el del paso anterior, asi que reescribe el prefijo
+            # entero cada vez, y escribir cuesta 1.25x: asi el cache ENCARECE en vez
+            # de abaratar. La historia se manda troceada en bloques inmutables, con el
+            # punto de corte en el ultimo, para que los anteriores si casen.
+            bloques = cache_prefix if isinstance(cache_prefix, list) else [cache_prefix]
+            for indice, bloque in enumerate(bloques):
+                entrada: dict = {"type": "text", "text": bloque}
+                if indice == len(bloques) - 1:
+                    entrada["cache_control"] = {"type": "ephemeral"}
+                contenido.append(entrada)
+        contenido.append({"type": "text", "text": user})
         response = self._client.messages.create(
             model=self.model,
             max_tokens=max_tokens or self.max_tokens,
-            system=system,
-            messages=[{"role": "user", "content": user}],
+            system=[{"type": "text", "text": system,
+                     "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": contenido}],
         )
         text = "".join(block.text for block in response.content if block.type == "text")
         return Completion(
             text=text,
             prompt_tokens=response.usage.input_tokens,
             output_tokens=response.usage.output_tokens,
+            cache_read=getattr(response.usage, "cache_read_input_tokens", 0) or 0,
+            cache_write=getattr(response.usage, "cache_creation_input_tokens", 0) or 0,
             truncated=response.stop_reason == "max_tokens",
         )

@@ -12,7 +12,7 @@ from dr.config import load_env
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
-from dr.metrics import aggregate, score
+from dr.metrics import aggregate, coste_efectivo, score
 from dr.runner import run_episode
 from dr.runtimes.memory import MemoryRuntime
 from dr.runtimes.react import ReActRuntime
@@ -88,11 +88,15 @@ def main() -> None:
         runtimes = {k: v for k, v in runtimes.items() if k in args.only}
     for name, build in runtimes.items():
         scores, prompts, totals = [], [], []
+        brutos, efectivos = [], []
         overflowed: list[int] = []
         for seed in range(args.seeds):
             key = f"{name}:{seed}"
             if key in done:
                 cached = done[key]
+                if "entrada_bruta" in cached:
+                    brutos.append(cached["entrada_bruta"])
+                    efectivos.append(cached["entrada_efectiva"])
                 if cached.get("overflowed"):
                     overflowed.append(seed)
                 else:
@@ -119,7 +123,12 @@ def main() -> None:
             scores.append(score(results))
             prompts.append(sum(r.prompt_tokens for r in results) / len(results))
             totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
+            cst = coste_efectivo(results)
+            brutos.append(cst['tokens_brutos'])
+            efectivos.append(cst['entrada_efectiva'])
             done[key] = {
+                "entrada_bruta": brutos[-1],
+                "entrada_efectiva": efectivos[-1],
                 "score": scores[-1],
                 "avg_prompt": prompts[-1],
                 "total": totals[-1],
@@ -134,6 +143,8 @@ def main() -> None:
                 "avg_prompt_tokens": finite(aggregate(prompts).mean),
                 "total_tokens": finite(aggregate(totals).mean),
                 "overflowed_seeds": overflowed,
+                "entrada_bruta": finite(aggregate(brutos).mean) if brutos else None,
+                "entrada_efectiva": finite(aggregate(efectivos).mean) if efectivos else None,
             }
         else:
             table[name] = {

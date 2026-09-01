@@ -89,3 +89,5 @@ class StepResult:
     output_tokens: int
     state_size: int = 0
     truncated: int = 0
+    cache_read: int = 0
+    cache_write: int = 0
