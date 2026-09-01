@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter
+from pathlib import Path
 
 from dr.config import load_env
 from dr.envs.warehouse import Warehouse
@@ -93,11 +93,23 @@ def main() -> None:
 
     load_env()
     keep_system_awake()
+    # Checkpoint por episodio: la primera version no lo tenia y una parada de la
+    # maquina se llevo ocho episodios ya pagados.
+    ruta = Path("results") / "patch_style.json"
+    ruta.parent.mkdir(exist_ok=True)
+    hechos: dict = json.loads(ruta.read_text()) if ruta.exists() else {}
     resumen: dict[str, list[dict]] = {}
     for modelo in args.models:
         resumen[modelo] = []
         for seed in args.seeds:
+            clave = f"{modelo}:{seed}:k{args.k}"
+            if clave in hechos:
+                resumen[modelo].append(hechos[clave])
+                print(f"{clave} (cacheado)", flush=True)
+                continue
             r = episodio(modelo, seed, args.k, args.max_tokens)
+            hechos[clave] = r
+            ruta.write_text(json.dumps(hechos, indent=2))
             resumen[modelo].append(r)
             print(
                 f"{modelo} seed={seed}: acierto={'OK' if r['acierto'] else 'X'} "
