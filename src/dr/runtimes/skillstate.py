@@ -74,9 +74,12 @@ class SkillStateRuntime:
             "Provide your response with:\n"
             "1. Step-by-step reasoning (will be discarded after execution)\n"
             "2. A JSON block fenced with ```json ... ``` containing both your State Patch "
-            'and your Action. The JSON block MUST have exactly these two keys: '
-            '{ "state_patch": { <dict: your state updates, set keys to null to delete> }, '
-            '"action": "<string: the exact command you want to execute>" }'
+            'and your Action. The JSON block MUST have exactly these two top-level keys: '
+            '"state_patch" and "action". Every schema field goes INSIDE "state_patch" - '
+            'never at the top level. Shape:\n'
+            '   {"state_patch": {"<schema field>": <value>, ...}, '
+            '"action": "<the exact command to execute>"}\n'
+            "   Set a schema field to null inside state_patch to delete it."
         )
 
     def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
