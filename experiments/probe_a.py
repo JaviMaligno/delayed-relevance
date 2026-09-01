@@ -80,6 +80,8 @@ def main() -> None:
                         help="Dar al esquema un campo para la cuarentena (cota superior).")
     parser.add_argument("--hatch-schema", action="store_true",
                         help="Campo `notes` de texto libre: sitio sin decir para que.")
+    parser.add_argument("--reminder", action="store_true",
+                        help="Repetir el aviso en cada observacion posterior.")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
@@ -87,7 +89,7 @@ def main() -> None:
     load_env()
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
     client = AnthropicClient(model=args.model, provider=args.provider, max_tokens=args.max_tokens)
-    sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "")
+    sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "") + ("_reminder" if args.reminder else "")
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
     Path(args.out).mkdir(exist_ok=True)
@@ -118,7 +120,8 @@ def main() -> None:
                 env = Warehouse(horizon=args.horizon, seed=seed, latent_k=k,
                                 latent_control=args.control,
                                 oracle_schema=args.oracle_schema,
-                                hatch_schema=args.hatch_schema)
+                                hatch_schema=args.hatch_schema,
+                                reminder=args.reminder)
                 try:
                     resultados, acierto = run_episode_probe(env, build(client, env))
                 except anthropic.BadRequestError as error:

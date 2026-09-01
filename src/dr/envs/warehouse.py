@@ -90,6 +90,7 @@ class Warehouse:
         latent_control: bool = False,
         oracle_schema: bool = False,
         hatch_schema: bool = False,
+        reminder: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -109,6 +110,7 @@ class Warehouse:
         self.latent_control = latent_control
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
+        self.reminder = reminder
         self.shelves: dict[int, tuple[str, int, str] | None] = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
         self.quarantined_shelf: int | None = None
@@ -285,7 +287,21 @@ class Warehouse:
         return self.script[0]
 
     def observe(self) -> Observation:
-        return self.script[self.step_index]
+        obs = self.script[self.step_index]
+        if not self.reminder or self.quarantined_shelf is None:
+            return obs
+        if self.quarantine_from is None or self.step_index <= self.quarantine_from:
+            return obs
+        # Condicion de recordatorio: el hecho viaja PEGADO a la decision, en cada
+        # observacion posterior al aviso. El agente no necesita recordar nada ni
+        # tener donde guardarlo. Separa "el campo del esquema sirve de almacen" de
+        # "sirve de recordatorio situado donde el modelo mira".
+        return Observation(
+            step=obs.step,
+            text=(f"STANDING NOTICE | shelf={self.quarantined_shelf} | status=quarantined "
+                  f"| do_not_store=true\n" + obs.text),
+            actionable=obs.actionable,
+        )
 
     @property
     def done(self) -> bool:
