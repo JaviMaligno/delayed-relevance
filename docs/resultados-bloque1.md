@@ -6,6 +6,19 @@
 estadística (§6). Entorno reimplementado desde la descripción de su §4.1 — SkillExecBench no
 tiene código público; se iguala la **densidad de contexto**, no el contenido literal.
 
+> ⚠️ **Revisión en curso: el ruido de muestreo es mayor de lo asumido.** La misma celda
+> (Sonnet, oráculo, `k=40`, seeds 0–9) medida tres veces con **prompts idénticos byte a byte**
+> dio **70%, 70% y 95%**. Y las dos corridas al 70% fallaron en *seeds distintas*, así que la
+> variación no viene del escenario sino del muestreo del modelo.
+>
+> Consecuencia: **cada seed es una tirada, no una réplica**. `n=20 seeds` nunca fue `n=20
+> mediciones` de la condición, y las comparaciones ajustadas de este documento mezclan efecto
+> con ruido. Hay una medición en marcha (misma seed × 8 repeticiones) para cuantificarlo.
+>
+> **Aguantan** las diferencias grandes: 0% → 82% (§4), 15% → 100% (§4), 7,54x → 1,39x (§3).
+> **En duda** las ajustadas, marcadas abajo con ⚠️: sobre todo Haiku 100% frente a Sonnet 82%,
+> que se declaró defendible con intervalos que asumían seeds independientes.
+
 **Tres hallazgos independientes**, cada uno con su experimento y ninguno derivado de los otros:
 
 1. La ventaja de coste del método es **1,4x, no 7,5x**, una vez se paga la factura real (§3).
@@ -161,8 +174,14 @@ Haiku    OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK
 Sonnet   X  X  OK OK OK OK OK OK OK X  OK OK OK OK OK OK OK OK OK OK OK X
 ```
 
-Los intervalos no se solapan, así que la diferencia es defendible. Los cuatro fallos de Sonnet
-están repartidos, no agrupados al principio, así que no es azar de ordenación.
+⚠️ **Esta comparación está retirada a la espera de la medición de ruido.** Se declaró
+defendible porque los intervalos no se solapaban, pero esos intervalos asumen que cada seed es
+una réplica independiente. No lo es: la celda de Sonnet remedida dio 70%, 70% y 95% con
+prompts idénticos. El 82% es una de esas tiradas, y el 100% de Haiku podría serlo también.
+
+Lo que **sí** se sostiene es que el efecto replica en las dos familias: sin campo 15% y 0%,
+con campo 100% y 82%. La dirección y el orden de magnitud son los mismos. Lo que **no** puede
+afirmarse todavía es que los techos difieran.
 
 **Dos lecturas, y ambas importan:**
 
@@ -227,8 +246,16 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
   oráculo (n=22 en ambos) pero no en el resto de celdas de la sonda A ni en el bloque 1.
 - **Memoria de corto alcance del entorno**, cuantificada en §1. Es la limitación que motiva la
   sonda A y la que hace que subir el horizonte no aporte.
-- **n pequeño en varias celdas.** Los IC95 están en la tabla. Un 0% y un 100% con n=5 son la
-  misma afirmación: "no lo he medido suficiente" — el 0% inicial de §4 resultó ser 15% con n=20.
+- **Las seeds no son réplicas.** Es la limitación más seria y se descubrió tarde. Con el
+  prompt fijo, la única fuente de variación entre episodios de la misma seed es el muestreo
+  del modelo, y es grande: 70%, 70% y 95% en tres medidas de la misma celda. Comparar
+  condiciones con seeds distintas mezcla efecto y ruido. Las diferencias grandes sobreviven;
+  las ajustadas no.
+- **n pequeño en varias celdas.** Un 0% y un 100% con n=5 son la misma afirmación: "no lo he
+  medido suficiente" — el 0% inicial de §4 resultó ser 15% con n=20, y el 1/3 de Sonnet
+  resultó ser 82% con n=22.
+- **Intervalos:** los normales colapsan a cero con p=0 o p=1 y produjeron un IC de 100–100%,
+  imposible. Se usa Wilson.
 
 ## 7. Pendiente
 
