@@ -27,8 +27,16 @@ from dr.metrics import score
 from dr.runtimes.skillstate import SkillStateRuntime
 
 
-def episodio(cliente, seed: int, k: int, oracle: bool) -> dict:
-    env = Warehouse(horizon=50, seed=seed, latent_k=k, oracle_schema=oracle)
+CONDICIONES = {
+    "none":     dict(),                          # sin campo: el hecho no tiene donde vivir
+    "oracle":   dict(oracle_schema=True),        # campo que nombra lo que hay que guardar
+    "hatch":    dict(hatch_schema=True),         # campo libre `notes`, sin decir para que
+    "reminder": dict(reminder=True),             # el hecho repetido en cada observacion
+}
+
+
+def episodio(cliente, seed: int, k: int, condicion: str) -> dict:
+    env = Warehouse(horizon=50, seed=seed, latent_k=k, **CONDICIONES[condicion])
     rt = SkillStateRuntime(cliente, env.spec(), env.schema_fields())
     env.reset()
     acierto = None
@@ -65,7 +73,7 @@ def main() -> None:
     parser.add_argument("--repeats", type=int, default=8)
     parser.add_argument("--k", type=int, default=40)
     parser.add_argument("--model", default="claude-sonnet-5")
-    parser.add_argument("--oracle-schema", action="store_true", default=True)
+    parser.add_argument("--condicion", default="oracle", choices=list(CONDICIONES))
     parser.add_argument("--max-tokens", type=int, default=600)
     args = parser.parse_args()
 
@@ -78,10 +86,10 @@ def main() -> None:
 
     for seed in args.seeds:
         for rep in range(args.repeats):
-            clave = f"{args.model}:s{seed}:r{rep}:k{args.k}"
+            clave = f"{args.model}:{args.condicion}:s{seed}:r{rep}:k{args.k}"
             if clave in hechos:
                 continue
-            r = episodio(cliente, seed, args.k, args.oracle_schema)
+            r = episodio(cliente, seed, args.k, args.condicion)
             hechos[clave] = r
             ruta.write_text(json.dumps(hechos, indent=2))
             print(f"seed={seed} rep={rep}: {'OK' if r['acierto'] else 'X'} score={r['score']:.3f}",
@@ -90,7 +98,8 @@ def main() -> None:
     print("\nRUIDO DENTRO DE CADA SEED (mismo escenario, distintas tiradas)")
     tasas = []
     for seed in args.seeds:
-        v = [x for c, x in hechos.items() if f":s{seed}:" in c and c.endswith(f"k{args.k}")]
+        v = [x for c, x in hechos.items()
+             if f":{args.condicion}:s{seed}:" in c and c.endswith(f"k{args.k}")]
         if not v:
             continue
         a = sum(x["acierto"] for x in v)
