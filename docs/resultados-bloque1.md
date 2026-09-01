@@ -147,9 +147,41 @@ mayor, despreciable frente a los 16.437 tokens de la historia completa.
 no es recordar: lo que salva al agente no es haber guardado el dato, es haber decidido en el
 momento de verlo que merecía guardarse.
 
-**Réplica cruzada, parcial y no concluyente.** Sonnet 5 sin campo: 0/3, coherente con el 15% de
-Haiku. Con oráculo: **1/3**, frente al 100% de Haiku sobre 11 episodios. Esa divergencia no
-está explicada y n=3 no da para interpretarla.
+### Réplica cruzada de modelo
+
+Celda del oráculo a `k=40`, **muestras igualadas**:
+
+| modelo | acierto | IC95 (Wilson) |
+|---|---|---|
+| Haiku 4.5 | **22/22 = 100%** | 85–100% |
+| Sonnet 5 | **18/22 = 82%** | 66–98% |
+
+```
+Haiku    OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK OK
+Sonnet   X  X  OK OK OK OK OK OK OK X  OK OK OK OK OK OK OK OK OK OK OK X
+```
+
+Los intervalos no se solapan, así que la diferencia es defendible. Los cuatro fallos de Sonnet
+están repartidos, no agrupados al principio, así que no es azar de ordenación.
+
+**Dos lecturas, y ambas importan:**
+
+- **El efecto replica en las dos familias.** Sin campo: 15% (Haiku) y 0% (Sonnet). Con campo:
+  100% y 82%. La dirección y la magnitud son las mismas, así que el hallazgo es sobre **diseño
+  de esquemas**, no sobre un modelo concreto.
+- **El techo sí depende del modelo.** Haiku aprovecha el campo perfectamente; Sonnet falla una
+  de cada cinco veces con el mismo campo disponible. La recomendación se matiza: dar sitio en
+  el esquema ayuda siempre, pero no garantiza por sí solo el acierto.
+
+**Hipótesis sin comprobar** para la diferencia de techo: Sonnet emite parches mínimos —solo la
+clave que cambia— mientras Haiku tiende a reemitir el estado entero, lo que le da
+auto-corrección. Con merge profundo ambas estrategias son válidas, pero la de Sonnet no
+re-sincroniza nunca. **No está medido**: los checkpoints guardan score, acierto y tamaño de Σ,
+no los parches, así que comprobarlo exige re-correr con registro de parches.
+
+Nota de método: esta celda empezó en **1/3** con n=3 y llegó a 82% con n=22. Se llegó a
+formular una explicación mecánica para aquel 1/3 antes de comprobar que hubiera algo que
+explicar. **Antes de explicar por qué dos condiciones difieren, comprobar que difieren.**
 
 ---
 
@@ -191,8 +223,8 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
 - **Sin `temperature`**: eliminada del SDK. Reproducibilidad estadística, no bit a bit. Aun
   así, repetir dos seeds tras un cambio de prompt dio scores **idénticos al tercer decimal**:
   el fallo medido es estructural, no un tropiezo de muestreo.
-- **Un entorno y casi un solo modelo.** Warehouse, Haiku 4.5, con Sonnet 5 solo parcial y
-  divergente en una celda.
+- **Un solo entorno.** Warehouse. La réplica cruzada de modelo está cerrada en la celda del
+  oráculo (n=22 en ambos) pero no en el resto de celdas de la sonda A ni en el bloque 1.
 - **Memoria de corto alcance del entorno**, cuantificada en §1. Es la limitación que motiva la
   sonda A y la que hace que subir el horizonte no aporte.
 - **n pequeño en varias celdas.** Los IC95 están en la tabla. Un 0% y un 100% con n=5 son la
@@ -200,7 +232,9 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
 
 ## 7. Pendiente
 
-- Sonda A en Sonnet 5 con muestra suficiente; la divergencia del oráculo (1/3) sin explicar.
+- Sonda A en Sonnet 5 en el resto de celdas (sin campo y escotilla) con muestra suficiente.
+- Por qué Sonnet no alcanza el techo de Haiku con el mismo campo: re-correr registrando los
+  parches para contrastar la hipótesis del estilo de parcheo.
 - Sonda C: invalidación retroactiva e irrecuperabilidad.
 - Segundo entorno (Software Repository) para separar hallazgo de dominio.
 - Coste efectivo medido también en la sonda A.
