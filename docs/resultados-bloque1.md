@@ -41,8 +41,9 @@ encima, marcada con ⚠️.
 2. El modo de fallo que el paper atribuye al modelo se reproduce **manipulando solo el
    runtime**, sin tocar el modelo (§2).
 3. Lo que salva a un agente no es retener el dato sino **tenerlo delante en el momento de
-   usarlo**: 12% → 83% (§4). Y el sitio tiene que **nombrar qué guardar**: un campo genérico
-   se queda en 21%, indistinguible de no tener ninguno.
+   usarlo**. Repetir el hecho vigente en cada observación lleva a Haiku de **0/24 a 24/24** y a
+   Sonnet de 12% a 83% (§4). Un campo de esquema funciona solo si **nombra qué guardar**; uno
+   genérico se queda en 21%, indistinguible de no tener ninguno.
 
 ---
 
@@ -228,6 +229,24 @@ Lo que queda en pie:
   que sobrevive.
 - **El efecto es absoluto donde el escenario lo permite y nulo donde no.** Seeds 1 y 2: de 0/8
   a 8/8. Seed 0: todas las condiciones entre 0% y 62%, indistinguibles.
+
+### El recordatorio, en dos modelos
+
+Misma seed × 8 repeticiones, diseño pareado, `k=40`:
+
+| modelo | sin campo | recordatorio |
+|---|---|---|
+| **Haiku 4.5** | **0/24 = 0%** (IC 0–14%) | **24/24 = 100%** (IC 86–100%) |
+| Sonnet 5 | 3/24 = 12% (IC 4–31%) | 20/24 = 83% (IC 64–93%) |
+
+En Haiku el efecto es **absoluto**: 0/24 → 24/24, sin una sola excepción en ninguna dirección,
+en las tres seeds. Los intervalos no se solapan en ninguno de los dos modelos.
+
+**Es el resultado mejor medido del proyecto** y el único que cumple las tres condiciones a la
+vez: protocolo pareado con repeticiones, réplica en dos familias de modelo, y una intervención
+que **no exige anticipar nada**. El oráculo funciona pero requiere que el diseñador del esquema
+ya hubiera previsto el hecho; el campo genérico no funciona; repetir lo vigente funciona sin
+previsión.
 
 ### Réplica cruzada de modelo
 
