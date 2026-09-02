@@ -40,8 +40,9 @@ encima, marcada con ⚠️.
 1. La ventaja de coste del método es **1,4x, no 7,5x**, una vez se paga la factura real (§3).
 2. El modo de fallo que el paper atribuye al modelo se reproduce **manipulando solo el
    runtime**, sin tocar el modelo (§2).
-3. Lo que salva a un agente no es retener el dato sino **tener dónde ponerlo**: 15% → 100% de
-   acierto por añadir un campo al esquema (§4).
+3. Lo que salva a un agente no es retener el dato sino **tenerlo delante en el momento de
+   usarlo**: 12% → 83% (§4). Y el sitio tiene que **nombrar qué guardar**: un campo genérico
+   se queda en 21%, indistinguible de no tener ninguno.
 
 ---
 
@@ -178,10 +179,9 @@ Celda decisiva (`k=40`) con muestra ampliada:
 hecho a la misma distancia, acierta 100% en vez de 15% por tener un campo donde ponerlo. Son 85
 puntos con n=20 y n=22: muy por encima del suelo de ruido, y el hallazgo aguanta.
 
-⚠️ La escotilla (60%) **no se distingue del oráculo (100%) ni del resto** con esta muestra: los
-20 puntos que las separan caben en el ruido. Lo que sí se sostiene es que la escotilla está muy
-por encima del 15% sin campo. Es decir: **dar sitio funciona; cuánto importa el nombre del
-campo, no lo sabemos**.
+⚠️ **El 60% de la escotilla en esta tabla es ruido y quedó refutado.** Medido con
+repeticiones sobre las mismas seeds da **21% (IC 9–40%)**, indistinguible de no tener campo.
+Ver la medición pareada más abajo, que es la que vale.
 
 **Σ permanece acotado en las tres condiciones** (~110 → ~350 caracteres, el mismo 3x para todo
 `k`). La escotilla no compra robustez a cambio del O(1): sigue siendo O(1) con una constante
@@ -197,27 +197,37 @@ Sonnet 5, `k=40`, **misma seed × 8 repeticiones** — el único bloque del docu
 el protocolo de §7. Cada seed es su propio control: lo único que cambia entre columnas es
 dónde vive el hecho.
 
-| seed | sin campo | oráculo (en Σ) | recordatorio (en obs) |
-|---|---|---|---|
-| 0 | 3/8 = 38% | 4/8 = 50% | 5/8 = 62% |
-| 1 | **0/8 = 0%** | 6/8 = 75% | 7/8 = 88% |
-| 2 | **0/8 = 0%** | 8/8 = **100%** | 8/8 = **100%** |
-| **agregado** | **3/24 = 12%** | **18/24 = 75%** | **20/24 = 83%** |
-| IC95 Wilson | **4–31%** | 55–88% | 64–93% |
+| seed | sin campo | campo libre `notes` | oráculo (en Σ) | recordatorio (en obs) |
+|---|---|---|---|---|
+| 0 | 3/8 = 38% | **0/8 = 0%** | 4/8 = 50% | 5/8 = 62% |
+| 1 | 0/8 = 0% | 4/8 = 50% | 6/8 = 75% | 7/8 = 88% |
+| 2 | 0/8 = 0% | 1/8 = 12% | 8/8 = **100%** | 8/8 = **100%** |
+| **agregado** | **3/24 = 12%** | **5/24 = 21%** | **18/24 = 75%** | **20/24 = 83%** |
+| IC95 Wilson | **4–31%** | **9–40%** | 55–88% | 64–93% |
 
-**El intervalo de "sin campo" no toca a los otros dos.** 63 y 71 puntos de diferencia, muy por
-encima del suelo de ruido. Es la afirmación central del proyecto, y es la única medida en
-diseño pareado.
+Las condiciones se parten en **dos grupos que no se tocan**: {sin campo 12%, campo libre 21%}
+frente a {oráculo 75%, recordatorio 83%}. Dentro de cada grupo los intervalos se solapan;
+entre grupos, no.
 
-Dos lecturas que solo el pareado hace visibles:
+**El campo genérico NO funciona.** 21% con intervalo 9–40%, solapado con el 12% de no tener
+nada y sin llegar al 55% del oráculo. En la seed 0 saca **0/8, peor que sin campo (3/8)**: un
+campo sin nombre útil puede distraer.
 
-- **Oráculo y recordatorio son equivalentes** (75% vs 83%, intervalos solapados). Repetir el
-  hecho en cada observación hace lo mismo que un campo de esquema con el nombre correcto —
-  sin runtime de estado, sin esquema que acertar de antemano, sin operador de merge. **No
-  importa dónde pongas el hecho; importa que esté en algún sitio.**
+> ⚠️ Esta medición **retira** una recomendación anterior de este documento. Con una tirada por
+> seed, el campo libre había dado 60% y se convirtió en el consejo práctico del proyecto
+> ("deja una escotilla en tu esquema"). Medido con repeticiones, es falso.
+
+Lo que queda en pie:
+
+- **Dar sitio no basta: el sitio tiene que decir qué guardar.** El oráculo funciona porque el
+  campo se llama `quarantined_shelves` y anticipa el hecho. Es decir, un runtime de estado
+  explícito **solo protege contra lo que su diseñador ya previó** — la limitación L1 que el
+  paper declara y no mide, ahora con número.
+- **El recordatorio funciona sin exigir anticipación** (83%). El entorno emite el aviso y basta
+  con no dejar de mostrarlo: no hay esquema que acertar. Es la única recomendación aplicable
+  que sobrevive.
 - **El efecto es absoluto donde el escenario lo permite y nulo donde no.** Seeds 1 y 2: de 0/8
-  a 8/8. Seed 0: las tres condiciones entre 38% y 62%, indistinguibles. Dar sitio al hecho no
-  arregla un escenario duro por otros motivos; **rescata los que fallaban solo por esto**.
+  a 8/8. Seed 0: todas las condiciones entre 0% y 62%, indistinguibles.
 
 ### Réplica cruzada de modelo
 
