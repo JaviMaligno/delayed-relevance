@@ -191,6 +191,34 @@ mayor, despreciable frente a los 16.437 tokens de la historia completa.
 no es recordar: lo que salva al agente no es haber guardado el dato, es haber decidido en el
 momento de verlo que merecía guardarse.
 
+### Medición pareada, con el protocolo corregido
+
+Sonnet 5, `k=40`, **misma seed × 8 repeticiones** — el único bloque del documento medido con
+el protocolo de §7. Cada seed es su propio control: lo único que cambia entre columnas es
+dónde vive el hecho.
+
+| seed | sin campo | oráculo (en Σ) | recordatorio (en obs) |
+|---|---|---|---|
+| 0 | 3/8 = 38% | 4/8 = 50% | 5/8 = 62% |
+| 1 | **0/8 = 0%** | 6/8 = 75% | 7/8 = 88% |
+| 2 | **0/8 = 0%** | 8/8 = **100%** | 8/8 = **100%** |
+| **agregado** | **3/24 = 12%** | **18/24 = 75%** | **20/24 = 83%** |
+| IC95 Wilson | **4–31%** | 55–88% | 64–93% |
+
+**El intervalo de "sin campo" no toca a los otros dos.** 63 y 71 puntos de diferencia, muy por
+encima del suelo de ruido. Es la afirmación central del proyecto, y es la única medida en
+diseño pareado.
+
+Dos lecturas que solo el pareado hace visibles:
+
+- **Oráculo y recordatorio son equivalentes** (75% vs 83%, intervalos solapados). Repetir el
+  hecho en cada observación hace lo mismo que un campo de esquema con el nombre correcto —
+  sin runtime de estado, sin esquema que acertar de antemano, sin operador de merge. **No
+  importa dónde pongas el hecho; importa que esté en algún sitio.**
+- **El efecto es absoluto donde el escenario lo permite y nulo donde no.** Seeds 1 y 2: de 0/8
+  a 8/8. Seed 0: las tres condiciones entre 38% y 62%, indistinguibles. Dar sitio al hecho no
+  arregla un escenario duro por otros motivos; **rescata los que fallaban solo por esto**.
+
 ### Réplica cruzada de modelo
 
 Celda del oráculo a `k=40`, **muestras igualadas**:
