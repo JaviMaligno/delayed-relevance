@@ -6,6 +6,12 @@ pasos despues de haber sido observada.
 
 Diseno completo: ver el spec enlazado desde el articulo.
 
+- [`docs/resultados-bloque1.md`](docs/resultados-bloque1.md) — replica, coste efectivo con
+  cache, sonda de relevancia diferida, y que afirmacion sobrevive a que nivel de ruido.
+- [`docs/metodo-medir-el-instrumento.md`](docs/metodo-medir-el-instrumento.md) — notas de
+  metodo: medir el ruido del instrumento antes que el fenomeno, y los ocho artefactos que
+  costo aprenderlo.
+
 ## Uso
 
     pip install -e ".[dev]"
