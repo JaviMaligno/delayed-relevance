@@ -36,6 +36,7 @@ CONDICIONES = {
     "oracle":   dict(oracle_schema=True),        # campo que nombra lo que hay que guardar
     "hatch":    dict(hatch_schema=True),         # campo libre `notes`, sin decir para que
     "reminder": dict(reminder=True),             # el hecho repetido en cada observacion
+    "invalidation": dict(invalidation=True),     # sonda C: correccion retroactiva
 }
 
 
@@ -50,10 +51,14 @@ RUNTIMES = {
 def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillstate") -> dict:
     kwargs = dict(CONDICIONES[condicion])
     sin_sonda = kwargs.pop("sin_sonda", False)
+    invalidacion = kwargs.pop("invalidation", False)
+    if invalidacion:
+        kwargs["invalidation_k"] = k
     # `plain` reproduce la celda de la Tabla 1: mismo entorno, sin regla latente. Sirve
     # para comprobar si los 1.00 de esa tabla, medidos con 3-5 tiradas sueltas,
     # aguantan al repetir.
-    env = Warehouse(horizon=50, seed=seed, latent_k=None if sin_sonda else k, **kwargs)
+    env = Warehouse(horizon=50, seed=seed,
+                    latent_k=None if (sin_sonda or invalidacion) else k, **kwargs)
     rt = RUNTIMES[runtime](cliente, env)
     env.reset()
     acierto = None
@@ -70,6 +75,14 @@ def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillst
         resultados.append(StepResult(step=env.step_index, actionable=env.observe().actionable,
                                      correct=correcta, prompt_tokens=0, output_tokens=0))
         env.apply(accion if accion is not None else esperada)
+    if invalidacion and env.invalidation_from is not None:
+        # METRICA DE PROMEDIO, no de evento: score sobre el tramo POSTERIOR al aviso.
+        # Todos los Store de ese tramo dependen de haber aplicado la correccion, asi
+        # que promedia quince o veinte eventos en vez de mirar uno solo.
+        posteriores = [r for r in resultados if r.step > env.invalidation_from]
+        return {"acierto": bool(acierto), "score": score(resultados),
+                "score_posterior": score(posteriores),
+                "n_posteriores": sum(1 for r in posteriores if r.actionable)}
     return {"acierto": bool(acierto), "score": score(resultados)}
 
 

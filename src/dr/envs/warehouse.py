@@ -91,6 +91,7 @@ class Warehouse:
         oracle_schema: bool = False,
         hatch_schema: bool = False,
         reminder: bool = False,
+        invalidation_k: int | None = None,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -111,6 +112,9 @@ class Warehouse:
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
         self.reminder = reminder
+        self.invalidation_k = invalidation_k
+        self.invalidation_from: int | None = None
+        self.invalidated_shelf: int | None = None
         self.shelves: dict[int, tuple[str, int, str] | None] = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
         self.quarantined_shelf: int | None = None
@@ -119,6 +123,8 @@ class Warehouse:
         self.script: list[Observation] = self._build_script()
         if latent_k is not None:
             self._plant_latent_rule(latent_k)
+        if invalidation_k is not None:
+            self._plant_invalidation(invalidation_k)
 
     def _canonical_first_empty(self) -> list[tuple[int, int]]:
         """Simula la trayectoria del oraculo y devuelve (paso, estanteria libre mas baja)
@@ -174,6 +180,53 @@ class Warehouse:
             ),
             actionable=False,
         )
+
+    def _plant_invalidation(self, k: int) -> None:
+        """Sonda C: invalidacion retroactiva, con metrica de PROMEDIO y no de evento.
+
+        En el paso `t` el agente almacena en la estanteria S. En `t+k` llega un aviso
+        de que aquella colocacion nunca se completo y S esta en realidad vacia. Desde
+        ese momento S es la libre mas baja, asi que **todos** los `Store` posteriores
+        dependen de haber aplicado la correccion, no solo el siguiente.
+
+        Esa eleccion es deliberada: la misma pregunta formulada como "acerto el paso
+        siguiente" tiene ~50 puntos de ruido de muestreo; formulada como score sobre
+        el tramo posterior promedia quince o veinte eventos y el ruido casi desaparece.
+        Ademas mide mejor lo que interesa: no si se recupero una vez, sino si SIGUIO
+        recuperado.
+        """
+        puntos = self._canonical_first_empty()
+        candidatos = [(p, s) for p, s in puntos if p + k < self.horizon - 4]
+        if not candidatos:
+            raise ValueError(f"horizonte {self.horizon} demasiado corto para invalidacion k={k}")
+        paso_store, estanteria = candidatos[0]
+        self.invalidated_shelf = estanteria
+        self.invalidation_from = paso_store + k
+        rng = random.Random(self.seed * 6271 + k)
+        self.script[self.invalidation_from] = Observation(
+            step=self.invalidation_from,
+            text=(
+                f"EVENT correction_notice | notice_id=COR-{rng.randint(1000, 9999)} "
+                f"| corrects_step={paso_store} | shelf={estanteria} "
+                f"| finding=putaway_never_completed | shelf_is_now=empty "
+                f"| stock_removed=true | confidence=confirmed\n"
+                f"  raised_by=cycle_count_team_{rng.randint(10, 99)} "
+                f"| audit_ref=AUD-{rng.randint(10000, 99999)} "
+                f"| recount_performed=true | discrepancy_closed=true "
+                f"| supersedes_prior_record=true"
+                + _audit_block(rng)
+            ),
+            actionable=False,
+        )
+
+    def _apply_invalidation_if_due(self) -> None:
+        """Al llegar el aviso, el estado VERDADERO cambia: la estanteria queda vacia."""
+        if (
+            self.invalidation_from is not None
+            and self.invalidated_shelf is not None
+            and self.step_index == self.invalidation_from
+        ):
+            self.shelves[self.invalidated_shelf] = None
 
     def _is_quarantined(self, shelf: int) -> bool:
         return (
@@ -284,6 +337,7 @@ class Warehouse:
     def reset(self) -> Observation:
         self.shelves = {i: None for i in range(SHELF_COUNT)}
         self.step_index = 0
+        self._apply_invalidation_if_due()
         return self.script[0]
 
     def observe(self) -> Observation:
@@ -365,6 +419,7 @@ class Warehouse:
                 self.shelves[target] = self.shelves[source]
                 self.shelves[source] = None
         self.step_index += 1
+        self._apply_invalidation_if_due()
 
     def spec(self) -> str:
         return (
