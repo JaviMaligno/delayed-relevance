@@ -345,6 +345,36 @@ desmentido, y en cada paso posterior tiene que resolver la contradicción otra v
 Es el único eje del proyecto donde el estado explícito gana claramente, y eso importa para la
 credibilidad del resto: una réplica que solo encuentra defectos es sospechosa de sesgo.
 
+## 4.ter Segundo entorno: el empate de Warehouse no era general
+
+Repo implementa el mismo protocolo pero con **dependencias densas**: mergear una PR invalida
+el CI de todas las demás PRs abiertas de esa rama, sin que llegue ningún evento avisándolo.
+Control de dificultad: 50% de los merges exigen recordar la regla (en Warehouse, 70% de los
+Store). T=50, 3 seeds × 3 repeticiones.
+
+| entorno | SKILL.state | ReAct |
+|---|---|---|
+| Warehouse (estado plano) | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| **Repo (dependencias densas)** | **0,974 ± 0,023** | **0,895 ± 0,090** |
+
+**El empate a 1.00 era una propiedad de Warehouse.** Con estado plano e independiente, la
+historia completa basta; con dependencias densas, no. La dispersión de ReAct es cuatro veces
+mayor, la misma firma que en la sonda C.
+
+### La tesis que unifica los dos ejes donde el estado gana
+
+| eje | qué cambia sin aviso | SKILL.state | ReAct |
+|---|---|---|---|
+| Sonda C: invalidación retroactiva | un hecho anotado deja de valer | 0,997 | 0,941 |
+| Repo: dependencias densas | un hecho caduca por acción propia | 0,974 | 0,895 |
+
+> **El estado explícito no gana por comprimir: gana por tener un único sitio donde la verdad
+> se actualiza.** Cuando nada cambia retroactivamente, la historia completa empata y sale más
+> barata con caché (§3). Cuando la verdad caduca en silencio, el estado gana.
+
+El paper no formula esta tesis, y sus limitaciones L2 predicen lo contrario. Es la aportación
+conceptual de la réplica.
+
 ## 5. Artefactos encontrados, y el patrón que forman
 
 Siete, todos con la misma firma: **un contrato implícito entre runtime y modelo**. El runtime
