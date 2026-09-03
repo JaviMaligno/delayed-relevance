@@ -188,9 +188,19 @@ Ver la medición pareada más abajo, que es la que vale.
 `k`). La escotilla no compra robustez a cambio del O(1): sigue siendo O(1) con una constante
 mayor, despreciable frente a los 16.437 tokens de la historia completa.
 
-**ReAct a `k=40` acierta el 0%** con el boletín literalmente presente en el contexto. Conservar
-no es recordar: lo que salva al agente no es haber guardado el dato, es haber decidido en el
-momento de verlo que merecía guardarse.
+**ReAct con el boletín en el contexto: 2/12 = 17%** (IC 5–45%), medido con repeticiones. El
+0% que aparecía con seeds sueltas era ruido — la cuarta afirmación de este documento que cae al
+medirla bien.
+
+Lo que **no** cambia es la conclusión: el intervalo de ReAct no se acerca al 86–100% del
+recordatorio. **Conservar la historia entera y no conservar nada caen en el mismo grupo**
+(17% y 0%); lo que separa es tener el hecho delante en el momento de usarlo.
+
+| condición (Haiku, `k=40`) | acierto | IC95 |
+|---|---|---|
+| ReAct, historia completa | 2/12 = 17% | 5–45% |
+| SKILL.state, sin campo | 0/24 = 0% | 0–14% |
+| SKILL.state + recordatorio | **24/24 = 100%** | 86–100% |
 
 ### Medición pareada, con el protocolo corregido
 
