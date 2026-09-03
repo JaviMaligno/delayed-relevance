@@ -76,6 +76,25 @@ promediar escenarios distintos.
 
 ---
 
+## 3.bis No todas las métricas sufren igual
+
+El ruido no depende del cuidado con que midas, sino de **qué** mides:
+
+| métrica | ruido | por qué |
+|---|---|---|
+| Acierto de un solo evento | ~50 pp | una tirada, sin promediar |
+| Promedio sobre ~170 eventos por episodio | despreciable | el promediado amortigua |
+| Contabilidad (tokens, caché, coste) | ninguno | no hay muestreo |
+
+En nuestro caso: la celda del score global remedida con 3 escenarios × 6 repeticiones dio
+**18/18 exactos, desviación cero**, mientras el acierto de un solo paso oscilaba 50 puntos en
+el mismo entorno. Las cuatro afirmaciones que se cayeron eran todas del primer tipo.
+
+**Consecuencia de diseño:** si tu pregunta se puede formular como un promedio sobre muchos
+eventos en vez de como el acierto de uno, fórmulala así. Cuesta lo mismo medirla y el ruido
+baja un orden de magnitud. Cuando no se pueda —y a veces el evento único *es* la pregunta,
+como en nuestra sonda—, presupuesta repeticiones desde el principio.
+
 ## 4. Señales de que estás midiendo tu instrumento
 
 Cada una nos costó al menos un día.

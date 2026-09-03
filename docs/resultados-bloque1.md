@@ -31,9 +31,18 @@ Tres consecuencias que gobiernan todo lo demás:
    82%, el 0% que fue 15%, y el 70% contra 95% entre dos corredores con prompts idénticos.
    Ninguna necesitaba explicación.
 
-**Sobrevive** lo que separa decenas de puntos con muestra grande, o lo que no es una tasa de
-acierto: los tres hallazgos centrales (§2, §3, §4). **Se cae** la capa de matices construida
-encima, marcada con ⚠️.
+**Lo que decide qué sobrevive no es el cuidado con que se midió, sino el TIPO de métrica:**
+
+| métrica | ruido de muestreo | ejemplo | veredicto |
+|---|---|---|---|
+| Acierto de **un solo paso** | brutal (~50 pp) | sonda A, el 0% de ReAct | 4 afirmaciones caídas |
+| **Promedio sobre ~170 eventos** | despreciable | Tabla 1, 2×2 del merge | intacto |
+| **Contabilidad de tokens** | ninguno | coste efectivo (§3) | intacto |
+
+Comprobado: la celda de la Tabla 1 remedida con 3 seeds × 6 repeticiones da **18/18 exactos,
+desviación cero**. El promediado sobre 172 eventos accionables amortigua el ruido casi por
+completo. Medir un **evento único** con un LLM es intrínsecamente ruidoso, y todo lo que se
+cayó en este proyecto era de esa clase.
 
 **Tres hallazgos independientes**, cada uno con su experimento y ninguno derivado de los otros:
 
