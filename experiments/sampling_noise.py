@@ -24,7 +24,10 @@ from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
 from dr.metrics import score
+from dr.runtimes.memory import MemoryRuntime
+from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
+from dr.runtimes.stateful import StatefulRuntime
 
 
 CONDICIONES = {
@@ -35,9 +38,17 @@ CONDICIONES = {
 }
 
 
-def episodio(cliente, seed: int, k: int, condicion: str) -> dict:
+RUNTIMES = {
+    "skillstate": lambda c, e: SkillStateRuntime(c, e.spec(), e.schema_fields()),
+    "react": lambda c, e: ReActRuntime(c, e.spec()),
+    "memory": lambda c, e: MemoryRuntime(c, e.spec()),
+    "stateful": lambda c, e: StatefulRuntime(c, e.spec(), e.schema_fields()),
+}
+
+
+def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillstate") -> dict:
     env = Warehouse(horizon=50, seed=seed, latent_k=k, **CONDICIONES[condicion])
-    rt = SkillStateRuntime(cliente, env.spec(), env.schema_fields())
+    rt = RUNTIMES[runtime](cliente, env)
     env.reset()
     acierto = None
     resultados = []
@@ -74,6 +85,7 @@ def main() -> None:
     parser.add_argument("--k", type=int, default=40)
     parser.add_argument("--model", default="claude-sonnet-5")
     parser.add_argument("--condicion", default="oracle", choices=list(CONDICIONES))
+    parser.add_argument("--runtime", default="skillstate", choices=list(RUNTIMES))
     parser.add_argument("--max-tokens", type=int, default=600)
     args = parser.parse_args()
 
@@ -86,10 +98,11 @@ def main() -> None:
 
     for seed in args.seeds:
         for rep in range(args.repeats):
-            clave = f"{args.model}:{args.condicion}:s{seed}:r{rep}:k{args.k}"
+            pref = "" if args.runtime == "skillstate" else f"{args.runtime}:"
+            clave = f"{pref}{args.model}:{args.condicion}:s{seed}:r{rep}:k{args.k}"
             if clave in hechos:
                 continue
-            r = episodio(cliente, seed, args.k, args.condicion)
+            r = episodio(cliente, seed, args.k, args.condicion, args.runtime)
             hechos[clave] = r
             ruta.write_text(json.dumps(hechos, indent=2))
             print(f"seed={seed} rep={rep}: {'OK' if r['acierto'] else 'X'} score={r['score']:.3f}",
@@ -98,8 +111,10 @@ def main() -> None:
     print("\nRUIDO DENTRO DE CADA SEED (mismo escenario, distintas tiradas)")
     tasas = []
     for seed in args.seeds:
+        pref = "" if args.runtime == "skillstate" else f"{args.runtime}:"
         v = [x for c, x in hechos.items()
-             if f":{args.condicion}:s{seed}:" in c and c.endswith(f"k{args.k}")]
+             if c.startswith(pref if pref else args.model)
+             and f":{args.condicion}:s{seed}:" in c and c.endswith(f"k{args.k}")]
         if not v:
             continue
         a = sum(x["acierto"] for x in v)
