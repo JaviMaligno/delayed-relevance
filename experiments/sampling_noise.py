@@ -20,6 +20,7 @@ import math
 from pathlib import Path
 
 from dr.config import load_env
+from dr.envs.repo import Repo
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
@@ -29,6 +30,8 @@ from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
 from dr.runtimes.stateful import StatefulRuntime
 
+
+ENTORNOS = {"warehouse": Warehouse, "repo": Repo}
 
 CONDICIONES = {
     "plain":    dict(sin_sonda=True),             # Tabla 1: sin sonda de relevancia diferida
@@ -48,7 +51,8 @@ RUNTIMES = {
 }
 
 
-def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillstate") -> dict:
+def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillstate",
+             entorno: str = "warehouse") -> dict:
     kwargs = dict(CONDICIONES[condicion])
     sin_sonda = kwargs.pop("sin_sonda", False)
     invalidacion = kwargs.pop("invalidation", False)
@@ -57,8 +61,13 @@ def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillst
     # `plain` reproduce la celda de la Tabla 1: mismo entorno, sin regla latente. Sirve
     # para comprobar si los 1.00 de esa tabla, medidos con 3-5 tiradas sueltas,
     # aguantan al repetir.
-    env = Warehouse(horizon=50, seed=seed,
-                    latent_k=None if (sin_sonda or invalidacion) else k, **kwargs)
+    if entorno == "repo":
+        # El segundo entorno no lleva sondas: sirve como control de dominio de la
+        # replica, no como sonda. Si un hallazgo aparece en los dos, no es del dominio.
+        env = Repo(horizon=50, seed=seed)
+    else:
+        env = Warehouse(horizon=50, seed=seed,
+                        latent_k=None if (sin_sonda or invalidacion) else k, **kwargs)
     rt = RUNTIMES[runtime](cliente, env)
     env.reset()
     acierto = None
@@ -106,6 +115,7 @@ def main() -> None:
     parser.add_argument("--model", default="claude-sonnet-5")
     parser.add_argument("--condicion", default="oracle", choices=list(CONDICIONES))
     parser.add_argument("--runtime", default="skillstate", choices=list(RUNTIMES))
+    parser.add_argument("--entorno", default="warehouse", choices=list(ENTORNOS))
     parser.add_argument("--max-tokens", type=int, default=600)
     args = parser.parse_args()
 
@@ -118,11 +128,12 @@ def main() -> None:
 
     for seed in args.seeds:
         for rep in range(args.repeats):
-            pref = "" if args.runtime == "skillstate" else f"{args.runtime}:"
+            pref = ("" if args.runtime == "skillstate" else f"{args.runtime}:")
+            pref = pref if args.entorno == "warehouse" else f"{args.entorno}:{pref}"
             clave = f"{pref}{args.model}:{args.condicion}:s{seed}:r{rep}:k{args.k}"
             if clave in hechos:
                 continue
-            r = episodio(cliente, seed, args.k, args.condicion, args.runtime)
+            r = episodio(cliente, seed, args.k, args.condicion, args.runtime, args.entorno)
             hechos[clave] = r
             ruta.write_text(json.dumps(hechos, indent=2))
             print(f"seed={seed} rep={rep}: {'OK' if r['acierto'] else 'X'} score={r['score']:.3f}",
@@ -131,7 +142,8 @@ def main() -> None:
     print("\nRUIDO DENTRO DE CADA SEED (mismo escenario, distintas tiradas)")
     tasas = []
     for seed in args.seeds:
-        pref = "" if args.runtime == "skillstate" else f"{args.runtime}:"
+        pref = ("" if args.runtime == "skillstate" else f"{args.runtime}:")
+        pref = pref if args.entorno == "warehouse" else f"{args.entorno}:{pref}"
         v = [x for c, x in hechos.items()
              if c.startswith(pref if pref else args.model)
              and f":{args.condicion}:s{seed}:" in c and c.endswith(f"k{args.k}")]
