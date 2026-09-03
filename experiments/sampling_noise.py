@@ -31,6 +31,7 @@ from dr.runtimes.stateful import StatefulRuntime
 
 
 CONDICIONES = {
+    "plain":    dict(sin_sonda=True),             # Tabla 1: sin sonda de relevancia diferida
     "none":     dict(),                          # sin campo: el hecho no tiene donde vivir
     "oracle":   dict(oracle_schema=True),        # campo que nombra lo que hay que guardar
     "hatch":    dict(hatch_schema=True),         # campo libre `notes`, sin decir para que
@@ -47,14 +48,20 @@ RUNTIMES = {
 
 
 def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillstate") -> dict:
-    env = Warehouse(horizon=50, seed=seed, latent_k=k, **CONDICIONES[condicion])
+    kwargs = dict(CONDICIONES[condicion])
+    sin_sonda = kwargs.pop("sin_sonda", False)
+    # `plain` reproduce la celda de la Tabla 1: mismo entorno, sin regla latente. Sirve
+    # para comprobar si los 1.00 de esa tabla, medidos con 3-5 tiradas sueltas,
+    # aguantan al repetir.
+    env = Warehouse(horizon=50, seed=seed, latent_k=None if sin_sonda else k, **kwargs)
     rt = RUNTIMES[runtime](cliente, env)
     env.reset()
     acierto = None
     resultados = []
     while not env.done:
         esperada = env.expected_action()
-        es_dependiente = env.step_index == env.dependent_step
+        es_dependiente = (env.dependent_step is not None
+                          and env.step_index == env.dependent_step)
         accion, completions = rt.act(env.observe())
         correcta = accion is not None and accion.render() == esperada.render()
         if es_dependiente:
