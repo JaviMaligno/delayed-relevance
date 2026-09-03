@@ -311,6 +311,40 @@ explicar. **Antes de explicar por qué dos condiciones difieren, comprobar que d
 
 ---
 
+## 4.bis Sonda C: invalidación retroactiva — el eje donde el método gana
+
+En el paso `t` el agente almacena en la estantería S. En `t+10` un aviso corrige que aquella
+colocación nunca se completó y S está vacía. Desde ahí S es la libre más baja, así que **todos
+los `Store` posteriores** dependen de haber aplicado la corrección.
+
+**Métrica de promedio por diseño**, no de evento único: score sobre los ~28 eventos accionables
+posteriores al aviso. La misma pregunta como "acertó el paso siguiente" habría exigido ocho o
+diez repeticiones por celda; así bastan tres para orientar. Es la primera sonda diseñada con la
+lección de §0 en vez de corregida después.
+
+| runtime | score posterior | IC95 de la media | n |
+|---|---|---|---|
+| SKILL.state | **0,997 ± 0,010** | 0,991–1,003 | 12 |
+| ReAct | **0,941 ± 0,047** | 0,911–0,972 | 9 |
+
+Diferencia +0,056, **intervalos no solapados**. Referencia sin sonda: SKILL.state 1,000 ± 0,000.
+
+**El fallo de ReAct es determinista por escenario.** Los nueve episodios dan 0,931 tres veces,
+0,893 tres veces y 1,0 tres veces — tres repeticiones idénticas por seed. No es ruido: en las
+seeds donde el conflicto aparece, se resuelve mal **siempre igual**.
+
+**Mecanismo:** el estado explícito tiene **un solo sitio que corregir**, y corregirlo es la
+operación que ya sabe hacer. La historia no borra nada: acumula el registro original y su
+desmentido, y en cada paso posterior tiene que resolver la contradicción otra vez.
+
+> Esto **contradice la limitación L2 del paper**, que predecía que el método fallaría cuando el
+> objetivo dependiera de la procedencia. Los datos apuntan al revés, y por un motivo que sus
+> autores no articulan: **tener un único lugar donde vive la verdad es una ventaja cuando la
+> verdad cambia.**
+
+Es el único eje del proyecto donde el estado explícito gana claramente, y eso importa para la
+credibilidad del resto: una réplica que solo encuentra defectos es sospechosa de sesgo.
+
 ## 5. Artefactos encontrados, y el patrón que forman
 
 Siete, todos con la misma firma: **un contrato implícito entre runtime y modelo**. El runtime
