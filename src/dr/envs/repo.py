@@ -10,15 +10,11 @@ dominio.
 Implementa el mismo protocolo `Environment` que Warehouse, asi que los cuatro runtimes
 y las dos sondas funcionan sin tocarlos.
 
-ESTADO: NO USAR TODAVIA. El control de dificultad dice que la regla portante se activa
-en el 5% de los merges a T=25 y en el 22% a T=50. Con esa tasa un agente que ignore la
-regla por completo saca ~0.95 y el entorno no discrimina entre runtimes: mide otra cosa.
-Comparar con Warehouse, donde el 70% de los Store exigen la regla.
-
-El arreglo no es otro sesgo en el generador — ya se intento y da tasas inconsistentes
-entre horizontes. Hay que **construir el guion desde el resultado**: fijar de antemano
-cuantos merges exigiran la regla (la mitad, por ejemplo) y generar el resto alrededor,
-como hace la sonda A, que planta el paso dependiente primero y coloca el aviso despues.
+CONTROL DE DIFICULTAD SUPERADO: la regla portante se activa en el 50% de los merges a
+T=50 y el 40% a T=25, con el 68% de eventos accionables. Un agente que la ignore cae de
+forma medible. La primera version generaba por sesgo aleatorio y daba entre 5% y 22%
+segun el horizonte, que es un entorno que no discrimina; se reescribio el generador
+para construir el guion DESDE EL RESULTADO.
 
 Decisiones tomadas con lo aprendido en el bloque 1:
   - la metrica es un promedio sobre eventos accionables, nunca un acierto puntual;
@@ -81,90 +77,97 @@ class Repo:
         self.script: list[Observation] = self._build_script()
 
     def _build_script(self) -> list[Observation]:
+        """Construye el guion DESDE EL RESULTADO, no por sesgo aleatorio.
+
+        La unidad es un ciclo de dos PRs sobre la misma rama:
+          1. se abre A            -> RunTests
+          2. CI de A en verde     -> Approve
+          3. se abre B            -> RunTests
+          4. CI de B en verde     -> Approve
+          5. se pide integrar A   -> Merge   (valido; INVALIDA a B)
+          6. se pide integrar B   -> RunTests (la regla portante: B ya no esta verde)
+
+        Dos solicitudes de merge por ciclo y exactamente una exige recordar la regla:
+        50% por construccion, y estable en cualquier horizonte. Generar por sesgo
+        aleatorio daba entre el 5% y el 22% segun el horizonte, que es un entorno que
+        no discrimina.
+        """
         rng = random.Random(self.seed)
         script: list[Observation] = []
-        abiertas: list[str] = []
-        verdes: list[str] = []
-        rama_de: dict[str, str] = {}
-        # PRs que estaban verdes y quedaron invalidadas por un merge en su rama. El
-        # guion sesga las solicitudes de merge hacia ellas: si la regla portante casi
-        # nunca se activa, el entorno no discrimina entre runtimes y mide otra cosa.
-        invalidadas: list[str] = []
-        for paso in range(self.horizon):
-            forzar_apertura = paso < 2 or not abiertas
-            tipo = "abrir" if forzar_apertura else rng.choice(
-                ["abrir", "ci_ok", "merge", "telemetria"]
-            )
-            if tipo == "ci_ok" and not abiertas:
-                tipo = "abrir"
-            if tipo == "merge" and not verdes and not invalidadas:
-                tipo = "ci_ok" if abiertas else "abrir"
 
-            if tipo == "abrir":
-                pr = f"PR-{rng.randint(1000, 9999)}"
-                rama = rng.choice(RAMAS)
-                abiertas.append(pr)
-                rama_de[pr] = rama
-                texto = (
-                    f"EVENTO pr_abierta | pr={pr} | rama_destino={rama} "
-                    f"| autor={rng.choice(AUTORES)} | commits={rng.randint(1, 12)} "
-                    f"| estado_ci=pendiente | borrador=false | conflictos=ninguno\n"
-                    f"  titulo=cambio_rutinario_{rng.randint(100, 999)} "
-                    f"| base_sha={rng.randint(10**7, 10**8):x} "
-                    f"| head_sha={rng.randint(10**7, 10**8):x} "
-                    f"| aprobaciones={rng.randint(0, 3)} | bloqueada=false"
-                    + _cola_auditoria(rng)
-                )
-                script.append(Observation(step=paso, text=texto, actionable=True))
-            elif tipo == "ci_ok":
-                pr = rng.choice(abiertas)
-                if pr not in verdes:
-                    verdes.append(pr)
-                texto = (
-                    f"EVENTO ci_finalizado | pr={pr} | resultado=exito "
-                    f"| suite={rng.choice(SUITES)} | fallos=0 "
-                    f"| duracion_s={rng.randint(60, 1200)}\n"
-                    f"  reintentos_ci=0 | flaky_detectado=false "
-                    f"| commit_probado={rng.randint(10**7, 10**8):x} "
-                    f"| entorno=ci-prod | paralelismo={rng.randint(1, 16)}"
-                    + _cola_auditoria(rng)
-                )
-                script.append(Observation(step=paso, text=texto, actionable=True))
-            elif tipo == "merge":
-                # Con probabilidad alta se pide integrar una PR ya invalidada: es el
-                # caso que exige recordar la regla, y sin el la tarea es trivial.
-                if invalidadas and (not verdes or rng.random() < 0.6):
-                    pr = rng.choice(invalidadas)
-                    invalidadas.remove(pr)
-                else:
-                    pr = rng.choice(verdes)
-                    verdes.remove(pr)
-                    if pr in abiertas:
-                        abiertas.remove(pr)
-                    # El merge invalida las demas PRs verdes de la misma rama.
-                    rama_pr = rama_de.get(pr)
-                    for otra in list(verdes):
-                        if rama_de.get(otra) == rama_pr:
-                            verdes.remove(otra)
-                            invalidadas.append(otra)
-                texto = (
-                    f"EVENTO solicitud_merge | pr={pr} | solicitante={rng.choice(AUTORES)} "
-                    f"| urgencia={rng.choice(['normal', 'alta', 'baja'])} "
-                    f"| ventana_despliegue=abierta\n"
-                    f"  aprobaciones_requeridas=2 | aprobaciones_obtenidas=2 "
-                    f"| checklist_completo=true | rollback_preparado=true"
-                    + _cola_auditoria(rng)
-                )
-                script.append(Observation(step=paso, text=texto, actionable=True))
-            else:
-                texto = (
-                    f"EVENTO telemetria | metrica={rng.choice(['cola_ci', 'uso_runners', 'latencia_git'])} "
-                    f"| valor={rng.uniform(1, 200):.1f} | estado=nominal "
-                    f"| ventana=15m | requiere_accion=false\n"
-                    f"  panel=infra | umbral_superado=false | guardia={rng.choice(AUTORES)}"
-                    + _cola_auditoria(rng)
-                )
-                script.append(Observation(step=paso, text=texto, actionable=False))
+        def telemetria(paso: int) -> Observation:
+            texto = (
+                f"EVENTO telemetria | metrica={rng.choice(['cola_ci', 'uso_runners', 'latencia_git'])} "
+                f"| valor={rng.uniform(1, 200):.1f} | estado=nominal "
+                f"| ventana=15m | requiere_accion=false\n"
+                f"  panel=infra | umbral_superado=false | guardia={rng.choice(AUTORES)}"
+                + _cola_auditoria(rng)
+            )
+            return Observation(step=paso, text=texto, actionable=False)
+
+        def abrir(paso: int, pr: str, rama: str) -> Observation:
+            texto = (
+                f"EVENTO pr_abierta | pr={pr} | rama_destino={rama} "
+                f"| autor={rng.choice(AUTORES)} | commits={rng.randint(1, 12)} "
+                f"| estado_ci=pendiente | borrador=false | conflictos=ninguno\n"
+                f"  titulo=cambio_rutinario_{rng.randint(100, 999)} "
+                f"| base_sha={rng.randint(10**7, 10**8):x} "
+                f"| head_sha={rng.randint(10**7, 10**8):x} "
+                f"| aprobaciones={rng.randint(0, 3)} | bloqueada=false"
+                + _cola_auditoria(rng)
+            )
+            return Observation(step=paso, text=texto, actionable=True)
+
+        def ci_ok(paso: int, pr: str) -> Observation:
+            texto = (
+                f"EVENTO ci_finalizado | pr={pr} | resultado=exito "
+                f"| suite={rng.choice(SUITES)} | fallos=0 "
+                f"| duracion_s={rng.randint(60, 1200)}\n"
+                f"  reintentos_ci=0 | flaky_detectado=false "
+                f"| commit_probado={rng.randint(10**7, 10**8):x} "
+                f"| entorno=ci-prod | paralelismo={rng.randint(1, 16)}"
+                + _cola_auditoria(rng)
+            )
+            return Observation(step=paso, text=texto, actionable=True)
+
+        def pedir_merge(paso: int, pr: str) -> Observation:
+            texto = (
+                f"EVENTO solicitud_merge | pr={pr} | solicitante={rng.choice(AUTORES)} "
+                f"| urgencia={rng.choice(['normal', 'alta', 'baja'])} "
+                f"| ventana_despliegue=abierta\n"
+                f"  aprobaciones_requeridas=2 | aprobaciones_obtenidas=2 "
+                f"| checklist_completo=true | rollback_preparado=true"
+                + _cola_auditoria(rng)
+            )
+            return Observation(step=paso, text=texto, actionable=True)
+
+        # Plantilla del ciclo: cada entrada produce un evento. `None` es telemetria,
+        # que se intercala para diluir y para dar eventos no accionables.
+        plantilla = ["abrir_a", "ci_a", None, "abrir_b", "ci_b", None,
+                     "merge_a", None, "merge_b"]
+        paso = 0
+        while paso < self.horizon:
+            rama = rng.choice(RAMAS)
+            a = f"PR-{rng.randint(1000, 9999)}"
+            b = f"PR-{rng.randint(1000, 9999)}"
+            for etiqueta in plantilla:
+                if paso >= self.horizon:
+                    break
+                if etiqueta is None:
+                    script.append(telemetria(paso))
+                elif etiqueta == "abrir_a":
+                    script.append(abrir(paso, a, rama))
+                elif etiqueta == "ci_a":
+                    script.append(ci_ok(paso, a))
+                elif etiqueta == "abrir_b":
+                    script.append(abrir(paso, b, rama))
+                elif etiqueta == "ci_b":
+                    script.append(ci_ok(paso, b))
+                elif etiqueta == "merge_a":
+                    script.append(pedir_merge(paso, a))
+                elif etiqueta == "merge_b":
+                    script.append(pedir_merge(paso, b))
+                paso += 1
         return script
 
     def reset(self) -> Observation:
