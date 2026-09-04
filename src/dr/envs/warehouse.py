@@ -91,6 +91,7 @@ class Warehouse:
         oracle_schema: bool = False,
         hatch_schema: bool = False,
         reminder: bool = False,
+        reminder_raw: bool = False,
         invalidation_k: int | None = None,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
@@ -112,6 +113,14 @@ class Warehouse:
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
         self.reminder = reminder
+        # `reminder_raw` repite el aviso ENTERO, tal como llego, en vez de los tres
+        # campos portantes. Separa dos explicaciones del efecto del recordatorio que
+        # hasta ahora iban juntas: si basta con que el hecho este disponible, o si hace
+        # falta ademas que este destilado. El aviso original ya dice `do_not_store=true`,
+        # asi que la diferencia entre las dos condiciones no es la instruccion: es que
+        # una trae 3 campos y la otra los mismos 3 enterrados entre otros quince.
+        self.reminder_raw = reminder_raw
+        self.quarantine_notice_text: str | None = None
         self.invalidation_k = invalidation_k
         self.invalidation_from: int | None = None
         self.invalidated_shelf: int | None = None
@@ -180,6 +189,7 @@ class Warehouse:
             ),
             actionable=False,
         )
+        self.quarantine_notice_text = self.script[paso_aviso].text
 
     def _plant_invalidation(self, k: int) -> None:
         """Sonda C: invalidacion retroactiva, con metrica de PROMEDIO y no de evento.
@@ -342,10 +352,19 @@ class Warehouse:
 
     def observe(self) -> Observation:
         obs = self.script[self.step_index]
-        if not self.reminder or self.quarantined_shelf is None:
+        if not (self.reminder or self.reminder_raw) or self.quarantined_shelf is None:
             return obs
         if self.quarantine_from is None or self.step_index <= self.quarantine_from:
             return obs
+        if self.reminder_raw:
+            # Misma posicion y misma cabecera que el recordatorio destilado; lo unico
+            # que cambia es que el contenido viene sin destilar.
+            return Observation(
+                step=obs.step,
+                text=("STANDING NOTICE (as originally filed):\n"
+                      f"{self.quarantine_notice_text}\n" + obs.text),
+                actionable=obs.actionable,
+            )
         # Condicion de recordatorio: el hecho viaja PEGADO a la decision, en cada
         # observacion posterior al aviso. El agente no necesita recordar nada ni
         # tener donde guardarlo. Separa "el campo del esquema sirve de almacen" de

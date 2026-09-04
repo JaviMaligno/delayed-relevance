@@ -38,7 +38,8 @@ CONDICIONES = {
     "none":     dict(),                          # sin campo: el hecho no tiene donde vivir
     "oracle":   dict(oracle_schema=True),        # campo que nombra lo que hay que guardar
     "hatch":    dict(hatch_schema=True),         # campo libre `notes`, sin decir para que
-    "reminder": dict(reminder=True),             # el hecho repetido en cada observacion
+    "reminder": dict(reminder=True),             # el hecho DESTILADO en cada observacion
+    "reminder_raw": dict(reminder_raw=True),     # el aviso ENTERO, sin destilar
     "invalidation": dict(invalidation=True),     # sonda C: correccion retroactiva
 }
 
@@ -89,7 +90,11 @@ def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillst
             prompt_tokens=sum(c.prompt_tokens for c in completions),
             output_tokens=sum(c.output_tokens for c in completions),
             cache_read=sum(c.cache_read for c in completions),
-            cache_write=sum(c.cache_write for c in completions)))
+            cache_write=sum(c.cache_write for c in completions),
+            # El truncamiento se cuenta SIEMPRE: una respuesta cortada no llega a la
+            # linea de accion y puntua como error. Sin este contador, 19 de 50 pasos
+            # perdidos por presupuesto de salida se leyeron como un hallazgo cruzado.
+            truncated=sum(1 for c in completions if c.truncated)))
         env.apply(accion if accion is not None else esperada)
     if invalidacion and env.invalidation_from is not None:
         # METRICA DE PROMEDIO, no de evento: score sobre el tramo POSTERIOR al aviso.
@@ -99,12 +104,14 @@ def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillst
         coste = coste_efectivo(resultados)
         return {"acierto": bool(acierto), "score": score(resultados),
                 "score_posterior": score(posteriores),
+                "truncadas": sum(r.truncated for r in resultados),
                 "n_posteriores": sum(1 for r in posteriores if r.actionable),
                 "entrada_bruta": coste["tokens_brutos"],
                 "entrada_efectiva": coste["entrada_efectiva"],
                 "salida": sum(r.output_tokens for r in resultados)}
     coste = coste_efectivo(resultados)
     return {"acierto": bool(acierto), "score": score(resultados),
+            "truncadas": sum(r.truncated for r in resultados),
             "entrada_bruta": coste["tokens_brutos"],
             "entrada_efectiva": coste["entrada_efectiva"],
             "salida": sum(r.output_tokens for r in resultados)}
