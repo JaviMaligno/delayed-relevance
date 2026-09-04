@@ -102,11 +102,24 @@ Frente a su Tabla 1 (Gemini-3-Flash, mismos horizontes):
 A T=200 su brazo de transcript falla una decisión de cada cuatro; el nuestro falla **una de
 unas 600**, con un prompt de 48.000 caracteres y 690 eventos accionables.
 
-⚠️ **La fila de Memory no es fiable y se está remidiendo.** Es el único runtime que hace una
-segunda llamada por paso, y a T=100 perdió 23, 14 y 2 respuestas de 100 por el tope de salida
-en las tres seeds, puntuando 0.58, 0.67 y 0.91 en ese orden. La correlación entre truncamiento
-y score es evidente: no es un fallo de resumir, es un fallo de presupuesto. Corriendo con tope
-1.200 en `results_mt1200/`.
+**La fila de Memory, comprobada contra la hipótesis del presupuesto.** Es el único runtime que
+hace una segunda llamada por paso, y a T=100 perdió 23, 14 y 2 respuestas de 100 por el tope de
+salida, puntuando 0.58, 0.67 y 0.91 en ese orden — una correlación que hacía sospechar un
+artefacto. Remedido con el tope al doble (`results_mt1200/`):
+
+| Memory | tope 600 | tope 1.200 | truncadas |
+|---|---|---|---|
+| T=50 | 0.75 | **0.79** (0.74, 0.71, 0.91) | 3–10 de 50 |
+| T=100 | 0.72 | **0.71** (0.59, 0.84, 0.71) | 12–37 de 100 |
+
+**La hipótesis queda refutada, no solo sin confirmar.** Doblar el presupuesto *subió* el
+truncamiento —de 23 a 34 respuestas cortadas en la misma seed— y dejó el score igual. El modelo
+llena el presupuesto que le den; el truncamiento es un síntoma de respuestas largas, no la
+causa del score. Memory se degrada de verdad, y más que en el paper.
+
+Vale la pena anotar el patrón, porque es el tercero igual del proyecto: **subir el tope de
+salida nunca ha arreglado un truncamiento en este trabajo** — ni en Sonnet con ReAct (600→19,
+1.500→11, 4.000→18) ni aquí. Cuando el modelo escribe largo, escribe largo.
 
 Prompt medio **en caracteres**, y ratio contra el suyo:
 

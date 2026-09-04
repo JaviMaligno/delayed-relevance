@@ -1,0 +1,26 @@
+{
+  "memory:0": {
+    "entrada_bruta": 304616,
+    "entrada_efectiva": 304616.0,
+    "score": 0.7368421052631579,
+    "avg_prompt": 6092.32,
+    "total": 354898,
+    "overflowed": false
+  },
+  "memory:1": {
+    "entrada_bruta": 304149,
+    "entrada_efectiva": 304149.0,
+    "score": 0.7142857142857143,
+    "avg_prompt": 6082.98,
+    "total": 354333,
+    "overflowed": false
+  },
+  "memory:2": {
+    "entrada_bruta": 314821,
+    "entrada_efectiva": 314821.0,
+    "score": 0.9117647058823529,
+    "avg_prompt": 6296.42,
+    "total": 369645,
+    "overflowed": false
+  }
+}

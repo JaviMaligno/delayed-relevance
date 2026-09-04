@@ -1,2 +1,20 @@
 suspension del sistema inhibida: True
 proveedor: foundry  modelo: claude-haiku-4-5
+  AVISO memory seed=0: 6 respuestas truncadas por el tope de salida
+memory seed=0 score=0.74 tokens=354898
+  AVISO memory seed=1: 3 respuestas truncadas por el tope de salida
+memory seed=1 score=0.71 tokens=354333
+  AVISO memory seed=2: 10 respuestas truncadas por el tope de salida
+memory seed=2 score=0.91 tokens=369645
+escrito results_mt1200\table1_T50_claude-haiku-4-5_foundry.json
+suspension del sistema inhibida: True
+proveedor: foundry  modelo: claude-haiku-4-5
+  AVISO memory seed=0: 34 respuestas truncadas por el tope de salida
+memory seed=0 score=0.59 tokens=770318
+  AVISO memory seed=1: 12 respuestas truncadas por el tope de salida
+memory seed=1 score=0.84 tokens=764136
+  [reintento 1/5] APIConnectionError, esperando 2s
+  [reintento 2/5] APIConnectionError, esperando 4s
+  AVISO memory seed=2: 37 respuestas truncadas por el tope de salida
+memory seed=2 score=0.71 tokens=769996
+escrito results_mt1200\table1_T100_claude-haiku-4-5_foundry.json

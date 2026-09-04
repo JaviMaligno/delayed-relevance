@@ -1,0 +1,20 @@
+{
+  "memory": {
+    "score_mean": 0.7123277345113369,
+    "score_sd": 0.12339002944007632,
+    "avg_prompt_tokens": 6509.806666666667,
+    "total_tokens": 768150.0,
+    "overflowed_seeds": [],
+    "entrada_bruta": 650980.6666666666,
+    "entrada_efectiva": 650980.6666666666
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 100,
+    "seeds": 3,
+    "max_tokens": 1200,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}
