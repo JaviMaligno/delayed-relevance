@@ -24,7 +24,7 @@ from dr.envs.repo import Repo
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
-from dr.metrics import score
+from dr.metrics import coste_efectivo, score
 from dr.runtimes.memory import MemoryRuntime
 from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
@@ -81,18 +81,33 @@ def episodio(cliente, seed: int, k: int, condicion: str, runtime: str = "skillst
         if es_dependiente:
             acierto = correcta
         from dr.types import StepResult
-        resultados.append(StepResult(step=env.step_index, actionable=env.observe().actionable,
-                                     correct=correcta, prompt_tokens=0, output_tokens=0))
+        # Los tokens se guardan SIEMPRE. La primera version los ponia a cero porque
+        # solo interesaba el score, y eso dejo 461 episodios del proyecto sin coste
+        # trazado: el gasto total solo se pudo estimar, no calcular.
+        resultados.append(StepResult(
+            step=env.step_index, actionable=env.observe().actionable, correct=correcta,
+            prompt_tokens=sum(c.prompt_tokens for c in completions),
+            output_tokens=sum(c.output_tokens for c in completions),
+            cache_read=sum(c.cache_read for c in completions),
+            cache_write=sum(c.cache_write for c in completions)))
         env.apply(accion if accion is not None else esperada)
     if invalidacion and env.invalidation_from is not None:
         # METRICA DE PROMEDIO, no de evento: score sobre el tramo POSTERIOR al aviso.
         # Todos los Store de ese tramo dependen de haber aplicado la correccion, asi
         # que promedia quince o veinte eventos en vez de mirar uno solo.
         posteriores = [r for r in resultados if r.step > env.invalidation_from]
+        coste = coste_efectivo(resultados)
         return {"acierto": bool(acierto), "score": score(resultados),
                 "score_posterior": score(posteriores),
-                "n_posteriores": sum(1 for r in posteriores if r.actionable)}
-    return {"acierto": bool(acierto), "score": score(resultados)}
+                "n_posteriores": sum(1 for r in posteriores if r.actionable),
+                "entrada_bruta": coste["tokens_brutos"],
+                "entrada_efectiva": coste["entrada_efectiva"],
+                "salida": sum(r.output_tokens for r in resultados)}
+    coste = coste_efectivo(resultados)
+    return {"acierto": bool(acierto), "score": score(resultados),
+            "entrada_bruta": coste["tokens_brutos"],
+            "entrada_efectiva": coste["entrada_efectiva"],
+            "salida": sum(r.output_tokens for r in resultados)}
 
 
 def intervalo(aciertos: int, n: int) -> tuple[float, float]:

@@ -21,7 +21,7 @@ from dr.config import load_env
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
 from dr.llm import AnthropicClient
-from dr.metrics import aggregate, score
+from dr.metrics import aggregate, coste_efectivo, score
 from dr.runtimes.memory import MemoryRuntime
 from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
@@ -136,7 +136,11 @@ def main() -> None:
                 scores.append(s)
                 aciertos.append(bool(acierto))
                 tam = [r.state_size for r in resultados]
+                coste = coste_efectivo(resultados)
                 done[clave] = {"score": s, "dependiente": bool(acierto),
+                               "entrada_bruta": coste["tokens_brutos"],
+                               "entrada_efectiva": coste["entrada_efectiva"],
+                               "salida": sum(r.output_tokens for r in resultados),
                                "sigma_inicial": tam[0] if tam else 0,
                                "sigma_final": tam[-1] if tam else 0,
                                "sigma_max": max(tam) if tam else 0}
