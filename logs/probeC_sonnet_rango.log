@@ -1,0 +1,12 @@
+claude-sonnet-5:skillstate:s4:r0:k10:mt1500
+  correcta=19 sorda=0 otra=4 de 23  score=0.826
+  truncadas=0/50 sin_accion=2 parches_invalidos=14
+claude-sonnet-5:skillstate:s10:r0:k10:mt1500
+  correcta=25 sorda=0 otra=4 de 29  score=0.862
+  truncadas=0/50 sin_accion=1 parches_invalidos=6
+claude-sonnet-5:react:s4:r0:k10:mt1500
+  correcta=22 sorda=0 otra=1 de 23  score=0.957
+  truncadas=1/50 sin_accion=1 parches_invalidos=0
+claude-sonnet-5:react:s10:r0:k10:mt1500
+  correcta=24 sorda=3 otra=2 de 29  score=0.828
+  truncadas=0/50 sin_accion=0 parches_invalidos=0

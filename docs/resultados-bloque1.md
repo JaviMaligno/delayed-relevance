@@ -293,6 +293,36 @@ que **no exige anticipar nada**. El oráculo funciona pero requiere que el dise�
 ya hubiera previsto el hecho; el campo genérico no funciona; repetir lo vigente funciona sin
 previsión.
 
+### Repetir el hecho, o repetirlo destilado
+
+El recordatorio no reinyecta el aviso: reinyecta **tres de sus quince campos**, hoistados al
+principio de la observación. Eso mezclaba dos explicaciones —que el hecho esté disponible y que
+esté destilado— y la objeción es evidente en cuanto se formula. Se separa con una tercera
+condición, `reminder_raw`: **el aviso original entero**, verbatim, en la misma posición y bajo
+la misma cabecera. Lo único que cambia es que la información llega sin destilar, 981 caracteres
+en vez de 67. Ninguna de las dos añade instrucción: el aviso original ya dice
+`do_not_store=true`.
+
+Haiku 4.5, `k=40`, 3 seeds × 8 repeticiones, pareado:
+
+| condición | acierto | IC95 Wilson | por seed |
+|---|---|---|---|
+| sin campo | **0/24 = 0%** | 0–14% | 0/8 · 0/8 · 0/8 |
+| recordatorio **sin destilar** | **16/24 = 67%** | 47–82% | 5/8 · 4/8 · 7/8 |
+| recordatorio **destilado** | **24/24 = 100%** | 86–100% | 8/8 · 8/8 · 8/8 |
+
+**Los tres intervalos son disjuntos**, y en las tres seeds el destilado domina al crudo.
+
+- **La disponibilidad explica dos tercios del efecto.** Repetir el aviso tal cual sube de 0% a
+  67%: la mayor parte del fallo era, en efecto, que el hecho no estaba delante.
+- **El tercio que falta es destilación, y es el que separa "casi siempre" de "siempre".** Con el
+  mismo hecho presente en cada paso, enterrado entre catorce campos de metadatos, el agente lo
+  pasa por alto una de cada tres veces.
+
+> La recomendación práctica sobrevive y se vuelve más exigente: **no basta con reinyectar el
+> registro, hay que reinyectar el campo.** Un sistema que repite el documento entero deja un
+> tercio de los fallos sobre la mesa.
+
 ### Réplica cruzada de modelo
 
 Celda del oráculo a `k=40`, **muestras igualadas**:
@@ -337,107 +367,91 @@ explicar. **Antes de explicar por qué dos condiciones difieren, comprobar que d
 
 ---
 
-## 4.bis Sonda C: invalidación retroactiva — medida contra su suelo
+## 4.bis Sonda C: invalidación retroactiva
 
 En el paso `t` el agente almacena en la estantería S. En `t+10` un aviso corrige que aquella
 colocación nunca se completó y S está vacía. Desde ahí S es la libre más baja.
 
-**Primero el suelo, que hasta la auditoría no estaba medido.** Un agente *perfecto pero sordo*
-—que ejecuta todo bien pero nunca aplica el aviso— saca, por seed:
+### El suelo, y por qué la primera medición era casi ciega
 
-| seed | suelo del agente sordo | pasos que dependen de la corrección |
+Un agente *perfecto pero sordo* —que ejecuta todo bien pero nunca aplica el aviso— define el
+suelo. Calcularlo no cuesta una llamada, y cambia por completo qué seeds sirven:
+
+| seed | suelo del sordo | pasos que dependen de la corrección |
 |---|---|---|
-| 0 | 0,931 | 2 de 29 |
-| 1 | 0,893 | 3 de 28 |
-| 2 | **1,000** | **0** — el aviso no cambia ninguna acción |
+| 0 | 0,931 | 2 |
+| 1 | 0,893 | 3 |
+| **2** | **1,000** | **0** |
+| **4** | **0,522** | **11** |
+| 6 | 0,846 | 4 |
+| 10 | 0,759 | 7 |
 
-Dos consecuencias inmediatas: **la seed 2 no aporta señal** (su rango es cero y solo mete
-ruido en la media), y **el efecto máximo posible es de 6 a 11 puntos**, no de cien. Un score de
-0,94 en este eje no es "casi perfecto": es exactamente el suelo.
+Las tres seeds con las que se midió primero (0, 1, 2) aportaban **5 observaciones en total**, y
+una de ellas ninguna. Las seeds 4, 10 y 6 aportan **22 por repetición**. Es la misma sonda, el
+mismo coste por episodio y cuatro veces más señal: **elegir las seeds por rango medido, antes de
+gastar, es gratis y decide el experimento.**
 
-**Haiku 4.5, 9 episodios de ReAct: los 9 dan el suelo de su seed al tercer decimal.**
+### El resultado, contado sobre pasos dependientes
 
-| seed | suelo | ReAct (3 repeticiones) |
-|---|---|---|
-| 0 | 0,931 | 0,931 · 0,931 · 0,931 |
-| 1 | 0,893 | 0,893 · 0,893 · 0,893 |
-| 2 | 1,000 | 1,000 · 1,000 · 1,000 |
+La unidad no es el episodio ni la seed: es **cada paso posterior al aviso cuya acción correcta
+cambia por haberlo aplicado**. Seeds 4, 10 y 6, 2 repeticiones, los dos modelos. Los episodios
+con más de 3 respuestas truncadas de 50 se excluyen y se declaran: en ellos el brazo no llegó a
+decidir.
 
-No es un brazo ruidoso: es un agente que ejecuta el resto de la tarea sin un fallo y **nunca,
-en ninguna repetición, aplica la corrección**. La historia completa contiene el aviso; leerlo
-no basta.
+| modelo | runtime | **aplica la corrección** | otros fallos | pasos sin acción | parches inválidos |
+|---|---|---|---|---|---|
+| Haiku 4.5 | ReAct | **3/44 — 6,8%** | 0 | 0 | 0 |
+| Haiku 4.5 | SKILL.state | **44/44 — 100%** | 0 | 0 | 0 |
+| Sonnet 5 | ReAct | **15/38 — 39,5%** | 5 | 1 | 0 |
+| Sonnet 5 | SKILL.state | **49/49 — 100%** | 21 | 10 | 66 |
 
-Contado sobre los pasos que realmente dependen de la corrección, en las dos seeds con rango:
+**El estado explícito no falla una sola vez: 93 de 93 pasos dependientes, en los dos modelos.**
+La historia completa acierta 18 de 82.
 
-| runtime (Haiku 4.5) | pasos dependientes acertados |
-|---|---|
-| ReAct, historia completa | **0 de 15** |
-| SKILL.state | **≥24 de 25** |
+Tres cosas que solo se ven contando así:
+
+**1. El fallo de ReAct es de todo o nada por escenario.** En Haiku, `otra=0` en los seis
+episodios: sus únicos errores son los pasos de la corrección, y los falla en bloque — 11 de 11,
+7 de 7, 4 de 4. No es un agente que se despiste: es un agente impecable que **nunca actualizó
+un hecho**. En Sonnet ocurre lo mismo pero de forma bimodal: en un episodio aplica los 11 y en
+la repetición siguiente falla los 11.
+
+**2. Más capacidad ayuda, y no basta.** Sonnet con historia pasa de 6,8% a 39,5%: el modelo más
+capaz reconcilia la contradicción con bastante más frecuencia. Sigue perdiendo tres de cada
+cinco.
+
+**3. El estado explícito lo compra, y en Sonnet lo paga en otra moneda.** 66 parches fuera de
+esquema y 10 pasos sin acción en 8 episodios, que se traducen en 21 fallos por otras causas.
+En Haiku, cero. **El acierto sobre la corrección es del 100% en ambos; la fiabilidad del
+corredor depende del modelo.** Es la interacción runtime × modelo del proyecto, y vive en el
+modo de fallo del corredor, no en la tarea.
+
+> Esto **contradice la limitación L2 del paper**, que predecía que el método fallaría cuando el
+> objetivo dependiera de la procedencia. **Tener un único lugar donde vive la verdad es una
+> ventaja cuando la verdad cambia**, y la ventaja replica en dos modelos.
 
 **Mecanismo:** el estado explícito tiene un solo sitio que corregir, y corregirlo es la
 operación que ya sabe hacer. La historia no borra nada: acumula el registro original y su
 desmentido, y en cada paso posterior tiene que resolver la contradicción otra vez.
 
-> Esto **contradice la limitación L2 del paper**, que predecía que el método fallaría cuando el
-> objetivo dependiera de la procedencia. **Tener un único lugar donde vive la verdad es una
-> ventaja cuando la verdad cambia.**
+### ⚠️ La primera versión de esta sección era un artefacto
 
-### ⚠️ La réplica en Sonnet 5 no existe: era truncamiento
+Daba Sonnet con SKILL.state 0,885 frente a ReAct 0,686, separación +0,199, presentada como
+réplica. **El número se delataba solo**: +0,199 es mayor que el efecto máximo posible del aviso
+en aquellas seeds (0,06 de media). Ningún resultado sobre la corrección puede superar el rango
+que la corrección tiene.
 
-Una versión anterior de este documento daba Sonnet 5 con SKILL.state 0,885 frente a ReAct
-0,686, separación +0,199, y lo presentaba como réplica cruzada del hallazgo. **Es falso, y el
-número lo delataba**: +0,199 es mayor que el efecto máximo posible del aviso (0,06 de media
-entre las tres seeds). Ningún resultado sobre la corrección puede superar el rango que la
-corrección tiene.
-
-Instrumentando los episodios (`experiments/diagnose_probeC.py`) aparece la causa:
-
-| Sonnet 5, sonda C | truncadas / 50 pasos | pasos sin acción | parches inválidos | score |
-|---|---|---|---|---|
-| ReAct, seed 0 | 8 | 8 | — | 0,655 |
-| ReAct, seed 1 | **19** | **19** | — | 0,321 |
-| SKILL.state, seed 0 | 1 | 4 | **18** | 0,655 |
-| SKILL.state, seed 1 | 0 | 0 | 3 | 1,000 |
-
-**Cada respuesta truncada es un paso sin acción, y un paso sin acción cuenta como error.** El
-brazo de ReAct en Sonnet no estaba fallando la corrección: se quedaba sin presupuesto de salida
-antes de escribir la línea `Action:`, hasta en 19 de 50 pasos. El brazo de SKILL.state fallaba
-por otra vía —parches fuera de esquema, hasta 18 por episodio, que agotan los reintentos—. La
-clasificación por tipo de error lo confirma: de los fallos de SKILL.state, **cero** son el
-fallo del agente sordo.
-
-El tope de salida (600) se fijó para igualar la densidad de contexto con la del paper y está
-calibrado sobre Haiku. Sonnet 5 razona más largo y no cabe. **Es el mismo artefacto nº4 del
-proyecto, a otra escala y contra otro modelo, y esta vez había producido un hallazgo entero.**
-
-**Y subir el tope no lo arregla, que es lo que lo hace interesante.** La misma seed 1 con topes
-crecientes:
-
-| tope de salida | truncadas / 50 | score |
-|---|---|---|
-| 600 | 19 | 0,321 |
-| 1.500 | 11 | 0,464 |
-| 4.000 | **18** | 0,393 |
-
-No es un presupuesto corto: **Sonnet con ReAct llena el presupuesto que le den**. Cuadruplicar
-el tope no reduce el truncamiento, y multiplica por siete el coste de salida de los pasos que
-además siguen perdiéndose.
-
-La seed 0 sí se arregla, y su resultado es el que más dice del proyecto: con tope 1.500,
-**cero truncamientos y score 0,931 — el suelo del agente sordo exacto, con `sorda=2` y
-`otra=0`**. Sus dos únicos errores son los dos pasos de la corrección, los mismos que falla
-Haiku. En cuanto ReAct puede terminar sus respuestas, Sonnet se comporta igual que Haiku:
-impecable salvo la corrección, que no aplica nunca.
-
-Eso deja el estado real del eje: **el resultado es de un solo modelo**, con un indicio fuerte
-—pero de un episodio— de que replica, y con una razón medida de por qué el otro modelo no se
-puede medir en este banco tal como está.
+Instrumentado, el brazo de ReAct en Sonnet perdía de 8 a 19 de 50 pasos por **truncamiento**
+—cada respuesta cortada antes de la línea `Action:` es un paso sin acción, y cuenta como
+error—. Y **subir el tope no lo arregla**: en la misma seed, 600 → 19 truncadas, 1.500 → 11,
+4.000 → 18. Sonnet llena el presupuesto que le den. El truncamiento resultó además ser
+dependiente del escenario: en las seeds 4 y 10 es de 0 o 1 de 50, en la 1 y la 6 es masivo.
 
 > Un tope de salida fijo **penaliza al brazo cuyo prompt crece**, porque la respuesta se alarga
 > con el transcript. Cualquier comparación entre un runtime append-only y uno de contexto
-> acotado a horizontes largos tiene que reportar la tasa de truncamiento por brazo, o la
-> degradación que mida puede ser presupuestaria y no cognitiva. **El paper reporta degradación
-> de ReAct al crecer T y no reporta truncamiento.**
+> acotado tiene que reportar la tasa de truncamiento por brazo, o la degradación que mida puede
+> ser presupuestaria y no cognitiva. **El paper reporta degradación de ReAct al crecer T y no
+> reporta truncamiento.**
 
 ## 4.ter ⚠️ Segundo entorno: retirado — no discrimina
 
@@ -539,8 +553,12 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
 - **Un entorno útil de los cuatro del paper.** Warehouse discrimina; Repo se construyó como
   control y no discrimina (§4.ter), así que el proyecto tiene un solo entorno con resultados.
 - **La réplica cruzada de modelo está cerrada en la sonda A** (celda del oráculo n=22 en ambos;
-  recordatorio n=24 en ambos) **y no en la sonda C**, cuyo brazo de Sonnet resultó ser
-  truncamiento. El resultado de la sonda C es de un solo modelo.
+  recordatorio n=24 en ambos) **y en la sonda C** (93 pasos dependientes en el brazo de estado,
+  82 en el de historia, los dos modelos). No lo está en la Tabla 1 del bloque 1.
+- **Seis episodios de Sonnet con ReAct quedaron excluidos por truncamiento** y están declarados
+  uno a uno en §4.bis. El criterio (>3 respuestas cortadas de 50) se fijó al ver que el
+  truncamiento es masivo o inexistente según el escenario, nunca intermedio; no se fijó después
+  de mirar los scores.
 - **Asimetrías declaradas entre brazos**, que no son errores pero condicionan la lectura:
   SKILL.state dispone de hasta 3 intentos por paso (reintenta si el parche no valida) mientras
   ReAct dispone de uno; y recibe los nombres de los campos del esquema, que ReAct no ve. Lo
@@ -574,15 +592,14 @@ seeds distintas sin repetir.
 - Sonda A en Sonnet 5 en el resto de celdas (sin campo y escotilla) con muestra suficiente.
 - Por qué Sonnet no alcanza el techo de Haiku con el mismo campo: re-correr registrando los
   parches para contrastar la hipótesis del estilo de parcheo.
-- **Sonda C en Sonnet 5 con tope de salida suficiente**, sobre las seeds 0 y 1 (la 2 no tiene
-  rango). Es lo único que falta para que el resultado de la sonda C sea cruzado y no de un
-  solo modelo, y la seed 0 ya apunta a que replica exactamente.
 - **Tasa de truncamiento por brazo en toda la Tabla 1**, que se midió con el tope calibrado
-  sobre Haiku y nunca se comprobó contra el otro modelo.
-- **Recordatorio crudo frente a recordatorio con instrucción.** El recordatorio actual repite
-  `do_not_store=true`, es decir, la conclusión y no solo el hecho. Repetir únicamente el aviso
-  original separaría "no lo recuerda" de "no lo aplica", y hoy están mezclados en el mejor
-  resultado del documento.
+  sobre Haiku y nunca se comprobó contra el otro modelo. Es el hueco más probable de que quede
+  otro artefacto del nº8.
+- **Por qué Sonnet emite 66 parches fuera de esquema donde Haiku emite cero.** Es la única
+  asimetría grande entre modelos que queda sin explicar, y es una propiedad del método, no del
+  entorno.
+- **Recordatorio sin destilar en Sonnet**, para cerrar también en dos modelos el resultado de
+  los tres niveles (hoy es de Haiku).
 - **Rediseñar Repo o descartarlo**: `k` configurable en vez de fijo a 2, y una fracción de
   pasos portantes muy superior a 5 de 34.
 - Coste efectivo medido también en la sonda A. La contabilidad de tokens por episodio solo

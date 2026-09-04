@@ -1,0 +1,24 @@
+claude-sonnet-5:skillstate:s4:r1:k10:mt1500
+  correcta=23 sorda=0 otra=0 de 23  score=1.000
+  truncadas=0/50 sin_accion=0 parches_invalidos=5
+claude-sonnet-5:skillstate:s10:r1:k10:mt1500
+  correcta=29 sorda=0 otra=0 de 29  score=1.000
+  truncadas=0/50 sin_accion=0 parches_invalidos=3
+claude-sonnet-5:skillstate:s6:r0:k10:mt1500
+  correcta=25 sorda=0 otra=1 de 26  score=0.962
+  truncadas=0/50 sin_accion=2 parches_invalidos=11
+claude-sonnet-5:skillstate:s6:r1:k10:mt1500
+  correcta=24 sorda=0 otra=2 de 26  score=0.923
+  truncadas=0/50 sin_accion=1 parches_invalidos=6
+claude-sonnet-5:react:s4:r1:k10:mt1500
+  correcta=12 sorda=11 otra=0 de 23  score=0.522
+  truncadas=0/50 sin_accion=0 parches_invalidos=0
+claude-sonnet-5:react:s10:r1:k10:mt1500
+  correcta=20 sorda=7 otra=2 de 29  score=0.690
+  truncadas=0/50 sin_accion=0 parches_invalidos=0
+claude-sonnet-5:react:s6:r0:k10:mt1500
+  correcta=10 sorda=0 otra=16 de 26  score=0.385
+  truncadas=16/50 sin_accion=16 parches_invalidos=0
+claude-sonnet-5:react:s6:r1:k10:mt1500
+  correcta=13 sorda=4 otra=9 de 26  score=0.500
+  truncadas=9/50 sin_accion=9 parches_invalidos=0
