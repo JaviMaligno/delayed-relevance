@@ -1,0 +1,18 @@
+claude-haiku-4-5:skillstate:s0:mt600
+  score=1.000  portantes=5/5 resto=29/29
+  truncadas=0 sin_accion=0 parches_invalidos=0
+claude-haiku-4-5:skillstate:s1:mt600
+  score=1.000  portantes=5/5 resto=29/29
+  truncadas=0 sin_accion=0 parches_invalidos=0
+claude-haiku-4-5:skillstate:s2:mt600
+  score=0.971  portantes=4/5 resto=29/29
+  truncadas=0 sin_accion=0 parches_invalidos=0
+claude-haiku-4-5:react:s0:mt600
+  score=1.000  portantes=5/5 resto=29/29
+  truncadas=0 sin_accion=0 parches_invalidos=0
+claude-haiku-4-5:react:s1:mt600
+  score=1.000  portantes=5/5 resto=29/29
+  truncadas=0 sin_accion=0 parches_invalidos=0
+claude-haiku-4-5:react:s2:mt600
+  score=0.824  portantes=2/2 resto=26/32
+  truncadas=0 sin_accion=0 parches_invalidos=0

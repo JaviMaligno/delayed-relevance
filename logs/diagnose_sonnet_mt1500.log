@@ -1,0 +1,6 @@
+claude-sonnet-5:react:s0:r0:k10:mt1500
+  correcta=27 sorda=2 otra=0 de 29  score=0.931
+  truncadas=0/50 sin_accion=0 parches_invalidos=0
+claude-sonnet-5:react:s1:r0:k10:mt1500
+  correcta=13 sorda=3 otra=12 de 28  score=0.464
+  truncadas=11/50 sin_accion=11 parches_invalidos=0
