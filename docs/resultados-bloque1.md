@@ -81,12 +81,32 @@ v3):
 
 ### Nuestros números
 
-| runtime | T=10 | T=25 | T=50 | ellos T=50 (Gemini-3-Flash) |
-|---|---|---|---|---|
-| ReAct (historia completa) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.88 ±0.04 |
-| Memory (resumen en prosa) | 1.00 ±0.00 | 0.96 ±0.06 | **0.75 ±0.16** | 0.93 ±0.03 |
-| Stateful (estado + historia) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.94 ±0.00 |
-| SKILL.state (solo estado) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.96 ±0.01 |
+**Rango de horizonte completo, el suyo entero** (Haiku 4.5, 3 seeds):
+
+| runtime | T=10 | T=25 | T=50 | T=100 | T=200 |
+|---|---|---|---|---|---|
+| ReAct (historia completa) | 1.00 | 1.00 | 1.00 | 1.00 | **0.99 ±0.02** |
+| SKILL.state (solo estado) | 1.00 | 1.00 | 1.00 | 1.00 | **1.00 ±0.00** |
+| Stateful (estado + historia) | 1.00 | 1.00 | 1.00 | 0.99 ±0.02 | — |
+| Memory (resumen en prosa) | 1.00 | 0.96 | 0.75 ⚠️ | 0.72 ⚠️ | — |
+
+Frente a su Tabla 1 (Gemini-3-Flash, mismos horizontes):
+
+| runtime | T=10 | T=25 | T=50 | T=100 | T=200 |
+|---|---|---|---|---|---|
+| ReAct | 0.90 ±0.02 | 0.92 ±0.02 | 0.88 ±0.04 | 0.84 ±0.07 | **0.74 ±0.14** |
+| SKILL.state | 1.00 ±0.00 | 1.00 ±0.00 | 0.96 ±0.01 | 0.94 ±0.01 | **0.94 ±0.02** |
+| Stateful | 1.00 ±0.00 | 1.00 ±0.00 | 0.94 ±0.00 | 0.91 ±0.02 | 0.88 ±0.03 |
+| Memory | 1.00 ±0.00 | 0.99 ±0.00 | 0.93 ±0.03 | 0.87 ±0.05 | 0.84 ±0.09 |
+
+A T=200 su brazo de transcript falla una decisión de cada cuatro; el nuestro falla **una de
+unas 600**, con un prompt de 48.000 caracteres y 690 eventos accionables.
+
+⚠️ **La fila de Memory no es fiable y se está remidiendo.** Es el único runtime que hace una
+segunda llamada por paso, y a T=100 perdió 23, 14 y 2 respuestas de 100 por el tope de salida
+en las tres seeds, puntuando 0.58, 0.67 y 0.91 en ese orden. La correlación entre truncamiento
+y score es evidente: no es un fallo de resumir, es un fallo de presupuesto. Corriendo con tope
+1.200 en `results_mt1200/`.
 
 Prompt medio **en caracteres**, y ratio contra el suyo:
 
@@ -98,11 +118,12 @@ Prompt medio **en caracteres**, y ratio contra el suyo:
 **La mitad de coste se reproduce.** El prompt de SKILL.state es plano —2.136 → 2.157— mientras
 el de ReAct crece a 16.437: O(1) frente a O(T), tal como afirman, y a 1,2–1,4x de su densidad.
 
-**La de precisión, no se reproduce EN ESTE RANGO.** Con historia completa, prompts de ~4.700
-tokens y 172 eventos accionables, Haiku 4.5 no comete un error a T=50 donde Gemini-3-Flash
-comete el 12%. El único brazo que se degrada es el que resume en prosa, y más que en el paper.
-⚠️ **Afirmar más que eso exige T=100 y T=200**, que es donde su curva cae de verdad; hasta
-tenerlos, la lectura correcta es «no aparece a T≤50 en Claude», no «no existe».
+**La de precisión no se reproduce en NINGÚN horizonte de los suyos.** Su degradación es un
+efecto de escala, así que la comprobación exigía correr su rango entero, y se ha corrido:
+ReAct en Haiku 4.5 da 1.00 hasta T=100 y 0.99 a T=200, donde Gemini-3-Flash da 0.74. Con eso
+la afirmación ya no es «no aparece por debajo de T=50» sino **«no aparece en este modelo, a
+ninguna de sus escalas»** — y sigue sin poder atribuirse al método, porque la familia de
+modelo es la otra variable que cambió.
 
 **Control de dificultad.** El 69–74% de los eventos son accionables y el 70% de los `Store`
 reutilizan un hueco liberado, así que hay que llevar la cuenta de verdad. Pero **el hueco está

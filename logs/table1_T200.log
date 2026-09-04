@@ -1,2 +1,10 @@
 suspension del sistema inhibida: True
 proveedor: foundry  modelo: claude-haiku-4-5
+react seed=0 score=0.96 tokens=142234
+react seed=1 score=1.00 tokens=142060
+  [reintento 1/5] RateLimitError, esperando 2s
+react seed=2 score=1.00 tokens=139197
+skillstate seed=0 score=1.00 tokens=501177
+skillstate seed=1 score=1.00 tokens=485979
+skillstate seed=2 score=1.00 tokens=494853
+escrito results\table1_T200_claude-haiku-4-5_foundry.json

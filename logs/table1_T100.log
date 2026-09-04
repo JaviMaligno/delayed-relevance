@@ -7,3 +7,12 @@ react seed=2 score=1.00 tokens=76030
 memory seed=0 score=0.58 tokens=754343
   AVISO memory seed=1: 2 respuestas truncadas por el tope de salida
 memory seed=1 score=0.91 tokens=713049
+  AVISO memory seed=2: 14 respuestas truncadas por el tope de salida
+memory seed=2 score=0.67 tokens=754133
+stateful seed=0 score=0.97 tokens=3445429
+stateful seed=1 score=1.00 tokens=3537248
+stateful seed=2 score=1.00 tokens=3298022
+skillstate seed=0 score=1.00 tokens=248179
+skillstate seed=1 score=1.00 tokens=239474
+skillstate seed=2 score=1.00 tokens=239357
+escrito results\table1_T100_claude-haiku-4-5_foundry.json
