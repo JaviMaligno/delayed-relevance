@@ -1,0 +1,221 @@
+{
+  "skillstate:k1:0": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k1:1": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k1:2": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k1:3": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k1:4": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k5:0": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k5:1": {
+    "score": 0.9705882352941176,
+    "dependiente": true
+  },
+  "skillstate:k5:2": {
+    "score": 0.9705882352941176,
+    "dependiente": true
+  },
+  "skillstate:k5:3": {
+    "score": 0.9714285714285714,
+    "dependiente": true
+  },
+  "skillstate:k5:4": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k10:0": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k10:1": {
+    "score": 0.9714285714285714,
+    "dependiente": true
+  },
+  "skillstate:k10:2": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k10:3": {
+    "score": 0.9411764705882353,
+    "dependiente": true
+  },
+  "skillstate:k10:4": {
+    "score": 0.9310344827586207,
+    "dependiente": true
+  },
+  "skillstate:k20:0": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k20:1": {
+    "score": 0.9714285714285714,
+    "dependiente": true
+  },
+  "skillstate:k20:2": {
+    "score": 0.9393939393939394,
+    "dependiente": true
+  },
+  "skillstate:k20:3": {
+    "score": 0.9411764705882353,
+    "dependiente": true
+  },
+  "skillstate:k20:4": {
+    "score": 0.9310344827586207,
+    "dependiente": true
+  },
+  "skillstate:k40:0": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k40:1": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k40:2": {
+    "score": 0.9696969696969697,
+    "dependiente": true
+  },
+  "skillstate:k40:3": {
+    "score": 0.8823529411764706,
+    "dependiente": true
+  },
+  "skillstate:k40:4": {
+    "score": 1.0,
+    "dependiente": true
+  },
+  "skillstate:k40:5": {
+    "score": 0.9166666666666666,
+    "dependiente": true,
+    "sigma_inicial": 72,
+    "sigma_final": 215,
+    "sigma_max": 479
+  },
+  "skillstate:k40:6": {
+    "score": 0.9714285714285714,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 693,
+    "sigma_max": 851
+  },
+  "skillstate:k40:7": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 113,
+    "sigma_final": 808,
+    "sigma_max": 862
+  },
+  "skillstate:k40:8": {
+    "score": 0.9705882352941176,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 617,
+    "sigma_max": 827
+  },
+  "skillstate:k40:9": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 134,
+    "sigma_max": 291
+  },
+  "skillstate:k40:10": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 449,
+    "sigma_max": 555
+  },
+  "skillstate:k40:11": {
+    "score": 0.9444444444444444,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 182,
+    "sigma_max": 399
+  },
+  "skillstate:k40:12": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 701,
+    "sigma_max": 755
+  },
+  "skillstate:k40:13": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 114,
+    "sigma_final": 517,
+    "sigma_max": 611
+  },
+  "skillstate:k40:14": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 380,
+    "sigma_max": 380
+  },
+  "skillstate:k40:15": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 119,
+    "sigma_final": 853,
+    "sigma_max": 853
+  },
+  "skillstate:k40:16": {
+    "score": 0.9615384615384616,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 246,
+    "sigma_max": 358
+  },
+  "skillstate:k40:17": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 399,
+    "sigma_max": 608
+  },
+  "skillstate:k40:18": {
+    "score": 0.9696969696969697,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 226,
+    "sigma_max": 540
+  },
+  "skillstate:k40:19": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 222,
+    "sigma_max": 485
+  },
+  "skillstate:k40:20": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 104,
+    "sigma_final": 217,
+    "sigma_max": 322
+  },
+  "skillstate:k40:21": {
+    "score": 0.9459459459459459,
+    "dependiente": true,
+    "sigma_inicial": 105,
+    "sigma_final": 241,
+    "sigma_max": 399
+  }
+}

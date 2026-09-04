@@ -1,0 +1,98 @@
+{
+  "react:0": {
+    "entrada_bruta": 1015939,
+    "entrada_efectiva": 164364.05,
+    "score": 1.0,
+    "avg_prompt": 504.46,
+    "total": 31118,
+    "overflowed": false
+  },
+  "react:1": {
+    "entrada_bruta": 1023572,
+    "entrada_efectiva": 159251.45,
+    "score": 1.0,
+    "avg_prompt": 503.4,
+    "total": 31190,
+    "overflowed": false
+  },
+  "react:2": {
+    "entrada_bruta": 1046295,
+    "entrada_efectiva": 162065.45,
+    "score": 1.0,
+    "avg_prompt": 501.28,
+    "total": 31791,
+    "overflowed": false
+  },
+  "memory:0": {
+    "entrada_bruta": 489075,
+    "entrada_efectiva": 253365.0,
+    "score": 0.7368421052631579,
+    "avg_prompt": 4543.5,
+    "total": 272455,
+    "overflowed": false
+  },
+  "memory:1": {
+    "entrada_bruta": 491004,
+    "entrada_efectiva": 255294.0,
+    "score": 0.8,
+    "avg_prompt": 4582.08,
+    "total": 277186,
+    "overflowed": false
+  },
+  "memory:2": {
+    "entrada_bruta": 501677,
+    "entrada_efectiva": 265967.0,
+    "score": 0.9411764705882353,
+    "avg_prompt": 4795.54,
+    "total": 293518,
+    "overflowed": false
+  },
+  "stateful:0": {
+    "entrada_bruta": 1078868,
+    "entrada_efectiva": 849181.7,
+    "score": 1.0,
+    "avg_prompt": 16339.36,
+    "total": 825347,
+    "overflowed": false
+  },
+  "stateful:1": {
+    "entrada_bruta": 1085097,
+    "entrada_efectiva": 849387.0,
+    "score": 1.0,
+    "avg_prompt": 16463.94,
+    "total": 831928,
+    "overflowed": false
+  },
+  "stateful:2": {
+    "entrada_bruta": 1083184,
+    "entrada_efectiva": 847474.0,
+    "score": 1.0,
+    "avg_prompt": 16425.68,
+    "total": 829260,
+    "overflowed": false
+  },
+  "skillstate:0": {
+    "entrada_bruta": 299081,
+    "entrada_efectiva": 63371.0,
+    "score": 1.0,
+    "avg_prompt": 743.62,
+    "total": 50088,
+    "overflowed": false
+  },
+  "skillstate:1": {
+    "entrada_bruta": 301635,
+    "entrada_efectiva": 65925.0,
+    "score": 1.0,
+    "avg_prompt": 794.7,
+    "total": 54413,
+    "overflowed": false
+  },
+  "skillstate:2": {
+    "entrada_bruta": 299809,
+    "entrada_efectiva": 64099.0,
+    "score": 1.0,
+    "avg_prompt": 758.18,
+    "total": 51026,
+    "overflowed": false
+  }
+}

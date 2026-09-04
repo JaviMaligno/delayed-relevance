@@ -1,0 +1,38 @@
+{
+  "react:0": {
+    "score": 1.0,
+    "avg_prompt": 9111.64,
+    "total": 230680,
+    "overflowed": false
+  },
+  "react:1": {
+    "score": 1.0,
+    "avg_prompt": 8964.48,
+    "total": 226680,
+    "overflowed": false
+  },
+  "react:2": {
+    "score": 1.0,
+    "avg_prompt": 8990.48,
+    "total": 227313,
+    "overflowed": false
+  },
+  "react:3": {
+    "score": 1.0,
+    "avg_prompt": 9143.36,
+    "total": 231501,
+    "overflowed": false
+  },
+  "react:4": {
+    "score": 1.0,
+    "avg_prompt": 8874.64,
+    "total": 224171,
+    "overflowed": false
+  },
+  "memory:0": {
+    "score": 1.0,
+    "avg_prompt": 4896.92,
+    "total": 135822,
+    "overflowed": false
+  }
+}

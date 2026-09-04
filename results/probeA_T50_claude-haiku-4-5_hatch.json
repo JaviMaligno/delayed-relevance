@@ -1,0 +1,45 @@
+{
+  "skillstate:k1": {
+    "score_mean": 0.9888544891640867,
+    "score_sd": 0.015300822034862617,
+    "acierto_dependiente": 0.8,
+    "n": 5
+  },
+  "skillstate:k5": {
+    "score_mean": 0.9873891625615764,
+    "score_sd": 0.017394115874436195,
+    "acierto_dependiente": 0.8,
+    "n": 5
+  },
+  "skillstate:k10": {
+    "score_mean": 0.9699101709649378,
+    "score_sd": 0.029101483296397813,
+    "acierto_dependiente": 0.8,
+    "n": 5
+  },
+  "skillstate:k20": {
+    "score_mean": 0.9759231510955649,
+    "score_sd": 0.013744523839842737,
+    "acierto_dependiente": 0.6,
+    "n": 5
+  },
+  "skillstate:k40": {
+    "score_mean": 0.9463868069750423,
+    "score_sd": 0.07189018872176628,
+    "acierto_dependiente": 0.6,
+    "n": 15
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 50,
+    "seeds": 15,
+    "ks": [
+      40
+    ],
+    "control": false,
+    "oracle_schema": false,
+    "hatch_schema": true,
+    "max_tokens": 600
+  }
+}

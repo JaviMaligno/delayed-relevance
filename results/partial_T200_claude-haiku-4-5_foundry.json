@@ -1,0 +1,50 @@
+{
+  "react:0": {
+    "entrada_bruta": 12669550,
+    "entrada_efectiva": 1514766.55,
+    "score": 0.9565217391304348,
+    "avg_prompt": 568.3,
+    "total": 142234,
+    "overflowed": false
+  },
+  "react:1": {
+    "entrada_bruta": 12665253,
+    "entrada_efectiva": 1514066.0,
+    "score": 1.0,
+    "avg_prompt": 567.99,
+    "total": 142060,
+    "overflowed": false
+  },
+  "react:2": {
+    "entrada_bruta": 12354990,
+    "entrada_efectiva": 1479583.2,
+    "score": 1.0,
+    "avg_prompt": 566.395,
+    "total": 139197,
+    "overflowed": false
+  },
+  "skillstate:0": {
+    "entrada_bruta": 462971,
+    "entrada_efectiva": 462971.0,
+    "score": 1.0,
+    "avg_prompt": 2314.855,
+    "total": 501177,
+    "overflowed": false
+  },
+  "skillstate:1": {
+    "entrada_bruta": 447372,
+    "entrada_efectiva": 447372.0,
+    "score": 1.0,
+    "avg_prompt": 2236.86,
+    "total": 485979,
+    "overflowed": false
+  },
+  "skillstate:2": {
+    "entrada_bruta": 456982,
+    "entrada_efectiva": 456982.0,
+    "score": 1.0,
+    "avg_prompt": 2284.91,
+    "total": 494853,
+    "overflowed": false
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "skillstate:k40:0": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 73,
+    "sigma_final": 479,
+    "sigma_max": 479
+  },
+  "skillstate:k40:1": {
+    "score": 0.5,
+    "dependiente": false,
+    "sigma_inicial": 121,
+    "sigma_final": 282,
+    "sigma_max": 373
+  },
+  "skillstate:k40:2": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "sigma_inicial": 113,
+    "sigma_final": 88,
+    "sigma_max": 350
+  },
+  "skillstate:k40:3": {
+    "score": 0.8823529411764706,
+    "dependiente": true,
+    "sigma_inicial": 73,
+    "sigma_final": 403,
+    "sigma_max": 404
+  },
+  "skillstate:k40:4": {
+    "score": 0.9,
+    "dependiente": true,
+    "sigma_inicial": 73,
+    "sigma_final": 482,
+    "sigma_max": 587
+  },
+  "skillstate:k40:5": {
+    "score": 0.9166666666666666,
+    "dependiente": true,
+    "sigma_inicial": 119,
+    "sigma_final": 150,
+    "sigma_max": 420
+  },
+  "skillstate:k40:6": {
+    "score": 0.9714285714285714,
+    "dependiente": true,
+    "sigma_inicial": 120,
+    "sigma_final": 588,
+    "sigma_max": 790
+  },
+  "skillstate:k40:7": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 113,
+    "sigma_final": 725,
+    "sigma_max": 778
+  },
+  "skillstate:k40:8": {
+    "score": 0.7941176470588235,
+    "dependiente": false,
+    "sigma_inicial": 121,
+    "sigma_final": 464,
+    "sigma_max": 623
+  },
+  "skillstate:k40:9": {
+    "score": 1.0,
+    "dependiente": true,
+    "sigma_inicial": 114,
+    "sigma_final": 141,
+    "sigma_max": 298
+  }
+}

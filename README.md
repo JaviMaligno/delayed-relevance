@@ -1,16 +1,43 @@
 # delayed-relevance
 
-Replicacion de [SKILL.state](https://arxiv.org/abs/2608.26263) y medicion de la frontera
-que el paper declara y no mide: que pasa cuando una observacion se vuelve relevante `k`
-pasos despues de haber sido observada.
+Replication of [*SKILL.state: Scalable Long-Horizon Agent Skills*](https://arxiv.org/abs/2608.26263)
+(Badhe, Tiwari and Chung), plus the boundary the paper declares and does not measure: what
+happens when an observation becomes relevant `k` steps after it was read.
 
-Diseno completo: ver el spec enlazado desde el articulo.
+Write-up: **[When the Fact Stops Being True](https://www.javieraguilar.ai/en/blog/when-the-fact-stops-being-true)**
+· [en espanol](https://www.javieraguilar.ai/es/blog/when-the-fact-stops-being-true).
+The code is English-commented where it matters; the two design docs are in Spanish.
 
-- [`docs/resultados-bloque1.md`](docs/resultados-bloque1.md) — replica, coste efectivo con
-  cache, sonda de relevancia diferida, y que afirmacion sobrevive a que nivel de ruido.
-- [`docs/metodo-medir-el-instrumento.md`](docs/metodo-medir-el-instrumento.md) — notas de
-  metodo: medir el ruido del instrumento antes que el fenomeno, y los ocho artefactos que
-  costo aprenderlo.
+## Scope
+
+|  | this repo | the paper |
+|---|---|---|
+| models | Claude Haiku 4.5, Claude Sonnet 5 | Gemini-3-Flash, Gemma-4-31B-it, Qwen-3-8B-it |
+| environment | Warehouse, reimplemented from their §4.1 | Warehouse, Software Repository |
+| horizons | T ∈ {10, 25, 50, 100, 200} | the same |
+| context density | 1.2–1.4x theirs, by average prompt in characters | — |
+
+SkillExecBench has no public code, so the environment is a reimplementation matched on
+**context density**, not on literal content. Every number in the article comes from the JSON
+under [`results/`](results/), which is committed on purpose: the argument of the write-up is
+that this class of experiment fails by producing clean results, so the data has to be
+auditable. The three `results/aborted-*` directories are runs discarded because of the
+artefacts documented below — they are kept as the evidence for them.
+
+## What is here
+
+- [`docs/resultados-bloque1.md`](docs/resultados-bloque1.md) — full results: the Table 1
+  replication across their whole horizon range, effective cost with prompt caching measured
+  at two procedure lengths, the delayed-relevance and retroactive-invalidation probes, and
+  which claim survives which level of noise.
+- [`docs/metodo-medir-el-instrumento.md`](docs/metodo-medir-el-instrumento.md) — method
+  notes: measure the instrument's noise before the phenomenon, and the nine artefacts it
+  took to learn that. Two of the nine were caught auditing results that were already
+  written up.
+- [`experiments/`](experiments/) — one runner per question, all with per-episode
+  checkpointing so an interrupted grid resumes without re-paying.
+- [`src/dr/runtimes/`](src/dr/runtimes/) — the four runtimes compared: ReAct, Memory,
+  Stateful and SKILL.state.
 
 ## Uso
 

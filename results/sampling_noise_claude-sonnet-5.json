@@ -1,0 +1,572 @@
+{
+  "claude-sonnet-5:oracle:s0:r0:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s0:r1:k40": {
+    "acierto": false,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:oracle:s0:r2:k40": {
+    "acierto": true,
+    "score": 0.7837837837837838
+  },
+  "claude-sonnet-5:oracle:s0:r3:k40": {
+    "acierto": false,
+    "score": 0.4594594594594595
+  },
+  "claude-sonnet-5:oracle:s0:r4:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s0:r5:k40": {
+    "acierto": false,
+    "score": 0.4864864864864865
+  },
+  "claude-sonnet-5:oracle:s0:r6:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s0:r7:k40": {
+    "acierto": false,
+    "score": 0.5675675675675675
+  },
+  "claude-sonnet-5:oracle:s1:r0:k40": {
+    "acierto": false,
+    "score": 0.4117647058823529
+  },
+  "claude-sonnet-5:oracle:s1:r1:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s1:r2:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s1:r3:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s1:r4:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s1:r5:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s1:r6:k40": {
+    "acierto": false,
+    "score": 0.5294117647058824
+  },
+  "claude-sonnet-5:oracle:s1:r7:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s2:r0:k40": {
+    "acierto": true,
+    "score": 0.9696969696969697
+  },
+  "claude-sonnet-5:oracle:s2:r1:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s2:r2:k40": {
+    "acierto": true,
+    "score": 0.9696969696969697
+  },
+  "claude-sonnet-5:oracle:s2:r3:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s2:r4:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s2:r5:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:oracle:s2:r6:k40": {
+    "acierto": true,
+    "score": 0.9393939393939394
+  },
+  "claude-sonnet-5:oracle:s2:r7:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s0:r0:k40": {
+    "acierto": true,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:reminder:s0:r1:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s0:r2:k40": {
+    "acierto": true,
+    "score": 0.8648648648648649
+  },
+  "claude-sonnet-5:reminder:s0:r3:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:reminder:s0:r4:k40": {
+    "acierto": true,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:reminder:s0:r5:k40": {
+    "acierto": false,
+    "score": 0.8918918918918919
+  },
+  "claude-sonnet-5:reminder:s0:r6:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s0:r7:k40": {
+    "acierto": false,
+    "score": 0.5675675675675675
+  },
+  "claude-sonnet-5:reminder:s1:r0:k40": {
+    "acierto": false,
+    "score": 0.9705882352941176
+  },
+  "claude-sonnet-5:reminder:s1:r1:k40": {
+    "acierto": true,
+    "score": 0.7647058823529411
+  },
+  "claude-sonnet-5:reminder:s1:r2:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s1:r3:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s1:r4:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s1:r5:k40": {
+    "acierto": true,
+    "score": 0.9705882352941176
+  },
+  "claude-sonnet-5:reminder:s1:r6:k40": {
+    "acierto": true,
+    "score": 0.9117647058823529
+  },
+  "claude-sonnet-5:reminder:s1:r7:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s2:r0:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s2:r1:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s2:r2:k40": {
+    "acierto": true,
+    "score": 1.0
+  },
+  "claude-sonnet-5:reminder:s2:r3:k40": {
+    "acierto": true,
+    "score": 0.9696969696969697
+  },
+  "claude-sonnet-5:reminder:s2:r4:k40": {
+    "acierto": true,
+    "score": 0.9696969696969697
+  },
+  "claude-sonnet-5:reminder:s2:r5:k40": {
+    "acierto": true,
+    "score": 0.9696969696969697
+  },
+  "claude-sonnet-5:reminder:s2:r6:k40": {
+    "acierto": true,
+    "score": 0.9090909090909091
+  },
+  "claude-sonnet-5:reminder:s2:r7:k40": {
+    "acierto": true,
+    "score": 0.9393939393939394
+  },
+  "claude-sonnet-5:none:s0:r0:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:none:s0:r1:k40": {
+    "acierto": false,
+    "score": 0.8918918918918919
+  },
+  "claude-sonnet-5:none:s0:r2:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:none:s0:r3:k40": {
+    "acierto": true,
+    "score": 0.918918918918919
+  },
+  "claude-sonnet-5:none:s0:r4:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:none:s0:r5:k40": {
+    "acierto": true,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:none:s0:r6:k40": {
+    "acierto": true,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:none:s0:r7:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:none:s1:r0:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r1:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r2:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r3:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r4:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r5:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r6:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s1:r7:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:none:s2:r0:k40": {
+    "acierto": false,
+    "score": 0.7575757575757576
+  },
+  "claude-sonnet-5:none:s2:r1:k40": {
+    "acierto": false,
+    "score": 0.8484848484848485
+  },
+  "claude-sonnet-5:none:s2:r2:k40": {
+    "acierto": false,
+    "score": 0.696969696969697
+  },
+  "claude-sonnet-5:none:s2:r3:k40": {
+    "acierto": false,
+    "score": 0.8181818181818182
+  },
+  "claude-sonnet-5:none:s2:r4:k40": {
+    "acierto": false,
+    "score": 0.9090909090909091
+  },
+  "claude-sonnet-5:none:s2:r5:k40": {
+    "acierto": false,
+    "score": 0.9090909090909091
+  },
+  "claude-sonnet-5:none:s2:r6:k40": {
+    "acierto": false,
+    "score": 0.7878787878787878
+  },
+  "claude-sonnet-5:none:s2:r7:k40": {
+    "acierto": false,
+    "score": 0.8484848484848485
+  },
+  "claude-sonnet-5:hatch:s0:r0:k40": {
+    "acierto": false,
+    "score": 0.9459459459459459
+  },
+  "claude-sonnet-5:hatch:s0:r1:k40": {
+    "acierto": false,
+    "score": 0.7027027027027027
+  },
+  "claude-sonnet-5:hatch:s0:r2:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:hatch:s0:r3:k40": {
+    "acierto": false,
+    "score": 0.6216216216216216
+  },
+  "claude-sonnet-5:hatch:s0:r4:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:hatch:s0:r5:k40": {
+    "acierto": false,
+    "score": 0.972972972972973
+  },
+  "claude-sonnet-5:hatch:s0:r6:k40": {
+    "acierto": false,
+    "score": 0.6216216216216216
+  },
+  "claude-sonnet-5:hatch:s0:r7:k40": {
+    "acierto": false,
+    "score": 0.8378378378378378
+  },
+  "claude-sonnet-5:hatch:s1:r0:k40": {
+    "acierto": true,
+    "score": 0.7941176470588235
+  },
+  "claude-sonnet-5:hatch:s1:r1:k40": {
+    "acierto": true,
+    "score": 0.6470588235294118
+  },
+  "claude-sonnet-5:hatch:s1:r2:k40": {
+    "acierto": false,
+    "score": 0.5
+  },
+  "claude-sonnet-5:hatch:s1:r3:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:hatch:s1:r4:k40": {
+    "acierto": true,
+    "score": 0.6764705882352942
+  },
+  "claude-sonnet-5:hatch:s1:r5:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "claude-sonnet-5:hatch:s1:r6:k40": {
+    "acierto": false,
+    "score": 0.4411764705882353
+  },
+  "claude-sonnet-5:hatch:s1:r7:k40": {
+    "acierto": true,
+    "score": 0.7941176470588235
+  },
+  "claude-sonnet-5:hatch:s2:r0:k40": {
+    "acierto": false,
+    "score": 0.7878787878787878
+  },
+  "claude-sonnet-5:hatch:s2:r1:k40": {
+    "acierto": false,
+    "score": 0.6363636363636364
+  },
+  "claude-sonnet-5:hatch:s2:r2:k40": {
+    "acierto": false,
+    "score": 0.9090909090909091
+  },
+  "claude-sonnet-5:hatch:s2:r3:k40": {
+    "acierto": true,
+    "score": 0.8787878787878788
+  },
+  "claude-sonnet-5:hatch:s2:r4:k40": {
+    "acierto": false,
+    "score": 0.8181818181818182
+  },
+  "claude-sonnet-5:hatch:s2:r5:k40": {
+    "acierto": false,
+    "score": 0.9090909090909091
+  },
+  "claude-sonnet-5:hatch:s2:r6:k40": {
+    "acierto": false,
+    "score": 0.7878787878787878
+  },
+  "claude-sonnet-5:hatch:s2:r7:k40": {
+    "acierto": false,
+    "score": 0.7575757575757576
+  },
+  "repo:claude-sonnet-5:plain:s0:r0:k40": {
+    "acierto": false,
+    "score": 0.7647058823529411
+  },
+  "repo:claude-sonnet-5:plain:s0:r1:k40": {
+    "acierto": false,
+    "score": 0.9411764705882353
+  },
+  "repo:claude-sonnet-5:plain:s0:r2:k40": {
+    "acierto": false,
+    "score": 0.9411764705882353
+  },
+  "repo:claude-sonnet-5:plain:s1:r0:k40": {
+    "acierto": false,
+    "score": 0.8823529411764706
+  },
+  "repo:claude-sonnet-5:plain:s1:r1:k40": {
+    "acierto": false,
+    "score": 0.7941176470588235
+  },
+  "repo:claude-sonnet-5:plain:s1:r2:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:claude-sonnet-5:plain:s2:r0:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:claude-sonnet-5:plain:s2:r1:k40": {
+    "acierto": false,
+    "score": 0.7941176470588235
+  },
+  "repo:claude-sonnet-5:plain:s2:r2:k40": {
+    "acierto": false,
+    "score": 0.7647058823529411
+  },
+  "repo:react:claude-sonnet-5:plain:s0:r0:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s0:r1:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s0:r2:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s1:r0:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s1:r1:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s1:r2:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s2:r0:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s2:r1:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "repo:react:claude-sonnet-5:plain:s2:r2:k40": {
+    "acierto": false,
+    "score": 1.0
+  },
+  "claude-sonnet-5:invalidation:s0:r0:k10": {
+    "acierto": false,
+    "score": 1.0,
+    "score_posterior": 1.0,
+    "n_posteriores": 29
+  },
+  "claude-sonnet-5:invalidation:s0:r1:k10": {
+    "acierto": false,
+    "score": 0.8648648648648649,
+    "score_posterior": 0.8275862068965517,
+    "n_posteriores": 29
+  },
+  "claude-sonnet-5:invalidation:s0:r2:k10": {
+    "acierto": false,
+    "score": 0.7837837837837838,
+    "score_posterior": 0.7241379310344828,
+    "n_posteriores": 29
+  },
+  "claude-sonnet-5:invalidation:s1:r0:k10": {
+    "acierto": false,
+    "score": 1.0,
+    "score_posterior": 1.0,
+    "n_posteriores": 28
+  },
+  "claude-sonnet-5:invalidation:s1:r1:k10": {
+    "acierto": false,
+    "score": 0.9117647058823529,
+    "score_posterior": 0.9285714285714286,
+    "n_posteriores": 28
+  },
+  "claude-sonnet-5:invalidation:s1:r2:k10": {
+    "acierto": false,
+    "score": 0.7352941176470589,
+    "score_posterior": 0.6785714285714286,
+    "n_posteriores": 28
+  },
+  "claude-sonnet-5:invalidation:s2:r0:k10": {
+    "acierto": false,
+    "score": 0.8484848484848485,
+    "score_posterior": 0.8076923076923077,
+    "n_posteriores": 26
+  },
+  "react:claude-sonnet-5:invalidation:s0:r0:k10": {
+    "acierto": false,
+    "score": 0.7567567567567568,
+    "score_posterior": 0.6896551724137931,
+    "n_posteriores": 29
+  },
+  "react:claude-sonnet-5:invalidation:s0:r1:k10": {
+    "acierto": false,
+    "score": 0.9459459459459459,
+    "score_posterior": 0.9310344827586207,
+    "n_posteriores": 29
+  },
+  "react:claude-sonnet-5:invalidation:s0:r2:k10": {
+    "acierto": false,
+    "score": 0.4864864864864865,
+    "score_posterior": 0.3448275862068966,
+    "n_posteriores": 29
+  },
+  "react:claude-sonnet-5:invalidation:s1:r0:k10": {
+    "acierto": false,
+    "score": 0.5588235294117647,
+    "score_posterior": 0.4642857142857143,
+    "n_posteriores": 28
+  },
+  "react:claude-sonnet-5:invalidation:s1:r1:k10": {
+    "acierto": false,
+    "score": 0.7647058823529411,
+    "score_posterior": 0.7142857142857143,
+    "n_posteriores": 28
+  },
+  "react:claude-sonnet-5:invalidation:s1:r2:k10": {
+    "acierto": false,
+    "score": 0.6764705882352942,
+    "score_posterior": 0.6071428571428571,
+    "n_posteriores": 28
+  },
+  "react:claude-sonnet-5:invalidation:s2:r0:k10": {
+    "acierto": false,
+    "score": 1.0,
+    "score_posterior": 1.0,
+    "n_posteriores": 26
+  },
+  "react:claude-sonnet-5:invalidation:s2:r1:k10": {
+    "acierto": false,
+    "score": 0.7575757575757576,
+    "score_posterior": 0.6923076923076923,
+    "n_posteriores": 26
+  },
+  "react:claude-sonnet-5:invalidation:s2:r2:k10": {
+    "acierto": false,
+    "score": 0.7878787878787878,
+    "score_posterior": 0.7307692307692307,
+    "n_posteriores": 26
+  },
+  "claude-sonnet-5:invalidation:s2:r1:k10": {
+    "acierto": false,
+    "score": 0.9393939393939394,
+    "score_posterior": 1.0,
+    "n_posteriores": 26,
+    "entrada_bruta": 165392,
+    "entrada_efectiva": 67975.5,
+    "salida": 7127
+  },
+  "claude-sonnet-5:invalidation:s2:r2:k10": {
+    "acierto": false,
+    "score": 1.0,
+    "score_posterior": 1.0,
+    "n_posteriores": 26,
+    "entrada_bruta": 157313,
+    "entrada_efectiva": 62962.4,
+    "salida": 5753
+  }
+}

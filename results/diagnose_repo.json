@@ -1,0 +1,74 @@
+{
+  "claude-sonnet-5:skillstate:s0:mt600": {
+    "score": 0.9411764705882353,
+    "portantes": "4/5",
+    "resto": "28/29",
+    "truncadas": 0,
+    "sin_accion": 1,
+    "parches_invalidos": 5
+  },
+  "claude-sonnet-5:skillstate:s1:mt600": {
+    "score": 1.0,
+    "portantes": "5/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 2
+  },
+  "claude-sonnet-5:skillstate:s2:mt600": {
+    "score": 0.8823529411764706,
+    "portantes": "3/3",
+    "resto": "27/31",
+    "truncadas": 0,
+    "sin_accion": 2,
+    "parches_invalidos": 14
+  },
+  "claude-haiku-4-5:skillstate:s0:mt600": {
+    "score": 1.0,
+    "portantes": "5/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  },
+  "claude-haiku-4-5:skillstate:s1:mt600": {
+    "score": 1.0,
+    "portantes": "5/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  },
+  "claude-haiku-4-5:skillstate:s2:mt600": {
+    "score": 0.9705882352941176,
+    "portantes": "4/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  },
+  "claude-haiku-4-5:react:s0:mt600": {
+    "score": 1.0,
+    "portantes": "5/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  },
+  "claude-haiku-4-5:react:s1:mt600": {
+    "score": 1.0,
+    "portantes": "5/5",
+    "resto": "29/29",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  },
+  "claude-haiku-4-5:react:s2:mt600": {
+    "score": 0.8235294117647058,
+    "portantes": "2/2",
+    "resto": "26/32",
+    "truncadas": 0,
+    "sin_accion": 0,
+    "parches_invalidos": 0
+  }
+}

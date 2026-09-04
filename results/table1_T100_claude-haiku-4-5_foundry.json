@@ -1,0 +1,47 @@
+{
+  "react": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 632.37,
+    "total_tokens": 76004.66666666667,
+    "overflowed_seeds": [],
+    "entrada_bruta": 3193368.6666666665,
+    "entrada_efectiva": 447749.1166666667
+  },
+  "memory": {
+    "score_mean": 0.717485631204707,
+    "score_sd": 0.17323629852205566,
+    "avg_prompt_tokens": 6332.943333333334,
+    "total_tokens": 740508.3333333334,
+    "overflowed_seeds": [],
+    "entrada_bruta": 633294.3333333334,
+    "entrada_efectiva": 633294.3333333334
+  },
+  "stateful": {
+    "score_mean": 0.9908675799086758,
+    "score_sd": 0.015817815594236322,
+    "avg_prompt_tokens": 34097.45,
+    "total_tokens": 3426899.6666666665,
+    "overflowed_seeds": [],
+    "entrada_bruta": 3409745.0,
+    "entrada_efectiva": 3409745.0
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 2231.2466666666664,
+    "total_tokens": 242336.66666666666,
+    "overflowed_seeds": [],
+    "entrada_bruta": 223124.66666666666,
+    "entrada_efectiva": 223124.66666666666
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 100,
+    "seeds": 3,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

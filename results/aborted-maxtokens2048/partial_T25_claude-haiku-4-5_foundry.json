@@ -1,0 +1,122 @@
+{
+  "react:0": {
+    "score": 1.0,
+    "avg_prompt": 10091.24,
+    "total": 257441,
+    "overflowed": false
+  },
+  "react:1": {
+    "score": 1.0,
+    "avg_prompt": 10250.16,
+    "total": 261797,
+    "overflowed": false
+  },
+  "react:2": {
+    "score": 1.0,
+    "avg_prompt": 10269.2,
+    "total": 262041,
+    "overflowed": false
+  },
+  "react:3": {
+    "score": 1.0,
+    "avg_prompt": 12521.48,
+    "total": 325906,
+    "overflowed": false
+  },
+  "react:4": {
+    "score": 1.0,
+    "avg_prompt": 10636.4,
+    "total": 273055,
+    "overflowed": false
+  },
+  "memory:0": {
+    "score": 1.0,
+    "avg_prompt": 4862.4,
+    "total": 132859,
+    "overflowed": false
+  },
+  "memory:1": {
+    "score": 1.0,
+    "avg_prompt": 5434.32,
+    "total": 153537,
+    "overflowed": false
+  },
+  "memory:2": {
+    "score": 1.0,
+    "avg_prompt": 5174.36,
+    "total": 141768,
+    "overflowed": false
+  },
+  "memory:3": {
+    "score": 1.0,
+    "avg_prompt": 5194.16,
+    "total": 144440,
+    "overflowed": false
+  },
+  "memory:4": {
+    "score": 1.0,
+    "avg_prompt": 5411.24,
+    "total": 152646,
+    "overflowed": false
+  },
+  "stateful:0": {
+    "score": 1.0,
+    "avg_prompt": 10613.56,
+    "total": 271171,
+    "overflowed": false
+  },
+  "stateful:1": {
+    "score": 1.0,
+    "avg_prompt": 10822.76,
+    "total": 276985,
+    "overflowed": false
+  },
+  "stateful:2": {
+    "score": 1.0,
+    "avg_prompt": 11458.8,
+    "total": 294117,
+    "overflowed": false
+  },
+  "stateful:3": {
+    "score": 1.0,
+    "avg_prompt": 10643.56,
+    "total": 272406,
+    "overflowed": false
+  },
+  "stateful:4": {
+    "score": 1.0,
+    "avg_prompt": 11755.56,
+    "total": 302725,
+    "overflowed": false
+  },
+  "skillstate:0": {
+    "score": 1.0,
+    "avg_prompt": 2073.84,
+    "total": 59414,
+    "overflowed": false
+  },
+  "skillstate:1": {
+    "score": 1.0,
+    "avg_prompt": 2079.12,
+    "total": 60195,
+    "overflowed": false
+  },
+  "skillstate:2": {
+    "score": 1.0,
+    "avg_prompt": 2100.64,
+    "total": 60983,
+    "overflowed": false
+  },
+  "skillstate:3": {
+    "score": 1.0,
+    "avg_prompt": 2082.44,
+    "total": 60941,
+    "overflowed": false
+  },
+  "skillstate:4": {
+    "score": 1.0,
+    "avg_prompt": 2111.6,
+    "total": 60718,
+    "overflowed": false
+  }
+}

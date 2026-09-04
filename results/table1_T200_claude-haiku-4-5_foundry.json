@@ -1,0 +1,29 @@
+{
+  "react": {
+    "score_mean": 0.9855072463768115,
+    "score_sd": 0.025102185616940234,
+    "avg_prompt_tokens": 567.5616666666666,
+    "total_tokens": 141163.66666666666,
+    "overflowed_seeds": [],
+    "entrada_bruta": 12563264.333333334,
+    "entrada_efectiva": 1502805.25
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 2278.875,
+    "total_tokens": 494003.0,
+    "overflowed_seeds": [],
+    "entrada_bruta": 455775.0,
+    "entrada_efectiva": 455775.0
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 200,
+    "seeds": 3,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

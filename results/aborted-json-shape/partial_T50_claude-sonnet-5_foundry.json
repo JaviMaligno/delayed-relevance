@@ -1,0 +1,32 @@
+{
+  "skillstate:0": {
+    "score": 0.868421052631579,
+    "avg_prompt": 4021.42,
+    "total": 210245,
+    "overflowed": false
+  },
+  "skillstate:1": {
+    "score": 0.8285714285714286,
+    "avg_prompt": 4660.5,
+    "total": 244129,
+    "overflowed": false
+  },
+  "skillstate:2": {
+    "score": 0.6176470588235294,
+    "avg_prompt": 4497.58,
+    "total": 235897,
+    "overflowed": false
+  },
+  "skillstate:3": {
+    "score": 0.8285714285714286,
+    "avg_prompt": 4169.24,
+    "total": 220120,
+    "overflowed": false
+  },
+  "skillstate:4": {
+    "score": 0.7,
+    "avg_prompt": 4120.48,
+    "total": 215390,
+    "overflowed": false
+  }
+}

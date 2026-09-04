@@ -1,0 +1,18 @@
+{
+  "skillstate": {
+    "score_mean": 0.7256700574966829,
+    "score_sd": 0.10865326497422761,
+    "avg_prompt_tokens": 2106.036,
+    "total_tokens": 115189.6,
+    "overflowed_seeds": []
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 50,
+    "seeds": 5,
+    "max_tokens": 600,
+    "merge": "shallow",
+    "declare_merge": false
+  }
+}

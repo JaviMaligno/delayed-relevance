@@ -1,0 +1,162 @@
+{
+  "claude-sonnet-5:0:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.9791666666666666,
+    "reemite_estado_pct": 65.625,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:1:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.9183673469387755,
+    "reemite_estado_pct": 12.903225806451612,
+    "paso_en_que_guarda_cuarentena": 7,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:2:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.92,
+    "reemite_estado_pct": 40.625,
+    "paso_en_que_guarda_cuarentena": 6,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:3:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.88,
+    "reemite_estado_pct": 54.54545454545455,
+    "paso_en_que_guarda_cuarentena": 8,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:4:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.2857142857142858,
+    "reemite_estado_pct": 28.571428571428573,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:5:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.782608695652174,
+    "reemite_estado_pct": 50.0,
+    "paso_en_que_guarda_cuarentena": 6,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:6:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.88,
+    "reemite_estado_pct": 8.571428571428571,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:7:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.14,
+    "reemite_estado_pct": 27.77777777777778,
+    "paso_en_que_guarda_cuarentena": 8,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:8:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.9166666666666666,
+    "reemite_estado_pct": 9.67741935483871,
+    "paso_en_que_guarda_cuarentena": 5,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:9:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.0,
+    "reemite_estado_pct": 54.285714285714285,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:10:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.0,
+    "reemite_estado_pct": 22.22222222222222,
+    "paso_en_que_guarda_cuarentena": 7,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:11:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.1,
+    "reemite_estado_pct": 20.58823529411765,
+    "paso_en_que_guarda_cuarentena": 5,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:12:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.9,
+    "reemite_estado_pct": 8.823529411764707,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:13:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.08,
+    "reemite_estado_pct": 51.42857142857143,
+    "paso_en_que_guarda_cuarentena": 3,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:14:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.8,
+    "reemite_estado_pct": 53.125,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:15:k40": {
+    "acierto": true,
+    "claves_por_parche": 1.0212765957446808,
+    "reemite_estado_pct": 46.666666666666664,
+    "paso_en_que_guarda_cuarentena": 9,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:16:k40": {
+    "acierto": false,
+    "claves_por_parche": 0.6,
+    "reemite_estado_pct": 45.833333333333336,
+    "paso_en_que_guarda_cuarentena": 5,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:17:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.8979591836734694,
+    "reemite_estado_pct": 17.857142857142858,
+    "paso_en_que_guarda_cuarentena": 5,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:18:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.8163265306122449,
+    "reemite_estado_pct": 13.793103448275861,
+    "paso_en_que_guarda_cuarentena": 6,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  },
+  "claude-sonnet-5:19:k40": {
+    "acierto": true,
+    "claves_por_parche": 0.92,
+    "reemite_estado_pct": 38.46153846153846,
+    "paso_en_que_guarda_cuarentena": 7,
+    "cuarentena_presente_al_usarla": true,
+    "veces_que_toca_cuarentena": 1
+  }
+}

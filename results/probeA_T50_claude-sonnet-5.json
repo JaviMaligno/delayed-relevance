@@ -1,0 +1,21 @@
+{
+  "skillstate:k40": {
+    "score_mean": 0.8427438133320487,
+    "score_sd": 0.15150180536785945,
+    "acierto_dependiente": 0.0,
+    "n": 3
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-sonnet-5",
+    "horizon": 50,
+    "seeds": 3,
+    "ks": [
+      40
+    ],
+    "control": false,
+    "oracle_schema": false,
+    "hatch_schema": false,
+    "max_tokens": 600
+  }
+}

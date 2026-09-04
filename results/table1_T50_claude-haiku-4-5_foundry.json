@@ -1,0 +1,20 @@
+{
+  "stateful": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 17458.100000000002,
+    "total_tokens": 880455.0,
+    "overflowed_seeds": [],
+    "entrada_bruta": 872905.0,
+    "entrada_efectiva": 872905.0
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 50,
+    "seeds": 3,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

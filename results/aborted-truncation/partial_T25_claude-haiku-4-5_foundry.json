@@ -1,0 +1,26 @@
+{
+  "react:0": {
+    "score": 1.0,
+    "avg_prompt": 10452.4,
+    "total": 267260,
+    "overflowed": false
+  },
+  "react:1": {
+    "score": 1.0,
+    "avg_prompt": 10419.48,
+    "total": 266305,
+    "overflowed": false
+  },
+  "react:2": {
+    "score": 1.0,
+    "avg_prompt": 10531.56,
+    "total": 269099,
+    "overflowed": false
+  },
+  "react:3": {
+    "score": 0.8181818181818182,
+    "avg_prompt": 11532.64,
+    "total": 298160,
+    "overflowed": false
+  }
+}
