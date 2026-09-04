@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 
+from dr.envs.longspec import apendice
 from dr.types import Action, Observation
 
 SKUS = [f"SKU-{chr(ord('A') + i)}" for i in range(12)]
@@ -92,6 +93,7 @@ class Warehouse:
         hatch_schema: bool = False,
         reminder: bool = False,
         reminder_raw: bool = False,
+        long_spec: bool = False,
         invalidation_k: int | None = None,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
@@ -120,6 +122,11 @@ class Warehouse:
         # asi que la diferencia entre las dos condiciones no es la instruccion: es que
         # una trae 3 campos y la otra los mismos 3 enterrados entre otros quince.
         self.reminder_raw = reminder_raw
+        # `long_spec` anade la referencia de campos, las excepciones y los ejemplos
+        # resueltos, que llevan el procedimiento por encima del prefijo minimo
+        # cacheable (4.096 tokens, medidos). Sin eso la tabla de coste solo mide el
+        # caso en que NADA cachea salvo la historia acumulada de ReAct.
+        self.long_spec = long_spec
         self.quarantine_notice_text: str | None = None
         self.invalidation_k = invalidation_k
         self.invalidation_from: int | None = None
@@ -539,6 +546,7 @@ class Warehouse:
             "Keep your reasoning under 60 words, then emit the action. Brevity is a hard\n"
             "requirement: a long answer is cut off before the action is written, and a step\n"
             "without an action counts as a wrong action.\n"
+            + (apendice(self) if self.long_spec else "")
         )
 
     def schema_fields(self) -> list[str]:

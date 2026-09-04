@@ -60,25 +60,49 @@ cayó en este proyecto era de esa clase.
 
 ## 1. Réplica de la Tabla 1
 
+### Sus condiciones, verificadas contra el paper
+
+Antes de comparar nada, lo que su Tabla 1 dice literalmente (comprobado en el HTML de arXiv,
+v3):
+
+- **Modelo: Gemini-3-Flash.** El resto del paper evalúa además Gemma-4-31B-it y Qwen-3-8B-it.
+  Ninguno de los tres es de la familia que usamos aquí. Es una diferencia deliberada —ver qué
+  hace el efecto en otra familia es parte del objetivo— pero obliga a que **la primera
+  explicación candidata de cualquier discrepancia sea el modelo, no el método**.
+- **Horizontes: T ∈ {10, 25, 50, 100, 200}.** Su degradación de ReAct es
+  0,90 → 0,92 → 0,88 → 0,84 → **0,74**. El efecto que anuncian es de escala, y **el nuestro se
+  detuvo en T=50, la cuarta parte de su rango**. Corriendo T=100 y T=200 para cerrarlo.
+- **Su columna «Avg Prompt» está en CARACTERES**, no en tokens. Nuestro instrumento ya
+  comparaba en la misma unidad (`measure_density.py` guarda sus cifras y convierte con
+  `CHARS_PER_TOKEN = 3.48`), así que **los ratios de abajo son correctos**; lo que estaba mal
+  era llamarlos tokens en la prosa de este documento. Corregido.
+- **Su métrica:** «Score = Successful Actions / Total Actionable Events», la misma que usamos.
+- **O(T²)** es su afirmación sobre la acumulación de contexto, no O(T).
+
+### Nuestros números
+
+| runtime | T=10 | T=25 | T=50 | ellos T=50 (Gemini-3-Flash) |
+|---|---|---|---|---|
+| ReAct (historia completa) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.88 ±0.04 |
+| Memory (resumen en prosa) | 1.00 ±0.00 | 0.96 ±0.06 | **0.75 ±0.16** | 0.93 ±0.03 |
+| Stateful (estado + historia) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.94 ±0.00 |
+| SKILL.state (solo estado) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.96 ±0.01 |
+
+Prompt medio **en caracteres**, y ratio contra el suyo:
+
 | runtime | T=10 | T=25 | T=50 | ellos T=50 |
 |---|---|---|---|---|
-| ReAct (historia completa) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.88 |
-| Memory (resumen en prosa) | 1.00 ±0.00 | 0.96 ±0.06 | **0.75 ±0.16** | 0.93 |
-| Stateful (estado + historia) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.94 |
-| SKILL.state (solo estado) | 1.00 ±0.00 | 1.00 ±0.00 | **1.00 ±0.00** | 0.96 |
+| ReAct | 4.596 (1,41x) | 9.124 (1,51x) | 16.437 (1,38x) | 11.931 |
+| SKILL.state | 2.136 (1,20x) | 2.139 (1,23x) | **2.157 (1,22x)** | 1.773 |
 
-Prompt medio, y ratio contra el suyo:
+**La mitad de coste se reproduce.** El prompt de SKILL.state es plano —2.136 → 2.157— mientras
+el de ReAct crece a 16.437: O(1) frente a O(T), tal como afirman, y a 1,2–1,4x de su densidad.
 
-| runtime | T=10 | T=25 | T=50 |
-|---|---|---|---|
-| ReAct | 4.596 (1,41x) | 9.124 (1,51x) | 16.437 (1,38x) |
-| SKILL.state | 2.136 (1,20x) | 2.139 (1,23x) | **2.157 (1,22x)** |
-
-**La mitad de coste se reproduce; la de precisión no.** El prompt de SKILL.state es plano —
-2.136 → 2.157 — mientras el de ReAct crece a 16.437: O(1) frente a O(T), tal como afirman.
-Pero con historia completa, prompts de 16k y 172 eventos accionables, el modelo no comete ni
-un error, y no por falta de presión de contexto: vamos un 38% por encima de su densidad. El
-único brazo que se degrada es el que resume en prosa, y más que en el paper.
+**La de precisión, no se reproduce EN ESTE RANGO.** Con historia completa, prompts de ~4.700
+tokens y 172 eventos accionables, Haiku 4.5 no comete un error a T=50 donde Gemini-3-Flash
+comete el 12%. El único brazo que se degrada es el que resume en prosa, y más que en el paper.
+⚠️ **Afirmar más que eso exige T=100 y T=200**, que es donde su curva cae de verdad; hasta
+tenerlos, la lectura correcta es «no aparece a T≤50 en Claude», no «no existe».
 
 **Control de dificultad.** El 69–74% de los eventos son accionables y el 70% de los `Store`
 reutilizan un hueco liberado, así que hay que llevar la cuenta de verdad. Pero **el hueco está
@@ -159,26 +183,49 @@ si sus totales son facturados y su prompt medio bruto.
 ### Condición de validez del 0%, medida en la auditoría
 
 Los tres brazos que comprimen llevan punto de corte de caché en su bloque de sistema, igual que
-ReAct. Que aun así ahorren 0% tiene una causa concreta: **hay un prefijo mínimo cacheable, y la
-especificación de este entorno queda por debajo**. Medido directamente
-(`experiments/probe_cache_minimum.py`), en Haiku 4.5 un bloque de sistema de ~2.200 tokens
-repetido dos veces **no** lee nada de caché y uno de ~4.200 sí; la especificación de Warehouse
-son ~1.300 tokens. ReAct cachea porque su historia acumulada empuja el prefijo por encima del
-mínimo, no porque su bloque de sistema sea distinto.
+ReAct. Que aun así ahorren 0% tiene una causa concreta y medible: **hay un prefijo mínimo
+cacheable, y la especificación de este entorno queda por debajo**.
 
-Qué cambia y qué no:
+**El umbral, medido y no supuesto** (`experiments/probe_cache_minimum.py`, búsqueda binaria
+sobre Haiku 4.5, contando los tokens que reporta la propia API):
 
-- **No cambia la dirección.** Un prefijo que muta invalida la caché desde el punto en que muta:
-  eso es aritmética del mecanismo, no una medida de este entorno.
-- **Sí cambia la magnitud.** Con una especificación por encima del mínimo, los cuatro brazos
-  cachearían su parte estática y el 1,39x se movería. Con estos ~1.300 tokens por paso, el
-  orden de magnitud del ajuste es de ~58k tokens por episodio en cada brazo.
+| prompt de sistema | ¿la segunda llamada lee de caché? |
+|---|---|
+| 2.224 tokens | no |
+| 3.324 tokens | no |
+| **3.984 tokens** | **no** |
+| **4.116 tokens** | **sí** |
+| 4.424 tokens | sí |
+
+**El mínimo es 4.096 tokens exactos.** La especificación corta de Warehouse son 1.491, muy por
+debajo: su bloque de sistema no cachea en ningún brazo. ReAct cachea porque su historia
+acumulada empuja el prefijo por encima del mínimo, no porque su bloque de sistema sea distinto.
+
+Eso convierte «los métodos que comprimen ahorran 0%» en una afirmación sobre la longitud de
+NUESTRO prompt, no sobre el método — así que hay que medir el otro caso, que además es el que
+se parece a un despliegue real.
+
+### El caso del procedimiento largo
+
+`Warehouse(long_spec=True)` añade a la especificación lo que un procedimiento operativo real
+lleva y el nuestro no tenía: la referencia de los 112 campos que de verdad aparecen en los
+eventos —agrupados, y diciendo de cada grupo si el procedimiento lo lee o no—, seis reglas de
+excepción, y cinco ejemplos resueltos generados del propio simulador con una seed que no se usa
+en ningún experimento. No es relleno: es contenido verdadero sobre este entorno.
+
+Resultado: **5.243 tokens, verificado que cachea**. Con eso los cuatro brazos tienen prefijo
+estático cacheable y la comparación de coste se puede hacer en las dos condiciones en vez de en
+una sola. Corriendo.
+
+Lo que ya se puede afirmar sin ese dato:
+
+- **La dirección no depende de la longitud.** Un prefijo que muta invalida la caché desde el
+  punto en que muta: es aritmética del mecanismo.
+- **La magnitud sí.** El 1,39x pertenece a la condición «especificación por debajo del
+  mínimo». El caso largo es una medida distinta, no una corrección de esta.
 - **El 0% de Stateful es además de construcción**: su implementación no manda prefijo
   cacheable, coherente con que su bloque de estado va delante de la historia. Es una
   demostración del mecanismo con la plantilla del Apéndice A.3, no una medida de su código.
-
-Es decir: **"comprimir y cachear están en conflicto" se sostiene; "y por eso el ahorro es del
-82% frente al 0%" vale para esta longitud de prompt y este modelo.**
 
 ---
 
@@ -550,8 +597,17 @@ truncamientos por episodio, checkpoint por episodio, y contabilidad de caché de
 - **Sin `temperature`**: eliminada del SDK. Reproducibilidad estadística, no bit a bit. Aun
   así, repetir dos seeds tras un cambio de prompt dio scores **idénticos al tercer decimal**:
   el fallo medido es estructural, no un tropiezo de muestreo.
-- **Un entorno útil de los cuatro del paper.** Warehouse discrimina; Repo se construyó como
-  control y no discrimina (§4.ter), así que el proyecto tiene un solo entorno con resultados.
+- **Un entorno útil de los dos del paper.** SkillExecBench tiene dos entornos, no cuatro:
+  Warehouse Management y Software Repository. Warehouse discrimina; nuestra versión de Repo se
+  construyó como control y no discrimina (§4.ter), así que el proyecto tiene un solo entorno
+  con resultados.
+- **Familia de modelo distinta a la suya, a propósito.** Su Tabla 1 es Gemini-3-Flash y el
+  resto del paper Gemma-4-31B-it y Qwen-3-8B-it; aquí se usan Claude Haiku 4.5 y Sonnet 5. Ver
+  qué hace el efecto fuera de su familia es parte del objetivo, pero implica que **ninguna
+  discrepancia con sus cifras puede atribuirse al método sin descartar antes el modelo**.
+- **Rango de horizonte incompleto hasta que cierren T=100 y T=200.** Su curva de degradación
+  vive precisamente ahí (ReAct 0,88 a T=50 pero 0,74 a T=200), y el bloque 1 se midió hasta
+  T=50.
 - **La réplica cruzada de modelo está cerrada en la sonda A** (celda del oráculo n=22 en ambos;
   recordatorio n=24 en ambos) **y en la sonda C** (93 pasos dependientes en el brazo de estado,
   82 en el de historia, los dos modelos). No lo está en la Tabla 1 del bloque 1.

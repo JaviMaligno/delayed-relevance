@@ -1,0 +1,5 @@
+suspension del sistema inhibida: True
+proveedor: foundry  modelo: claude-haiku-4-5
+react seed=0 score=1.00 tokens=75030
+react seed=1 score=1.00 tokens=76954
+react seed=2 score=1.00 tokens=76030

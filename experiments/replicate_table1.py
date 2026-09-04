@@ -57,6 +57,11 @@ def main() -> None:
                              "condicion que produjo 0.62 en la corrida de humo.")
     parser.add_argument("--only", nargs="*", default=None,
                         help="Correr solo estos runtimes.")
+    parser.add_argument("--long-spec", action="store_true",
+                        help="Procedimiento largo (~4.900 tokens), por encima del "
+                             "prefijo minimo cacheable de 4.096. Sin esto la tabla de "
+                             "coste solo mide el caso en que el bloque de sistema no "
+                             "cachea en ningun brazo.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -72,7 +77,7 @@ def main() -> None:
 
     # Checkpoint por episodio: una corrida larga que se cae por un fallo de red no
     # puede perder todo lo ya pagado. Al relanzar, los episodios ya hechos se saltan.
-    stem = f"T{args.horizon}_{args.model}_{client.provider}"
+    stem = f"T{args.horizon}_{args.model}_{client.provider}" + ("_longspec" if args.long_spec else "")
     if args.merge != "deep":
         stem += f"_{args.merge}"
     if args.no_declare_merge:
@@ -105,7 +110,7 @@ def main() -> None:
                     totals.append(cached["total"])
                 print(f"{name} seed={seed} (cacheado)", flush=True)
                 continue
-            env = Warehouse(horizon=args.horizon, seed=seed)
+            env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec)
             try:
                 results = run_episode(env, build(client, env))
             except anthropic.BadRequestError as error:
