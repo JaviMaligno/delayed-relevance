@@ -3,3 +3,7 @@ proveedor: foundry  modelo: claude-haiku-4-5
 react seed=0 score=1.00 tokens=75030
 react seed=1 score=1.00 tokens=76954
 react seed=2 score=1.00 tokens=76030
+  AVISO memory seed=0: 23 respuestas truncadas por el tope de salida
+memory seed=0 score=0.58 tokens=754343
+  AVISO memory seed=1: 2 respuestas truncadas por el tope de salida
+memory seed=1 score=0.91 tokens=713049

@@ -3,3 +3,14 @@ proveedor: foundry  modelo: claude-haiku-4-5
 react seed=0 score=1.00 tokens=31118
 react seed=1 score=1.00 tokens=31190
 react seed=2 score=1.00 tokens=31791
+memory seed=0 score=0.74 tokens=272455
+memory seed=1 score=0.80 tokens=277186
+  AVISO memory seed=2: 14 respuestas truncadas por el tope de salida
+memory seed=2 score=0.94 tokens=293518
+stateful seed=0 score=1.00 tokens=825347
+stateful seed=1 score=1.00 tokens=831928
+stateful seed=2 score=1.00 tokens=829260
+skillstate seed=0 score=1.00 tokens=50088
+skillstate seed=1 score=1.00 tokens=54413
+skillstate seed=2 score=1.00 tokens=51026
+escrito results\table1_T50_claude-haiku-4-5_foundry_longspec.json

@@ -214,18 +214,39 @@ excepción, y cinco ejemplos resueltos generados del propio simulador con una se
 en ningún experimento. No es relleno: es contenido verdadero sobre este entorno.
 
 Resultado: **5.243 tokens, verificado que cachea**. Con eso los cuatro brazos tienen prefijo
-estático cacheable y la comparación de coste se puede hacer en las dos condiciones en vez de en
-una sola. Corriendo.
+estático cacheable, y la comparación se puede hacer en las **dos** condiciones. T=50, 3 seeds:
 
-Lo que ya se puede afirmar sin ese dato:
+| runtime | corto: bruto | corto: facturado | ahorro | largo: bruto | largo: facturado | ahorro |
+|---|---|---|---|---|---|---|
+| SKILL.state | 109k | 109k | 0% | 300k | **64k** | **79%** |
+| ReAct | 826k | 152k | 82% | 1.029k | 162k | 84% |
+| Memory | 313k | 313k | 0% | 494k | 258k | 48% |
+| Stateful | 873k | 873k | 0% | 1.082k | 849k | 22% |
 
-- **La dirección no depende de la longitud.** Un prefijo que muta invalida la caché desde el
-  punto en que muta: es aritmética del mecanismo.
-- **La magnitud sí.** El 1,39x pertenece a la condición «especificación por debajo del
-  mínimo». El caso largo es una medida distinta, no una corrección de esta.
-- **El 0% de Stateful es además de construcción**: su implementación no manda prefijo
-  cacheable, coherente con que su bloque de estado va delante de la historia. Es una
-  demostración del mecanismo con la plantilla del Apéndice A.3, no una medida de su código.
+Ventaja de SKILL.state sobre ReAct:
+
+| unidad | procedimiento corto | procedimiento realista |
+|---|---|---|
+| tokens brutos | **7,54x** | 3,43x |
+| **dinero facturado** | **1,39x** | **2,51x** |
+
+Tres lecturas, y ninguna necesita ya una nota al pie:
+
+1. **En las dos condiciones el recuento bruto es la cifra equivocada.** Dice 7,54x o 3,43x
+   donde la factura dice 1,39x o 2,51x. La dirección del sesgo es siempre la misma: el bruto
+   exagera la ventaja del método.
+2. **Alargar el procedimiento abarata SKILL.state un 41%** ($109 → $64 por mil episodios en
+   Haiku). Se triplicó el texto estático y bajó la factura, porque cruzó el umbral. Es
+   contraintuitivo y es accionable: si tu prefijo estático está justo por debajo de 4.096
+   tokens, alargarlo te sale gratis y te ahorra dinero.
+3. **El orden del prompt vale 5,2x, y aguanta en las dos condiciones.** Stateful manda casi lo
+   mismo que ReAct, con el bloque de estado delante en vez de detrás —donde lo pone su
+   Apéndice A.3—, y le facturan $849 frente a $162 por mil episodios con el mismo score de
+   1,00. En Sonnet 5, a 3x la entrada, son $2.546 frente a $486.
+
+⚠️ El 0% de Stateful en la condición corta es además **de construcción**: su implementación no
+manda prefijo cacheable, coherente con que su bloque de estado va delante de la historia. En la
+condición larga sí cachea (22%) porque su bloque de sistema entra por sí solo.
 
 ---
 
