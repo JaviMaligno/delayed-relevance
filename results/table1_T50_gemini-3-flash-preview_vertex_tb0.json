@@ -1,0 +1,70 @@
+{
+  "react": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 15707.696,
+    "total_tokens": 789468.2,
+    "overflowed_seeds": [],
+    "score_por_seed": {
+      "0": 1.0,
+      "1": 1.0,
+      "2": 1.0,
+      "3": 1.0,
+      "4": 1.0
+    },
+    "sd_entre_seeds": 0.0,
+    "episodios": 5,
+    "entrada_bruta": 823802.4,
+    "entrada_efectiva": 789226.5599999999
+  },
+  "memory": {
+    "score_mean": 0.8578917882942652,
+    "score_sd": 0.0603685876699199,
+    "avg_prompt_tokens": 5254.768000000001,
+    "total_tokens": 297297.2,
+    "overflowed_seeds": [],
+    "score_por_seed": {
+      "0": 0.8157894736842105,
+      "1": 0.8
+    },
+    "sd_entre_seeds": 0.011164843913471759,
+    "episodios": 5,
+    "entrada_bruta": 262738.4,
+    "entrada_efectiva": 262738.4
+  },
+  "stateful": {
+    "score_mean": 0.9770897832817337,
+    "score_sd": 0.03825440416887093,
+    "avg_prompt_tokens": 16427.091999999997,
+    "total_tokens": 827249.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 844256.8,
+    "entrada_efectiva": 823644.8200000001
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 2085.0199999999995,
+    "total_tokens": 111231.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 104251.0,
+    "entrada_efectiva": 104251.0
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 50,
+    "seeds": 5,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

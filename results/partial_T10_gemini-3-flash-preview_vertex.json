@@ -1,0 +1,13 @@
+{
+  "skillstate:0:0": {
+    "truncadas": 3,
+    "pasos": 10,
+    "thinking": 3872,
+    "entrada_bruta": 24775,
+    "entrada_efectiva": 24775.0,
+    "score": 0.875,
+    "avg_prompt": 2477.5,
+    "total": 30215,
+    "overflowed": false
+  }
+}

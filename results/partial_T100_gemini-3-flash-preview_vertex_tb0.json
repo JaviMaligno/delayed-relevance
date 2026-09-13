@@ -1,0 +1,112 @@
+{
+  "react:0:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 2373,
+    "entrada_bruta": 3239077,
+    "entrada_efectiva": 3010749.7,
+    "score": 1.0,
+    "avg_prompt": 29853.8,
+    "total": 2995036,
+    "overflowed": false
+  },
+  "react:1:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 2316,
+    "entrada_bruta": 3108395,
+    "entrada_efectiva": 2986852.7,
+    "score": 1.0,
+    "avg_prompt": 29733.48,
+    "total": 2982621,
+    "overflowed": false
+  },
+  "react:2:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 2082,
+    "entrada_bruta": 3162518,
+    "entrada_efectiva": 2996762.3,
+    "score": 1.0,
+    "avg_prompt": 29783.45,
+    "total": 2987538,
+    "overflowed": false
+  },
+  "react:3:0": {
+    "truncadas": 5,
+    "pasos": 100,
+    "thinking": 4223,
+    "entrada_bruta": 3147858,
+    "entrada_efectiva": 2982165.3,
+    "score": 0.8169014084507042,
+    "avg_prompt": 29637.55,
+    "total": 2974793,
+    "overflowed": false
+  },
+  "react:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 2336,
+    "entrada_bruta": 3310782,
+    "entrada_efectiva": 3008720.4,
+    "score": 0.984375,
+    "avg_prompt": 29751.58,
+    "total": 2984702,
+    "overflowed": false
+  },
+  "memory:0:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 1325,
+    "entrada_bruta": 565405,
+    "entrada_efectiva": 565405.0,
+    "score": 0.5205479452054794,
+    "avg_prompt": 5654.05,
+    "total": 650588,
+    "overflowed": false
+  },
+  "memory:1:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 1341,
+    "entrada_bruta": 547581,
+    "entrada_efectiva": 547581.0,
+    "score": 0.7761194029850746,
+    "avg_prompt": 5475.81,
+    "total": 624666,
+    "overflowed": false
+  },
+  "memory:2:0": {
+    "truncadas": 1,
+    "pasos": 100,
+    "thinking": 1585,
+    "entrada_bruta": 575242,
+    "entrada_efectiva": 575242.0,
+    "score": 0.7878787878787878,
+    "avg_prompt": 5752.42,
+    "total": 666516,
+    "overflowed": false
+  },
+  "memory:3:0": {
+    "truncadas": 4,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 574458,
+    "entrada_efectiva": 574458.0,
+    "score": 0.7183098591549296,
+    "avg_prompt": 5744.58,
+    "total": 662661,
+    "overflowed": false
+  },
+  "memory:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 245,
+    "entrada_bruta": 566731,
+    "entrada_efectiva": 566731.0,
+    "score": 0.71875,
+    "avg_prompt": 5667.31,
+    "total": 652273,
+    "overflowed": false
+  }
+}
