@@ -72,6 +72,24 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Comprobar que la clave tiene valor
+        # Un secreto creado sin valor -- `gh secret set` leyendo de un stdin vacio --
+        # existe, se lista y llega aqui como cadena vacia. Sin esta comprobacion el
+        # sintoma es un traceback en el primer episodio, dos minutos de runner mas
+        # tarde, y se lee como un fallo del corredor.
+        env:
+          MODEL: ${{ inputs.model }}
+        run: |
+          if [ "${MODEL#gemini}" != "$MODEL" ] && [ -z "$GEMINI_API_KEY" ]; then
+            echo "::error::GEMINI_API_KEY esta vacia. Ponla con:  gh secret set GEMINI_API_KEY --repo JaviMaligno/delayed-relevance --body '<clave>'"
+            exit 1
+          fi
+          if [ "${MODEL#claude}" != "$MODEL" ] && [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY esta vacia."
+            exit 1
+          fi
+          echo "clave presente (${#GEMINI_API_KEY} caracteres para Gemini)"
+
       - name: Instalar
         run: pip install -e ".[dev]"
 
