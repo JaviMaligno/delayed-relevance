@@ -86,3 +86,16 @@ def test_unparseable_answers_never_repair_the_world():
     results = run_episode(env, ReActRuntime(client=client, spec=env.spec()))
     assert len(results) == 6
     assert all(content is None for content in env.shelves.values())
+
+
+def test_el_resultado_del_paso_arrastra_los_tokens_de_pensamiento():
+    # Sin este numero, calibrar el tope de salida es adivinar: el pensamiento se
+    # come el presupuesto y la respuesta cortada se lee como fallo del metodo.
+    from dr.llm import Completion
+    from dr.types import StepResult
+
+    completions = [Completion(text="x", prompt_tokens=1, output_tokens=340,
+                              thinking_tokens=300)]
+    assert sum(c.thinking_tokens for c in completions) == 300
+    assert StepResult(step=0, actionable=True, correct=True, prompt_tokens=1,
+                      output_tokens=340, thinking_tokens=300).thinking_tokens == 300

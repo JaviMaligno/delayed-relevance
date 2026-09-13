@@ -178,3 +178,23 @@ def test_un_prompt_que_no_cabe_se_reconoce_en_los_dos_proveedores():
     # contarse como una celda no medible.
     assert not desborda(RuntimeError('HTTP 400 de Gemini: invalid generationConfig'))
     assert not desborda(RuntimeError("HTTP 403 de Gemini: permiso denegado"))
+
+
+def test_el_presupuesto_de_pensamiento_viaja_en_la_peticion(capturado):
+    # Apagarlo es una decision que hay que poder tomar con datos: el pensamiento
+    # cuenta contra el tope de salida, y en la corrida de humo dos respuestas de
+    # diez salieron truncadas con el tope calibrado sobre Claude.
+    GeminiClient(model="gemini-3-flash-preview", thinking_budget=0).complete(
+        system="s", user="u")
+    config = capturado["enviado"]["generationConfig"]
+    assert config["thinkingConfig"] == {"thinkingBudget": 0}
+
+
+def test_sin_presupuesto_declarado_no_se_manda_thinking_config(capturado):
+    GeminiClient(model="gemini-3-flash-preview").complete(system="s", user="u")
+    assert "thinkingConfig" not in capturado["enviado"]["generationConfig"]
+
+
+def test_la_fabrica_pasa_el_presupuesto_de_pensamiento(capturado):
+    cliente = build_client("gemini-3-flash-preview", thinking_budget=0)
+    assert cliente.thinking_budget == 0

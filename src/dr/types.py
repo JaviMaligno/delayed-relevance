@@ -91,3 +91,9 @@ class StepResult:
     truncated: int = 0
     cache_read: int = 0
     cache_write: int = 0
+    thinking_tokens: int = 0
+    """Razonamiento interno del proveedor, ya sumado en `output_tokens`.
+
+    Va hasta aqui porque decide el tope de salida: si el pensamiento se come el
+    presupuesto, la respuesta se corta y el brazo falla por el tope, no por el
+    metodo. Sin este numero, calibrar el tope es adivinar."""
