@@ -166,3 +166,15 @@ def test_completion_sigue_construyendose_sin_los_campos_nuevos():
     salida = Completion(text="x", prompt_tokens=1, output_tokens=1)
     assert salida.thinking_tokens == 0
     assert salida.model_version == ""
+
+
+def test_un_prompt_que_no_cabe_se_reconoce_en_los_dos_proveedores():
+    from dr.llm import es_desbordamiento_de_contexto as desborda
+
+    assert desborda(Exception("prompt is too long: 210000 tokens > 200000"))
+    assert desborda(RuntimeError('HTTP 400 de Gemini: {"error": {"message": '
+                                 '"The input token count exceeds the maximum"}}'))
+    # Un 400 por otra cosa NO es desbordamiento: tiene que reventar la corrida, no
+    # contarse como una celda no medible.
+    assert not desborda(RuntimeError('HTTP 400 de Gemini: invalid generationConfig'))
+    assert not desborda(RuntimeError("HTTP 403 de Gemini: permiso denegado"))

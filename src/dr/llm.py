@@ -320,6 +320,16 @@ class GeminiClient:
         )
 
 
+def es_desbordamiento_de_contexto(error: Exception) -> bool:
+    """Un prompt que no cabe no es un fallo del metodo: es una celda que no se puede
+    medir, y hay que contarla como tal en los dos proveedores. Anthropic lo dice con
+    una BadRequestError; Gemini, con un 400 que menciona los tokens."""
+    mensaje = str(error).lower()
+    if "prompt is too long" in mensaje:
+        return True
+    return "http 400" in mensaje and "token" in mensaje
+
+
 def build_client(model: str, provider: str = "auto", max_tokens: int = 2048):
     """Un solo punto donde se decide el cliente, para que los corredores no tengan
     que saber de proveedores. El nombre del modelo basta: `gemini-*` va a Gemini y
