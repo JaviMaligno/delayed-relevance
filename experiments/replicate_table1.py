@@ -71,6 +71,8 @@ def main() -> None:
                              "prefijo minimo cacheable de 4.096. Sin esto la tabla de "
                              "coste solo mide el caso en que el bloque de sistema no "
                              "cachea en ningun brazo.")
+    parser.add_argument("--thinking-budget", type=int, default=None,
+                        help="Solo Gemini. Tokens de razonamiento interno; 0 lo apaga. Cuenta contra el tope de salida, asi que sin acotarlo el truncamiento se lee como fallo del metodo.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -78,7 +80,8 @@ def main() -> None:
     awake = keep_system_awake()
     print(f"suspension del sistema inhibida: {awake}", flush=True)
 
-    client = build_client(args.model, args.provider, args.max_tokens)
+    client = build_client(args.model, args.provider, args.max_tokens,
+                          thinking_budget=args.thinking_budget)
     print(f"proveedor: {client.provider}  modelo: {args.model}", flush=True)
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
@@ -90,6 +93,14 @@ def main() -> None:
         stem += f"_{args.merge}"
     if args.no_declare_merge:
         stem += "_undeclared"
+    # El tope de salida y el presupuesto de pensamiento cambian lo que se mide, asi
+    # que no pueden compartir fichero de checkpoint: si lo comparten, la calibracion
+    # lee como "ya hecho" lo medido con el otro ajuste. Solo se anaden cuando se
+    # apartan del valor por defecto, para no invalidar lo ya guardado.
+    if args.max_tokens != 600:
+        stem += f"_mt{args.max_tokens}"
+    if args.thinking_budget is not None:
+        stem += f"_tb{args.thinking_budget}"
     partial_path = Path(args.out) / f"partial_{stem}.json"
     done: dict[str, dict] = {}
     if partial_path.exists():
@@ -147,6 +158,9 @@ def main() -> None:
                 brutos.append(cst['tokens_brutos'])
                 efectivos.append(cst['entrada_efectiva'])
                 done[key] = {
+                    "truncadas": truncs,
+                    "pasos": len(results),
+                    "thinking": sum(r.thinking_tokens for r in results),
                     "entrada_bruta": brutos[-1],
                     "entrada_efectiva": efectivos[-1],
                     "score": scores[-1],
@@ -182,6 +196,7 @@ def main() -> None:
     table["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds,
                       "repeats": args.repeats,
+                      "thinking_budget": args.thinking_budget,
                       "max_tokens": args.max_tokens,
                       "merge": args.merge,
                       "declare_merge": not args.no_declare_merge}

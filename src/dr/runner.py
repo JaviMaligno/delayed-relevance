@@ -25,6 +25,8 @@ def run_episode(env, runtime) -> list[StepResult]:
                 truncated=sum(1 for c in completions if c.truncated),
                 cache_read=sum(c.cache_read for c in completions),
                 cache_write=sum(c.cache_write for c in completions),
+                thinking_tokens=sum(
+                    getattr(c, "thinking_tokens", 0) for c in completions),
             )
         )
         # Un fallo de parseo es una accion nula, nunca la correcta: inyectar

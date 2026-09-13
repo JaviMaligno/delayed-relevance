@@ -330,10 +330,12 @@ def es_desbordamiento_de_contexto(error: Exception) -> bool:
     return "http 400" in mensaje and "token" in mensaje
 
 
-def build_client(model: str, provider: str = "auto", max_tokens: int = 2048):
+def build_client(model: str, provider: str = "auto", max_tokens: int = 2048,
+                 thinking_budget: int | None = None):
     """Un solo punto donde se decide el cliente, para que los corredores no tengan
     que saber de proveedores. El nombre del modelo basta: `gemini-*` va a Gemini y
     todo lo demas a Anthropic, salvo que se fuerce `--provider`."""
     if provider == "gemini" or (provider == "auto" and model.startswith("gemini")):
-        return GeminiClient(model=model, max_tokens=max_tokens)
+        return GeminiClient(model=model, max_tokens=max_tokens,
+                            thinking_budget=thinking_budget)
     return AnthropicClient(model=model, provider=provider, max_tokens=max_tokens)
