@@ -86,5 +86,16 @@
     "avg_prompt": 5983.225,
     "total": 1394948,
     "overflowed": false
+  },
+  "memory:3:0": {
+    "truncadas": 1,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 1172476,
+    "entrada_efectiva": 1172476.0,
+    "score": 0.6363636363636364,
+    "avg_prompt": 5862.38,
+    "total": 1357466,
+    "overflowed": false
   }
 }
