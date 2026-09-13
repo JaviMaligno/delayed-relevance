@@ -164,3 +164,70 @@ def test_la_fabrica_enruta_a_vertex_con_el_proveedor_forzado(vertex):
 def test_la_fabrica_pasa_el_presupuesto_de_pensamiento_a_vertex(vertex):
     assert build_client("gemini-3-flash-preview", provider="vertex",
                         thinking_budget=0).thinking_budget == 0
+
+
+def _http_401():
+    import io
+    import urllib.error
+
+    cuerpo = b'{"error": {"code": 401, "status": "UNAUTHENTICATED"}}'
+    return urllib.error.HTTPError("https://x", 401, "Unauthorized", {},
+                                  io.BytesIO(cuerpo))
+
+
+def test_un_401_refresca_el_token_y_reintenta(vertex, monkeypatch):
+    # `gcloud auth print-access-token` devuelve un token CACHEADO: puede venir a
+    # mitad de su hora de vida, asi que un TTL contado desde que se pide no garantiza
+    # nada. La rejilla de R1 se cayo entera por esto, los cuatro procesos a la vez.
+    import dr.llm as llm
+
+    intentos = {"n": 0}
+
+    def _post(url, headers, payload):
+        intentos["n"] += 1
+        if intentos["n"] == 1:
+            raise _http_401()
+        return vertex["respuesta"]
+
+    monkeypatch.setattr(llm, "post_json", _post)
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+    salida = _cliente().complete(system="s", user="u")
+    assert salida.text == "ok"
+    assert vertex["tokens"] == ["token-0", "token-1"]
+
+
+def test_un_401_que_persiste_acaba_fallando(vertex, monkeypatch):
+    # Si la sesion de gcloud esta caducada de verdad, reintentar no la arregla: tiene
+    # que parar con el mensaje del proveedor delante, no girar en vacio.
+    import dr.llm as llm
+
+    def _post(url, headers, payload):
+        raise _http_401()
+
+    monkeypatch.setattr(llm, "post_json", _post)
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+    with pytest.raises(RuntimeError, match="401"):
+        _cliente().complete(system="s", user="u")
+
+
+def test_en_ai_studio_un_401_no_se_reintenta(capturado_401):
+    # Alli el 401 es una clave mala, y eso no se arregla pidiendo otro token.
+    with pytest.raises(RuntimeError, match="401"):
+        GeminiClient(model="gemini-3-flash-preview").complete(system="s", user="u")
+    assert capturado_401["intentos"] == 1
+
+
+@pytest.fixture
+def capturado_401(monkeypatch):
+    import dr.llm as llm
+
+    estado = {"intentos": 0}
+
+    def _post(url, headers, payload):
+        estado["intentos"] += 1
+        raise _http_401()
+
+    monkeypatch.setattr(llm, "post_json", _post)
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+    monkeypatch.setenv("GEMINI_API_KEY", "ficticia")
+    return estado

@@ -324,6 +324,15 @@ class GeminiClient:
                 return self._generate(system, user, max_tokens, cache_prefix)
             except urllib.error.HTTPError as error:
                 ultimo = intento == RETRY_ATTEMPTS - 1
+                if error.code == 401 and self.backend == "vertex" and not ultimo:
+                    # `gcloud auth print-access-token` devuelve un token cacheado, que
+                    # puede venir ya a mitad de su hora de vida: contar el TTL desde
+                    # que se pide no basta. Aqui si se arregla reintentando, porque lo
+                    # primero que se hace es tirar el token y pedir otro. En AI Studio
+                    # un 401 es una clave mala y no se reintenta.
+                    print("  [401] token caducado, pidiendo otro a gcloud", flush=True)
+                    self._token = ""
+                    continue
                 if error.code not in GEMINI_RETRY_STATUS or ultimo:
                     detalle = error.read().decode(errors="replace")[:400]
                     raise RuntimeError(
