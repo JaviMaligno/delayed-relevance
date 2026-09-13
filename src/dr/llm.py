@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 
 import json
 import os
+import subprocess
 import time
 import urllib.error
 import urllib.request
@@ -188,6 +189,39 @@ GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
 GEMINI_TIMEOUT = 300
 GEMINI_RETRY_STATUS = (429, 500, 502, 503, 504)
 
+VERTEX_HOST = "aiplatform.googleapis.com"
+VERTEX_TOKEN_TTL = 45 * 60
+"""Segundos que se reutiliza un token de gcloud antes de pedir otro.
+
+Viven una hora y R1 dura mas: sin renovarlo, la rejilla se cae a media celda con un
+401 que no se arregla esperando, asi que el reintento no lo salvaria."""
+
+
+def _gcloud(*args: str) -> str:
+    salida = subprocess.run(("gcloud", *args), capture_output=True, text=True)
+    if salida.returncode != 0:
+        raise RuntimeError(
+            f"gcloud {' '.join(args)} fallo: {salida.stderr.strip()[:200]}")
+    return salida.stdout.strip()
+
+
+def gcloud_access_token() -> str:
+    """Token de las credenciales por defecto del CLI.
+
+    Es el equivalente de lo que Foundry hace con `az login`: con la sesion de gcloud
+    hecha no hace falta ninguna clave, y no queda ningun secreto en disco ni en el
+    entorno del proceso."""
+    return _gcloud("auth", "print-access-token")
+
+
+def gcloud_project() -> str:
+    """Proyecto activo del CLI, o cadena vacia si no hay ninguno configurado."""
+    try:
+        return _gcloud("config", "get-value", "project")
+    except RuntimeError:
+        return ""
+
+
 
 def post_json(url: str, headers: dict, payload: dict) -> dict:
     """POST de JSON con stdlib. Aislado en una funcion para poder sustituirlo en los
@@ -223,18 +257,62 @@ class GeminiClient:
         temperature: float = 0.0,
         top_p: float = 1.0,
         thinking_budget: int | None = None,
+        backend: str = "api",
     ) -> None:
-        clave = os.environ.get("GEMINI_API_KEY")
-        if not clave:
-            raise RuntimeError(
-                "falta GEMINI_API_KEY: ponla en el entorno o en el .env del repo")
         self.model = model
         self.max_tokens = max_tokens
         self.temperature = temperature
         self.top_p = top_p
         self.thinking_budget = thinking_budget
-        self.provider = "gemini"
-        self._clave = clave
+        self.backend = backend
+        self._clave = ""
+        self._token = ""
+        self._token_pedido = 0.0
+        if backend == "vertex":
+            # El proveedor se declara distinto a proposito: su nombre entra en el
+            # fichero de checkpoint, y episodios de dos backends en un mismo fichero
+            # serian celdas de procedencia desconocida.
+            self.provider = "vertex"
+            self.location = os.environ.get("GEMINI_VERTEX_LOCATION", "global")
+            self.project = (os.environ.get("GEMINI_VERTEX_PROJECT")
+                            or os.environ.get("GOOGLE_CLOUD_PROJECT")
+                            or gcloud_project())
+            if not self.project:
+                raise RuntimeError(
+                    "falta el proyecto de GCP: exporta GEMINI_VERTEX_PROJECT o deja "
+                    "hecho `gcloud config set project <id>`")
+        else:
+            clave = os.environ.get("GEMINI_API_KEY")
+            if not clave:
+                raise RuntimeError(
+                    "falta GEMINI_API_KEY: ponla en el entorno o en el .env del repo")
+            self.provider = "gemini"
+            self._clave = clave
+
+    def _url_y_cabeceras(self) -> tuple[str, dict]:
+        """Lo unico que cambia entre backends. El cuerpo es identico en los dos: si
+        difiriera, las dos corridas dejarian de ser comparables."""
+        if self.backend != "vertex":
+            return (f"{GEMINI_BASE}/models/{self.model}:generateContent",
+                    {"content-type": "application/json",
+                     "x-goog-api-key": self._clave})
+        host = (VERTEX_HOST if self.location == "global"
+                else f"{self.location}-{VERTEX_HOST}")
+        url = (f"https://{host}/v1beta1/projects/{self.project}"
+               f"/locations/{self.location}/publishers/google/models/"
+               f"{self.model}:generateContent")
+        # `x-goog-user-project`: con credenciales de usuario, Vertex responde 403
+        # "requires a quota project" sin ella, y el mensaje se lee como falta de plan.
+        return url, {"content-type": "application/json",
+                     "Authorization": f"Bearer {self._token_vigente()}",
+                     "x-goog-user-project": self.project}
+
+    def _token_vigente(self) -> str:
+        ahora = time.monotonic()
+        if not self._token or ahora - self._token_pedido >= VERTEX_TOKEN_TTL:
+            self._token = gcloud_access_token()
+            self._token_pedido = ahora
+        return self._token
 
     def complete(self, system: str, user: str, max_tokens: int | None = None,
                  cache_prefix: str | list[str] | None = None) -> Completion:
@@ -282,11 +360,8 @@ class GeminiClient:
             "contents": [{"role": "user", "parts": partes}],
             "generationConfig": config,
         }
-        datos = post_json(
-            f"{GEMINI_BASE}/models/{self.model}:generateContent",
-            {"content-type": "application/json", "x-goog-api-key": self._clave},
-            payload,
-        )
+        url, cabeceras = self._url_y_cabeceras()
+        datos = post_json(url, cabeceras, payload)
         return self._leer(datos)
 
     @staticmethod
@@ -335,6 +410,9 @@ def build_client(model: str, provider: str = "auto", max_tokens: int = 2048,
     """Un solo punto donde se decide el cliente, para que los corredores no tengan
     que saber de proveedores. El nombre del modelo basta: `gemini-*` va a Gemini y
     todo lo demas a Anthropic, salvo que se fuerce `--provider`."""
+    if provider == "vertex":
+        return GeminiClient(model=model, max_tokens=max_tokens,
+                            thinking_budget=thinking_budget, backend="vertex")
     if provider == "gemini" or (provider == "auto" and model.startswith("gemini")):
         return GeminiClient(model=model, max_tokens=max_tokens,
                             thinking_budget=thinking_budget)

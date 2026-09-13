@@ -53,7 +53,7 @@ def main() -> None:
                              "temperature 0) basta 1.")
     parser.add_argument("--model", default="claude-haiku-4-5")
     parser.add_argument("--provider", default="auto",
-                        choices=["auto", "api", "foundry", "gemini"])
+                        choices=["auto", "api", "foundry", "gemini", "vertex"])
     parser.add_argument("--max-tokens", type=int, default=600,
                         help="Tope de salida por llamada. Sus totales de la Tabla 1 "
                              "implican respuestas cortas; 2048 disparaba el coste "
