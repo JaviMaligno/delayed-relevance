@@ -1,0 +1,140 @@
+name: Experimento
+
+# Las rejillas son espera contra una API, no CPU: el portatil no aporta nada y se
+# satura. Aqui corren desatendidas, con los checkpoints por episodio guardados en una
+# rama aparte, asi que un lanzamiento que agote el tiempo continua en el siguiente sin
+# re-pagar lo ya medido.
+#
+# workflow_dispatch Y NADA MAS. El repo es publico: cualquier disparador que un fork
+# pueda provocar expondria GEMINI_API_KEY.
+
+on:
+  workflow_dispatch:
+    inputs:
+      experimento:
+        description: Que rejilla correr
+        required: true
+        type: choice
+        options: [table1, probeA, probeC]
+      model:
+        description: ID de modelo (gemini-* enruta solo a Gemini)
+        required: true
+        default: gemini-3-flash-preview
+        type: string
+      horizons:
+        description: 'table1: horizontes separados por espacios, de menor a mayor'
+        default: '10 25 50'
+        type: string
+      seeds:
+        description: 'table1/probeA: numero de seeds. probeC: lista, p.ej. "4 10 6"'
+        default: '5'
+        type: string
+      repeats:
+        description: Repeticiones por seed (1 basta en greedy)
+        default: '1'
+        type: string
+      runtimes:
+        description: Runtimes a correr, vacio = los cuatro
+        default: ''
+        type: string
+      max_tokens:
+        description: Tope de salida por llamada
+        default: '600'
+        type: string
+      extra:
+        description: Argumentos extra para el corredor (--ks, --oracle-schema, --k...)
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  # Dos lanzamientos de la misma celda se pisarian el checkpoint. Se encolan, no se
+  # cancelan: cancelar tira episodios ya pagados.
+  group: experimento-${{ inputs.experimento }}-${{ inputs.model }}
+  cancel-in-progress: false
+
+jobs:
+  correr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340   # por debajo del tope de 6 h del runner
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      RAMA: runs/${{ inputs.experimento }}-${{ inputs.model }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar
+        run: pip install -e ".[dev]"
+
+      - name: Restaurar checkpoints de la rama de resultados
+        run: |
+          git fetch origin "$RAMA" || echo "sin rama previa: primera corrida"
+          if git rev-parse --verify "origin/$RAMA" >/dev/null 2>&1; then
+            git checkout "origin/$RAMA" -- results/ || true
+            echo "checkpoints restaurados:"
+            ls -1 results/partial_* 2>/dev/null || echo "  ninguno"
+          fi
+
+      - name: Correr
+        # Las entradas entran por `env`, no interpoladas en el shell: asi no hay
+        # comillas que se rompan ni una entrada que se lea como comando.
+        env:
+          EXPERIMENTO: ${{ inputs.experimento }}
+          MODEL: ${{ inputs.model }}
+          HORIZONS: ${{ inputs.horizons }}
+          SEEDS: ${{ inputs.seeds }}
+          REPEATS: ${{ inputs.repeats }}
+          RUNTIMES: ${{ inputs.runtimes }}
+          MAX_TOKENS: ${{ inputs.max_tokens }}
+          EXTRA: ${{ inputs.extra }}
+        run: |
+          set -euo pipefail
+          ONLY=""
+          if [ -n "$RUNTIMES" ]; then ONLY="--only $RUNTIMES"; fi
+          case "$EXPERIMENTO" in
+            table1)
+              # De menor a mayor: si el criterio de R1 queda decidido en un horizonte
+              # corto, el largo no hace falta.
+              for T in $HORIZONS; do
+                echo "::group::table1 T=$T"
+                python experiments/replicate_table1.py --horizon "$T" --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
+                echo "::endgroup::"
+              done
+              ;;
+            probeA)
+              python experiments/probe_a.py --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
+              ;;
+            probeC)
+              python experiments/diagnose_probeC.py --seeds $SEEDS --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $EXTRA
+              ;;
+          esac
+
+      - name: Guardar resultados
+        # `always()`: una rejilla que se corta por tiempo o por un error de API ha
+        # pagado episodios que hay que conservar igual.
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$RAMA"
+          git add -f results/
+          git commit -m "runs: ${{ inputs.experimento }} ${{ inputs.model }} (run ${{ github.run_number }})" \
+            || { echo "nada nuevo que guardar"; exit 0; }
+          git push -f origin "$RAMA"
+
+      - name: Subir tambien como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.experimento }}-${{ inputs.model }}-${{ github.run_number }}
+          path: results/
+          if-no-files-found: warn

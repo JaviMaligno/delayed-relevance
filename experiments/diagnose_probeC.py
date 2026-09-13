@@ -25,7 +25,7 @@ from pathlib import Path
 from dr.config import load_env
 from dr.envs.warehouse import SHELF_COUNT, Warehouse, event_field
 from dr.keepawake import keep_system_awake, release
-from dr.llm import AnthropicClient
+from dr.llm import build_client
 from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
 from dr.types import Action
@@ -112,11 +112,13 @@ def main() -> None:
     p.add_argument("--repeats", type=int, default=1)
     p.add_argument("--k", type=int, default=10)
     p.add_argument("--max-tokens", type=int, default=600)
+    p.add_argument("--provider", default="auto",
+                   choices=["auto", "api", "foundry", "gemini"])
     args = p.parse_args()
 
     load_env()
     keep_system_awake()
-    cliente = AnthropicClient(model=args.model, max_tokens=args.max_tokens)
+    cliente = build_client(args.model, args.provider, args.max_tokens)
     ruta = Path("results") / "diagnose_probeC.json"
     ruta.parent.mkdir(exist_ok=True)
     hechos: dict = json.loads(ruta.read_text()) if ruta.exists() else {}

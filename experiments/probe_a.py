@@ -20,7 +20,7 @@ import anthropic
 from dr.config import load_env
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
-from dr.llm import AnthropicClient
+from dr.llm import build_client, es_desbordamiento_de_contexto
 from dr.metrics import aggregate, coste_efectivo, score
 from dr.runtimes.memory import MemoryRuntime
 from dr.runtimes.react import ReActRuntime
@@ -70,11 +70,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--horizon", type=int, default=50)
     parser.add_argument("--seeds", type=int, default=5)
+    parser.add_argument("--repeats", type=int, default=1,
+                        help="Repeticiones por seed; ver replicate_table1.py. Con una "
+                             "tirada por seed esta sonda dio un 60% que al repetirlo "
+                             "resulto ser 21%.")
     parser.add_argument("--ks", nargs="*", type=int, default=[1, 5, 10, 20, 40])
     parser.add_argument("--control", action="store_true",
                         help="Cuarentena sobre una estanteria que nunca es portante.")
     parser.add_argument("--model", default="claude-haiku-4-5")
-    parser.add_argument("--provider", default="auto", choices=["auto", "api", "foundry"])
+    parser.add_argument("--provider", default="auto",
+                        choices=["auto", "api", "foundry", "gemini"])
     parser.add_argument("--max-tokens", type=int, default=600)
     parser.add_argument("--oracle-schema", action="store_true",
                         help="Dar al esquema un campo para la cuarentena (cota superior).")
@@ -88,7 +93,7 @@ def main() -> None:
 
     load_env()
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
-    client = AnthropicClient(model=args.model, provider=args.provider, max_tokens=args.max_tokens)
+    client = build_client(args.model, args.provider, args.max_tokens)
     sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "") + ("_reminder" if args.reminder else "")
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
@@ -110,8 +115,12 @@ def main() -> None:
     for name, build in runtimes.items():
         for k in args.ks:
             scores, aciertos = [], []
-            for seed in range(args.seeds):
-                clave = f"{name}:k{k}:{seed}"
+            for seed, rep in [(s, r) for s in range(args.seeds)
+                              for r in range(args.repeats)]:
+                clave = f"{name}:k{k}:{seed}:{rep}"
+                # Compatibilidad con lo medido antes de las repeticiones.
+                if rep == 0 and clave not in done and f"{name}:k{k}:{seed}" in done:
+                    clave = f"{name}:k{k}:{seed}"
                 if clave in done:
                     scores.append(done[clave]["score"])
                     aciertos.append(done[clave]["dependiente"])
@@ -124,8 +133,8 @@ def main() -> None:
                                 reminder=args.reminder)
                 try:
                     resultados, acierto = run_episode_probe(env, build(client, env))
-                except anthropic.BadRequestError as error:
-                    if "prompt is too long" not in str(error).lower():
+                except (anthropic.BadRequestError, RuntimeError) as error:
+                    if not es_desbordamiento_de_contexto(error):
                         raise
                     print(f"{clave} DESBORDA la ventana", flush=True)
                     continue

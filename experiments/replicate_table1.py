@@ -11,7 +11,7 @@ import anthropic
 from dr.config import load_env
 from dr.envs.warehouse import Warehouse
 from dr.keepawake import keep_system_awake, release
-from dr.llm import AnthropicClient
+from dr.llm import build_client, es_desbordamiento_de_contexto
 from dr.metrics import aggregate, coste_efectivo, score
 from dr.runner import run_episode
 from dr.runtimes.memory import MemoryRuntime
@@ -43,8 +43,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--horizon", type=int, required=True)
     parser.add_argument("--seeds", type=int, default=5)
+    parser.add_argument("--repeats", type=int, default=1,
+                        help="Repeticiones por seed. Una seed es una tirada, no una "
+                             "replica: con el prompt fijo, la unica fuente de "
+                             "variacion entre episodios de la misma seed es el "
+                             "muestreo del modelo, y es de decenas de puntos. El "
+                             "acierto se agrega sobre repeticiones y la dispersion "
+                             "entre seeds se reporta aparte. En greedy (Gemini a "
+                             "temperature 0) basta 1.")
     parser.add_argument("--model", default="claude-haiku-4-5")
-    parser.add_argument("--provider", default="auto", choices=["auto", "api", "foundry"])
+    parser.add_argument("--provider", default="auto",
+                        choices=["auto", "api", "foundry", "gemini"])
     parser.add_argument("--max-tokens", type=int, default=600,
                         help="Tope de salida por llamada. Sus totales de la Tabla 1 "
                              "implican respuestas cortas; 2048 disparaba el coste "
@@ -69,8 +78,7 @@ def main() -> None:
     awake = keep_system_awake()
     print(f"suspension del sistema inhibida: {awake}", flush=True)
 
-    client = AnthropicClient(model=args.model, provider=args.provider,
-                             max_tokens=args.max_tokens)
+    client = build_client(args.model, args.provider, args.max_tokens)
     print(f"proveedor: {client.provider}  modelo: {args.model}", flush=True)
     Path(args.out).mkdir(exist_ok=True)
     table: dict[str, dict[str, object]] = {}
@@ -95,52 +103,59 @@ def main() -> None:
         scores, prompts, totals = [], [], []
         brutos, efectivos = [], []
         overflowed: list[int] = []
+        por_seed: dict[int, list[float]] = {}
         for seed in range(args.seeds):
-            key = f"{name}:{seed}"
-            if key in done:
-                cached = done[key]
-                if "entrada_bruta" in cached:
-                    brutos.append(cached["entrada_bruta"])
-                    efectivos.append(cached["entrada_efectiva"])
-                if cached.get("overflowed"):
+            for rep in range(args.repeats):
+                key = f"{name}:{seed}:{rep}"
+                # Las corridas anteriores a las repeticiones guardaron "name:seed".
+                # Se aceptan como la repeticion 0 para no re-pagar lo ya medido.
+                if rep == 0 and key not in done and f"{name}:{seed}" in done:
+                    key = f"{name}:{seed}"
+                if key in done:
+                    cached = done[key]
+                    if "entrada_bruta" in cached:
+                        brutos.append(cached["entrada_bruta"])
+                        efectivos.append(cached["entrada_efectiva"])
+                    if cached.get("overflowed"):
+                        overflowed.append(seed)
+                    else:
+                        scores.append(cached["score"])
+                        por_seed.setdefault(seed, []).append(cached["score"])
+                        prompts.append(cached["avg_prompt"])
+                        totals.append(cached["total"])
+                    print(f"{name} seed={seed} rep={rep} (cacheado)", flush=True)
+                    continue
+                env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec)
+                try:
+                    results = run_episode(env, build(client, env))
+                except anthropic.BadRequestError as error:
+                    if "prompt is too long" not in str(error).lower():
+                        raise
+                    print(f"{name} seed={seed} rep={rep} DESBORDA la ventana de contexto", flush=True)
                     overflowed.append(seed)
-                else:
-                    scores.append(cached["score"])
-                    prompts.append(cached["avg_prompt"])
-                    totals.append(cached["total"])
-                print(f"{name} seed={seed} (cacheado)", flush=True)
-                continue
-            env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec)
-            try:
-                results = run_episode(env, build(client, env))
-            except anthropic.BadRequestError as error:
-                if "prompt is too long" not in str(error).lower():
-                    raise
-                print(f"{name} seed={seed} DESBORDA la ventana de contexto", flush=True)
-                overflowed.append(seed)
-                done[key] = {"overflowed": True}
+                    done[key] = {"overflowed": True}
+                    partial_path.write_text(json.dumps(done, indent=2))
+                    continue
+                truncs = sum(r.truncated for r in results)
+                if truncs:
+                    print(f"  AVISO {name} seed={seed}: {truncs} respuestas truncadas "
+                          f"por el tope de salida", flush=True)
+                scores.append(score(results))
+                prompts.append(sum(r.prompt_tokens for r in results) / len(results))
+                totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
+                cst = coste_efectivo(results)
+                brutos.append(cst['tokens_brutos'])
+                efectivos.append(cst['entrada_efectiva'])
+                done[key] = {
+                    "entrada_bruta": brutos[-1],
+                    "entrada_efectiva": efectivos[-1],
+                    "score": scores[-1],
+                    "avg_prompt": prompts[-1],
+                    "total": totals[-1],
+                    "overflowed": False,
+                }
                 partial_path.write_text(json.dumps(done, indent=2))
-                continue
-            truncs = sum(r.truncated for r in results)
-            if truncs:
-                print(f"  AVISO {name} seed={seed}: {truncs} respuestas truncadas "
-                      f"por el tope de salida", flush=True)
-            scores.append(score(results))
-            prompts.append(sum(r.prompt_tokens for r in results) / len(results))
-            totals.append(sum(r.prompt_tokens + r.output_tokens for r in results))
-            cst = coste_efectivo(results)
-            brutos.append(cst['tokens_brutos'])
-            efectivos.append(cst['entrada_efectiva'])
-            done[key] = {
-                "entrada_bruta": brutos[-1],
-                "entrada_efectiva": efectivos[-1],
-                "score": scores[-1],
-                "avg_prompt": prompts[-1],
-                "total": totals[-1],
-                "overflowed": False,
-            }
-            partial_path.write_text(json.dumps(done, indent=2))
-            print(f"{name} seed={seed} score={scores[-1]:.2f} tokens={totals[-1]}", flush=True)
+                print(f"{name} seed={seed} rep={rep} score={scores[-1]:.2f} tokens={totals[-1]}", flush=True)
         if scores:
             table[name] = {
                 "score_mean": finite(aggregate(scores).mean),
@@ -148,6 +163,10 @@ def main() -> None:
                 "avg_prompt_tokens": finite(aggregate(prompts).mean),
                 "total_tokens": finite(aggregate(totals).mean),
                 "overflowed_seeds": overflowed,
+                "score_por_seed": {str(s): aggregate(v).mean for s, v in por_seed.items()},
+                "sd_entre_seeds": finite(aggregate(
+                    [aggregate(v).mean for v in por_seed.values()]).sd),
+                "episodios": len(scores),
                 "entrada_bruta": finite(aggregate(brutos).mean) if brutos else None,
                 "entrada_efectiva": finite(aggregate(efectivos).mean) if efectivos else None,
             }
@@ -162,6 +181,7 @@ def main() -> None:
 
     table["_meta"] = {"provider": client.provider, "model": args.model,
                       "horizon": args.horizon, "seeds": args.seeds,
+                      "repeats": args.repeats,
                       "max_tokens": args.max_tokens,
                       "merge": args.merge,
                       "declare_merge": not args.no_declare_merge}
