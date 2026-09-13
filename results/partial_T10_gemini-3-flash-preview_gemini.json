@@ -1,0 +1,18 @@
+{
+  "react:0:0": {
+    "entrada_bruta": 56007,
+    "entrada_efectiva": 44997.3,
+    "score": 1.0,
+    "avg_prompt": 4377.4,
+    "total": 47892,
+    "overflowed": false
+  },
+  "skillstate:0:0": {
+    "entrada_bruta": 22666,
+    "entrada_efectiva": 22666.0,
+    "score": 1.0,
+    "avg_prompt": 2266.6,
+    "total": 27925,
+    "overflowed": false
+  }
+}
