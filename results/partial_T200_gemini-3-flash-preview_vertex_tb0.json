@@ -97,5 +97,71 @@
     "avg_prompt": 5862.38,
     "total": 1357466,
     "overflowed": false
+  },
+  "memory:4:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 1152779,
+    "entrada_efectiva": 1152779.0,
+    "score": 0.6,
+    "avg_prompt": 5763.895,
+    "total": 1328453,
+    "overflowed": false
+  },
+  "stateful:0:0": {
+    "truncadas": 2,
+    "pasos": 200,
+    "thinking": 5250,
+    "entrada_bruta": 12213140,
+    "entrada_efectiva": 12176325.5,
+    "score": 0.9347826086956522,
+    "avg_prompt": 60861.175,
+    "total": 12197621,
+    "overflowed": false
+  },
+  "stateful:1:0": {
+    "truncadas": 3,
+    "pasos": 200,
+    "thinking": 5691,
+    "entrada_bruta": 13415786,
+    "entrada_efectiva": 12384238.4,
+    "score": 0.8581560283687943,
+    "avg_prompt": 61348.11,
+    "total": 12296609,
+    "overflowed": false
+  },
+  "stateful:2:0": {
+    "truncadas": 1,
+    "pasos": 200,
+    "thinking": 3668,
+    "entrada_bruta": 13936911,
+    "entrada_efectiva": 12400549.8,
+    "score": 0.9253731343283582,
+    "avg_prompt": 61149.215,
+    "total": 12253843,
+    "overflowed": false
+  },
+  "stateful:3:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 4617,
+    "entrada_bruta": 12361029,
+    "entrada_efectiva": 12316848.9,
+    "score": 0.993006993006993,
+    "avg_prompt": 61559.7,
+    "total": 12338352,
+    "overflowed": false
+  },
+  "stateful:4:0": {
+    "truncadas": 2,
+    "pasos": 200,
+    "thinking": 5282,
+    "entrada_bruta": 12115940,
+    "entrada_efectiva": 12104904.2,
+    "score": 0.9481481481481482,
+    "avg_prompt": 60518.39,
+    "total": 12128957,
+    "overflowed": false
   }
 }
