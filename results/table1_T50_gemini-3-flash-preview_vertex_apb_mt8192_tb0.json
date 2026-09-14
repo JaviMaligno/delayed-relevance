@@ -1,0 +1,37 @@
+{
+  "react": {
+    "score_mean": 1.0,
+    "score_sd": null,
+    "avg_prompt_tokens": 15291.9,
+    "total_tokens": 767888.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 1,
+    "entrada_bruta": 911783.0,
+    "entrada_efectiva": 779313.8
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": null,
+    "avg_prompt_tokens": 2208.1,
+    "total_tokens": 116862.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 1,
+    "entrada_bruta": 110405.0,
+    "entrada_efectiva": 110405.0
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 50,
+    "seeds": 1,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 8192,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}
