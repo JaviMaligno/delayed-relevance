@@ -113,7 +113,7 @@ def main() -> None:
     p.add_argument("--k", type=int, default=10)
     p.add_argument("--max-tokens", type=int, default=600)
     p.add_argument("--provider", default="auto",
-                   choices=["auto", "api", "foundry", "gemini"])
+                   choices=["auto", "api", "foundry", "gemini", "vertex"])
     args = p.parse_args()
 
     load_env()

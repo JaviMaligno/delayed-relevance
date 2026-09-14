@@ -79,7 +79,7 @@ def main() -> None:
                         help="Cuarentena sobre una estanteria que nunca es portante.")
     parser.add_argument("--model", default="claude-haiku-4-5")
     parser.add_argument("--provider", default="auto",
-                        choices=["auto", "api", "foundry", "gemini"])
+                        choices=["auto", "api", "foundry", "gemini", "vertex"])
     parser.add_argument("--max-tokens", type=int, default=600)
     parser.add_argument("--oracle-schema", action="store_true",
                         help="Dar al esquema un campo para la cuarentena (cota superior).")
