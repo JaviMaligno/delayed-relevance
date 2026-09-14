@@ -1,0 +1,35 @@
+{
+  "memory:0:0": {
+    "truncadas": 2,
+    "pasos": 100,
+    "thinking": 205,
+    "entrada_bruta": 574827,
+    "entrada_efectiva": 574827.0,
+    "score": 0.6575342465753424,
+    "avg_prompt": 5748.27,
+    "total": 663629,
+    "overflowed": false
+  },
+  "memory:1:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 146,
+    "entrada_bruta": 561614,
+    "entrada_efectiva": 561614.0,
+    "score": 0.8208955223880597,
+    "avg_prompt": 5616.14,
+    "total": 644324,
+    "overflowed": false
+  },
+  "memory:2:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 561607,
+    "entrada_efectiva": 561607.0,
+    "score": 0.7878787878787878,
+    "avg_prompt": 5616.07,
+    "total": 644350,
+    "overflowed": false
+  }
+}

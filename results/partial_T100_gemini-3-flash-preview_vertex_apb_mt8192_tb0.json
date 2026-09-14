@@ -75,5 +75,93 @@
     "avg_prompt": 5461.04,
     "total": 618911,
     "overflowed": false
+  },
+  "memory:2:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 164,
+    "entrada_bruta": 571061,
+    "entrada_efectiva": 571061.0,
+    "score": 1.0,
+    "avg_prompt": 5710.61,
+    "total": 655629,
+    "overflowed": false
+  },
+  "memory:3:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 464,
+    "entrada_bruta": 561197,
+    "entrada_efectiva": 561197.0,
+    "score": 0.8571428571428571,
+    "avg_prompt": 5611.97,
+    "total": 640812,
+    "overflowed": false
+  },
+  "memory:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 389,
+    "entrada_bruta": 551069,
+    "entrada_efectiva": 551069.0,
+    "score": 0.7307692307692307,
+    "avg_prompt": 5510.69,
+    "total": 624700,
+    "overflowed": false
+  },
+  "skillstate:0:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 222648,
+    "entrada_efectiva": 222648.0,
+    "score": 1.0,
+    "avg_prompt": 2226.48,
+    "total": 236160,
+    "overflowed": false
+  },
+  "skillstate:1:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 218536,
+    "entrada_efectiva": 218536.0,
+    "score": 1.0,
+    "avg_prompt": 2185.36,
+    "total": 232560,
+    "overflowed": false
+  },
+  "skillstate:2:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 217164,
+    "entrada_efectiva": 217164.0,
+    "score": 1.0,
+    "avg_prompt": 2171.64,
+    "total": 231005,
+    "overflowed": false
+  },
+  "skillstate:3:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 464,
+    "entrada_bruta": 231944,
+    "entrada_efectiva": 231944.0,
+    "score": 1.0,
+    "avg_prompt": 2319.44,
+    "total": 247374,
+    "overflowed": false
+  },
+  "skillstate:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 221734,
+    "entrada_efectiva": 221734.0,
+    "score": 1.0,
+    "avg_prompt": 2217.34,
+    "total": 236343,
+    "overflowed": false
   }
 }
