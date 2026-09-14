@@ -31,5 +31,27 @@
     "avg_prompt": 5616.07,
     "total": 644350,
     "overflowed": false
+  },
+  "memory:3:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 555236,
+    "entrada_efectiva": 555236.0,
+    "score": 0.8732394366197183,
+    "avg_prompt": 5552.36,
+    "total": 634212,
+    "overflowed": false
+  },
+  "memory:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 0,
+    "entrada_bruta": 559162,
+    "entrada_efectiva": 559162.0,
+    "score": 0.75,
+    "avg_prompt": 5591.62,
+    "total": 640291,
+    "overflowed": false
   }
 }

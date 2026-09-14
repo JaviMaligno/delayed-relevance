@@ -1,0 +1,25 @@
+{
+  "memory": {
+    "score_mean": 0.7779095986923815,
+    "score_sd": 0.08109273004519,
+    "avg_prompt_tokens": 5624.892,
+    "total_tokens": 645361.2,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 562489.2,
+    "entrada_efectiva": 562489.2
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 100,
+    "seeds": 5,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 8192,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}
