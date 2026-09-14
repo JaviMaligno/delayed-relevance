@@ -163,5 +163,60 @@
     "avg_prompt": 60518.39,
     "total": 12128957,
     "overflowed": false
+  },
+  "skillstate:0:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 441404,
+    "entrada_efectiva": 441404.0,
+    "score": 1.0,
+    "avg_prompt": 2207.02,
+    "total": 470169,
+    "overflowed": false
+  },
+  "skillstate:1:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 425052,
+    "entrada_efectiva": 425052.0,
+    "score": 1.0,
+    "avg_prompt": 2125.26,
+    "total": 453403,
+    "overflowed": false
+  },
+  "skillstate:2:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 435240,
+    "entrada_efectiva": 435240.0,
+    "score": 1.0,
+    "avg_prompt": 2176.2,
+    "total": 463263,
+    "overflowed": false
+  },
+  "skillstate:3:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 424439,
+    "entrada_efectiva": 424439.0,
+    "score": 1.0,
+    "avg_prompt": 2122.195,
+    "total": 452536,
+    "overflowed": false
+  },
+  "skillstate:4:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 0,
+    "entrada_bruta": 427553,
+    "entrada_efectiva": 427553.0,
+    "score": 1.0,
+    "avg_prompt": 2137.765,
+    "total": 455417,
+    "overflowed": false
   }
 }
