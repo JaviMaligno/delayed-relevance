@@ -42,5 +42,16 @@
     "avg_prompt": 29861.28,
     "total": 3109761,
     "overflowed": false
+  },
+  "react:4:0": {
+    "truncadas": 0,
+    "pasos": 100,
+    "thinking": 63267,
+    "entrada_bruta": 3034068,
+    "entrada_efectiva": 2956736.4,
+    "score": 1.0,
+    "avg_prompt": 29481.44,
+    "total": 3017962,
+    "overflowed": false
   }
 }
