@@ -1,0 +1,46 @@
+{
+  "react:0:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 6981,
+    "entrada_bruta": 12021318,
+    "entrada_efectiva": 11568078.0,
+    "score": 0.92,
+    "avg_prompt": 57588.59,
+    "total": 11541285,
+    "overflowed": false
+  },
+  "react:1:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 11752,
+    "entrada_bruta": 11702426,
+    "entrada_efectiva": 11525594.0,
+    "score": 0.92,
+    "avg_prompt": 57529.73,
+    "total": 11534210,
+    "overflowed": false
+  },
+  "react:2:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 6000,
+    "entrada_bruta": 11991966,
+    "entrada_efectiva": 11770905.3,
+    "score": 0.83,
+    "avg_prompt": 58731.715,
+    "total": 11772461,
+    "overflowed": false
+  },
+  "react:3:0": {
+    "truncadas": 0,
+    "pasos": 200,
+    "thinking": 5258,
+    "entrada_bruta": 11950042,
+    "entrada_efectiva": 11692201.0,
+    "score": 0.955,
+    "avg_prompt": 58317.76,
+    "total": 11686693,
+    "overflowed": false
+  }
+}
