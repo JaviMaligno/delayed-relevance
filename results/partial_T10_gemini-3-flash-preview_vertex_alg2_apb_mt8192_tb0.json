@@ -1,0 +1,24 @@
+{
+  "skillstate:0:0": {
+    "truncadas": 0,
+    "pasos": 10,
+    "thinking": 0,
+    "entrada_bruta": 20830,
+    "entrada_efectiva": 20830.0,
+    "score": 1.0,
+    "avg_prompt": 2083.0,
+    "total": 22452,
+    "overflowed": false
+  },
+  "react:0:0": {
+    "truncadas": 0,
+    "pasos": 10,
+    "thinking": 0,
+    "entrada_bruta": 43947,
+    "entrada_efectiva": 43947.0,
+    "score": 1.0,
+    "avg_prompt": 4394.7,
+    "total": 44745,
+    "overflowed": false
+  }
+}
