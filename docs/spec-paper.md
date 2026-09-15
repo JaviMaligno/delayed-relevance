@@ -37,9 +37,24 @@ De ahí cuelgan cuatro contribuciones, con su estado:
    recuperación con historia en Warehouse, 8–14 en Repo, 0 con estado explícito. Lo nuestro
    es la **métrica**, no el signo.
 2. **Modelo objetivo: `gemini-3-flash-preview`**, que es el de su Tabla 1, con
-   `temperature=0.0` y `top_p=1.0`, sus mismos ajustes. Recupera la decodificación greedy que
-   el SDK de Anthropic ya no permite, y con ella las seeds vuelven a ser instancias del
-   entorno en vez de tiradas.
+   `temperature=0.0` y `top_p=1.0`, sus mismos ajustes.
+
+   > **Corregido el 2026-09-15 con dato en contra.** Esta decisión decía que con greedy
+   > «las seeds vuelven a ser instancias del entorno en vez de tiradas», y de ahí que
+   > bastara **una** tirada por celda. **Es falso en este proveedor.** La misma celda
+   > —T=200, seed 2, ReAct, entorno del Apéndice B + Algoritmo 2, `temperature=0`,
+   > `thinking_budget=0`— repetida cinco veces da **0,830 / 0,930 / 0,940 / 0,945 /
+   > 0,960**: media 0,921, **sd 0,052**, amplitud 0,130.
+   >
+   > La dispersión no es simétrica y las trazas dicen por qué: los fallos **encadenan**.
+   > Un SKU mal copiado en el paso 12 deja al modelo afirmando en el paso 16 «Shelf 0
+   > (SKU-F, stored in step 12)» cuando él mismo guardó otro ahí. Casi siempre ~0,94, y
+   > de vez en cuando una cascada temprana hunde la celda a 0,83.
+   >
+   > Consecuencia operativa: **una tirada por celda no sostiene ninguna afirmación del
+   > paper**, que es justo lo que ya exigía el punto 3. Un efecto por debajo de ~5
+   > puntos medido con una tirada es indistinguible del ruido. Evidencia:
+   > `results/adj_T200_gemini-3-flash-preview_react_s2*.jsonl`, con traza por paso.
 3. **Protocolo §7 para todo lo que se enseñe**: pocas seeds, muchas repeticiones por seed,
    acierto agregado sobre repeticiones y dispersión entre seeds aparte. Lo medido con una
    tirada por seed no entra en el paper, ni siquiera como indicio.
