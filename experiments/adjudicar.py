@@ -32,6 +32,8 @@ def main() -> None:
     p.add_argument("--apendice-b", action="store_true")
     p.add_argument("--sin-telemetria", action="store_true")
     p.add_argument("--ruido", type=int, default=0)
+    p.add_argument("--etiqueta", default="",
+                   help="Sufijo del fichero de traza. Repetir la MISMA celda es\nla unica forma de medir el ruido de corrida a corrida, y sin etiqueta\ncada repeticion pisaria a la anterior.")
     p.add_argument("--out", default="results")
     args = p.parse_args()
 
@@ -40,8 +42,9 @@ def main() -> None:
     env = Warehouse(horizon=args.horizon, seed=args.seed, apendice_b=args.apendice_b,
                     sin_telemetria=args.sin_telemetria, ruido=args.ruido)
     runtime = build_runtimes(True, True)[args.runtime](cliente, env)
+    sufijo = f"_{args.etiqueta}" if args.etiqueta else ""
     destino = Path(args.out) / (f"adj_T{args.horizon}_{args.model}_{args.runtime}"
-                                f"_s{args.seed}.jsonl")
+                                f"_s{args.seed}{sufijo}.jsonl")
     destino.unlink(missing_ok=True)
     print(f"adjudicando {args.runtime} T={args.horizon} seed={args.seed} -> {destino}",
           flush=True)
