@@ -160,7 +160,9 @@ def main() -> None:
                                 sin_telemetria=args.sin_telemetria,
                                 ruido=args.ruido)
                 try:
-                    results = run_episode(env, build(client, env))
+                    traza = Path(args.out) / f"traza_{stem}_{name}_s{seed}r{rep}.jsonl"
+                    traza.unlink(missing_ok=True)
+                    results = run_episode(env, build(client, env), traza=traza)
                 except anthropic.BadRequestError as error:
                     if "prompt is too long" not in str(error).lower():
                         raise

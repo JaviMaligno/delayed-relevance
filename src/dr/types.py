@@ -87,6 +87,17 @@ class StepResult:
     correct: bool
     prompt_tokens: int
     output_tokens: int
+    raw: tuple[str, ...] = ()
+    """Respuesta COMPLETA del modelo en cada llamada de este paso.
+
+    Sin esto, `correct=False` es un cero indistinguible: no se puede saber si el
+    modelo perdio la cuenta del estado -- lo que el experimento mide -- o si copio
+    mal un campo del JSON de accion, que es una diferencia de nuestra reimplementacion
+    y no del metodo. Adjudicar despues exige tener el texto delante."""
+    esperado: str | None = None
+    """Accion del ground truth, renderizada."""
+    ejecutado: str | None = None
+    """Accion que se aplico, o None si la respuesta no parseo."""
     state_size: int = 0
     truncated: int = 0
     cache_read: int = 0
