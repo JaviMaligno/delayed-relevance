@@ -78,6 +78,12 @@ def main() -> None:
                              "obligan a Move, y rechazo de acciones invalidas con error "
                              "local. La diferencia contra la variante sin bandera es la "
                              "medida de cuanto pesaba el hueco.")
+    parser.add_argument("--sin-telemetria", action="store_true",
+                        help="Generador de su Algoritmo 2: todos los pasos accionables. "
+                             "Nuestra telemetria como paso propio es el hueco 3 de I4.")
+    parser.add_argument("--ruido", type=int, default=0,
+                        help="Distractores del Apendice C anexados a cada observacion, "
+                             "bajo su cabecera. Su Experimento 2 usa 0, 5, 20 y 50.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -98,6 +104,10 @@ def main() -> None:
         stem += f"_{args.merge}"
     if args.no_declare_merge:
         stem += "_undeclared"
+    if args.sin_telemetria:
+        stem += "_alg2"
+    if args.ruido:
+        stem += f"_ruido{args.ruido}"
     if args.apendice_b:
         # Otro entorno, otro fichero: mezclarlos seria comparar dos tareas
         # distintas dentro de la misma celda.
@@ -146,7 +156,9 @@ def main() -> None:
                     print(f"{name} seed={seed} rep={rep} (cacheado)", flush=True)
                     continue
                 env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec,
-                                apendice_b=args.apendice_b)
+                                apendice_b=args.apendice_b,
+                                sin_telemetria=args.sin_telemetria,
+                                ruido=args.ruido)
                 try:
                     results = run_episode(env, build(client, env))
                 except anthropic.BadRequestError as error:
