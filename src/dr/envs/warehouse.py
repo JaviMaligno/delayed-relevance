@@ -30,6 +30,10 @@ TELEMETRY_SOURCES = [
 ]
 
 
+MAINTENANCE_REASONS = ("rail_wear", "sensor_fault", "beam_deflection",
+                       "fire_sprinkler_check", "anchor_bolt_torque")
+
+
 def _audit_block(rng: random.Random) -> str:
     """Cola de auditoria que llevan todos los eventos.
 
@@ -95,6 +99,7 @@ class Warehouse:
         reminder_raw: bool = False,
         long_spec: bool = False,
         invalidation_k: int | None = None,
+        apendice_b: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -128,6 +133,13 @@ class Warehouse:
         # caso en que NADA cachea salvo la historia acumulada de ReAct.
         self.long_spec = long_spec
         self.quarantine_notice_text: str | None = None
+        # `apendice_b` cierra los dos huecos que I4 encontro contra su Apendice B:
+        # los eventos de mantenimiento que obligan a `Move`, y el rechazo de acciones
+        # invalidas con observacion de error local. Va detras de bandera porque
+        # cambiarlo por debajo invalidaria los 100 episodios de R1 de golpe; con
+        # bandera, la diferencia entre las dos variantes ES la medida del hueco.
+        self.apendice_b = apendice_b
+        self.rechazo: tuple[int, str] | None = None
         self.invalidation_k = invalidation_k
         self.invalidation_from: int | None = None
         self.invalidated_shelf: int | None = None
@@ -256,13 +268,29 @@ class Warehouse:
         rng = random.Random(self.seed)
         script: list[Observation] = []
         stored: list[str] = []
+        # Estado canonico de estanterias, solo con `apendice_b`: un evento de
+        # mantenimiento tiene que nombrar una estanteria que de verdad este ocupada en
+        # la trayectoria de ground truth, y el guion se construye antes de correr.
+        canonico: dict[int, str] = {}
+
+        def libre_canonica(excepto: int | None = None) -> int:
+            indice = 0
+            while indice in canonico or indice == excepto:
+                indice += 1
+            return indice
+
         for step in range(self.horizon):
             force_store = step == 0 or not stored
-            kind = "store" if force_store else rng.choice(["store", "ship", "telemetry"])
+            opciones = ["store", "ship", "telemetry"]
+            if self.apendice_b and canonico:
+                opciones.append("maintenance")
+            kind = "store" if force_store else rng.choice(opciones)
             if kind == "store":
                 sku = rng.choice(SKUS)
                 units = rng.randint(1, 20)
                 stored.append(sku)
+                if self.apendice_b:
+                    canonico[libre_canonica()] = sku
                 text = (
                     f"EVENT inbound_pallet | pallet_id=PAL-{rng.randint(1000, 9999)} "
                     f"| sku={sku} | units={units} | lot=L-{rng.randint(1000, 9999)} "
@@ -296,6 +324,11 @@ class Warehouse:
                 # orden pida mercancia que ya salio del almacen.
                 sku = rng.choice(stored)
                 stored.remove(sku)
+                if self.apendice_b:
+                    for indice in sorted(canonico):
+                        if canonico[indice] == sku:
+                            del canonico[indice]
+                            break
                 text = (
                     f"EVENT outbound_order | order_id=ORD-{rng.randint(1000, 9999)} "
                     f"| sku={sku} | units_requested={rng.randint(1, 20)} "
@@ -320,6 +353,34 @@ class Warehouse:
                     f"| partial_shipment={rng.choice(['true', 'false'])} "
                     f"| customer_reference=CR-{rng.randint(10000, 99999)} "
                     f"| sla_hours={rng.randint(12, 96)} "
+                    f"| notes={rng.choice(NOTES)}" + _audit_block(rng)
+                )
+                script.append(Observation(step=step, text=text, actionable=True))
+            elif kind == "maintenance":
+                # Su Algoritmo 2 sortea `Maintenance required on [shelf]`, que obliga a
+                # reubicar. Es la unica accion que cruza dos partes del estado en un
+                # solo paso: donde esta la pieza y que hueco esta libre.
+                estante = rng.choice(sorted(canonico))
+                destino = libre_canonica(excepto=estante)
+                canonico[destino] = canonico.pop(estante)
+                text = (
+                    f"EVENT maintenance_required | work_order=WO-{rng.randint(1000, 9999)} "
+                    f"| shelf={estante} | reason={rng.choice(MAINTENANCE_REASONS)} "
+                    f"| crew={rng.choice(['alpha', 'bravo', 'charlie'])} "
+                    f"| window_minutes={rng.randint(30, 240)} | shelf_must_be_cleared=true\n"
+                    f"  permit=PRM-{rng.randint(10000, 99999)} "
+                    f"| contractor={rng.choice(['Vanderlande', 'Dematic', 'Knapp', 'SSI'])} "
+                    f"| risk_assessment=filed | lockout_tagout=true "
+                    f"| scaffolding={rng.choice(['true', 'false'])} "
+                    f"| aisle={rng.randint(1, 24)} | zone={rng.choice(['north', 'south'])}\n"
+                    f"  reported_by=operator_{rng.randint(100, 999)} "
+                    f"| severity={rng.choice(['low', 'medium', 'high'])} "
+                    f"| downtime_estimate_h={rng.randint(1, 12)} "
+                    f"| parts_ordered={rng.choice(['true', 'false'])} "
+                    f"| vendor_ticket=VT-{rng.randint(1000, 9999)} "
+                    f"| recurring={rng.choice(['true', 'false'])}\n"
+                    f"  last_service=2026-0{rng.randint(1, 8)}-{rng.randint(10, 28)} "
+                    f"| inspection_due=2026-09-{rng.randint(10, 28)} "
                     f"| notes={rng.choice(NOTES)}" + _audit_block(rng)
                 )
                 script.append(Observation(step=step, text=text, actionable=True))
@@ -359,6 +420,12 @@ class Warehouse:
 
     def observe(self) -> Observation:
         obs = self.script[self.step_index]
+        if self.rechazo is not None and self.rechazo[0] == self.step_index:
+            # No se consume aqui: `expected_action` tambien llama a `observe`, y una
+            # observacion que cambia segun quien la mire no es una observacion.
+            obs = Observation(step=obs.step,
+                              text=self.rechazo[1] + "\n" + obs.text,
+                              actionable=obs.actionable)
         if not (self.reminder or self.reminder_raw) or self.quarantined_shelf is None:
             return obs
         if self.quarantine_from is None or self.step_index <= self.quarantine_from:
@@ -405,6 +472,16 @@ class Warehouse:
         obs = self.observe()
         if not obs.actionable:
             return Action(name="Wait")
+        if "maintenance_required" in obs.text:
+            estante = int(event_field(obs.text, "shelf") or -1)
+            if not (0 <= estante < SHELF_COUNT) or self.shelves[estante] is None:
+                # La estanteria que hay que vaciar ya esta vacia: no hay nada que
+                # reubicar. Pasa si el agente se desvio antes; el ground truth no.
+                return Action(name="Wait")
+            destino = next(i for i in range(SHELF_COUNT)
+                           if self.shelves[i] is None and i != estante
+                           and not self._is_quarantined(i))
+            return Action(name="Move", args={"from": estante, "to": destino})
         sku = event_field(obs.text, "sku") or ""
         if "inbound_pallet" in obs.text:
             units = int(event_field(obs.text, "units") or 0)
@@ -418,9 +495,21 @@ class Warehouse:
             return Action(name="Wait")
         return Action(name="Ship", args={"shelf": shelf, "sku": sku})
 
+    def _rechazar(self, motivo: str) -> None:
+        """Su Apendice B: una accion invalida devuelve una observacion de error local y
+        **rechaza la transicion**. El error se cuelga del paso siguiente, que es donde
+        el agente lo vera; no gasta un paso ni toca el denominador del score."""
+        self.rechazo = (self.step_index + 1, motivo)
+
     def apply(self, action: Action) -> None:
         if action.name == "Store":
             shelf = action.args.get("shelf")
+            if (self.apendice_b and isinstance(shelf, int) and 0 <= shelf < SHELF_COUNT
+                    and self.shelves[shelf] is not None):
+                self._rechazar(
+                    f"ACTION REJECTED: shelf {shelf} is already occupied; "
+                    "the state transition was not applied")
+                shelf = None
             if isinstance(shelf, int) and 0 <= shelf < SHELF_COUNT:
                 self.shelves[shelf] = (
                     str(action.args.get("sku")),
@@ -429,6 +518,15 @@ class Warehouse:
                 )
         elif action.name == "Ship":
             shelf = action.args.get("shelf")
+            if self.apendice_b and isinstance(shelf, int) and 0 <= shelf < SHELF_COUNT:
+                contenido = self.shelves[shelf]
+                pedido = str(action.args.get("sku"))
+                if contenido is None or contenido[0] != pedido:
+                    tenia = "nothing" if contenido is None else contenido[0]
+                    self._rechazar(
+                        f"ACTION REJECTED: shelf {shelf} holds {tenia}, not {pedido}; "
+                        "the state transition was not applied")
+                    shelf = None
             if isinstance(shelf, int) and 0 <= shelf < SHELF_COUNT:
                 self.shelves[shelf] = None
         elif action.name == "Move":
@@ -444,6 +542,10 @@ class Warehouse:
             if in_range and self.shelves[source] is not None and self.shelves[target] is None:
                 self.shelves[target] = self.shelves[source]
                 self.shelves[source] = None
+            elif self.apendice_b:
+                self._rechazar(
+                    f"ACTION REJECTED: cannot move from {source} to {target}; the source "
+                    "must hold stock and the destination must be empty")
         self.step_index += 1
         self._apply_invalidation_if_due()
 
@@ -471,7 +573,9 @@ class Warehouse:
             "      Load-bearing field: sku.\n"
             "  telemetry      - a status reading from equipment or facilities.\n"
             "      No load-bearing fields. Telemetry never requires an action.\n"
-            "\n"
+            + ("  maintenance_required - a shelf must be cleared for maintenance work.\n"
+               "      Load-bearing field: shelf.\n" if self.apendice_b else "")
+            + "\n"
             "ACTIONS\n"
             '  Store({"shelf": <int>, "sku": "<str>", "units": <int>, "lot": "<str>"})\n'
             "      Put an inbound pallet away. The shelf MUST be the lowest-numbered shelf\n"
@@ -494,7 +598,16 @@ class Warehouse:
             "  2. On outbound_order: recall which shelf holds that SKU and Ship from it.\n"
             "     If the ordered SKU is not currently in stock, reply Wait({}).\n"
             "  3. On telemetry: reply Wait({}).\n"
-            "\n"
+            + ("  4. On maintenance_required: the named shelf must be emptied. Move its\n"
+               "     pallet to the lowest-numbered shelf that is currently empty. If the\n"
+               "     named shelf is already empty, reply Wait({}).\n"
+               "\n"
+               "INVALID ACTIONS\n"
+               "An action that violates the rules above is rejected: the state does not\n"
+               "change, and the next event you see is prefixed with a line beginning\n"
+               "ACTION REJECTED explaining why. A rejected action still counts as your\n"
+               "answer for that event - there is no retry.\n" if self.apendice_b else "")
+            + "\n"
             "WHAT MAKES THIS HARD\n"
             "Shelf occupancy is not derivable from the current event. It is the accumulated\n"
             "consequence of every Store and Ship you have performed so far. A single missed\n"

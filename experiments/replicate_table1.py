@@ -73,6 +73,11 @@ def main() -> None:
                              "cachea en ningun brazo.")
     parser.add_argument("--thinking-budget", type=int, default=None,
                         help="Solo Gemini. Tokens de razonamiento interno; 0 lo apaga. Cuenta contra el tope de salida, asi que sin acotarlo el truncamiento se lee como fallo del metodo.")
+    parser.add_argument("--apendice-b", action="store_true",
+                        help="Cierra los dos huecos de I4: eventos de mantenimiento que "
+                             "obligan a Move, y rechazo de acciones invalidas con error "
+                             "local. La diferencia contra la variante sin bandera es la "
+                             "medida de cuanto pesaba el hueco.")
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
@@ -93,6 +98,10 @@ def main() -> None:
         stem += f"_{args.merge}"
     if args.no_declare_merge:
         stem += "_undeclared"
+    if args.apendice_b:
+        # Otro entorno, otro fichero: mezclarlos seria comparar dos tareas
+        # distintas dentro de la misma celda.
+        stem += "_apb"
     # El tope de salida y el presupuesto de pensamiento cambian lo que se mide, asi
     # que no pueden compartir fichero de checkpoint: si lo comparten, la calibracion
     # lee como "ya hecho" lo medido con el otro ajuste. Solo se anaden cuando se
@@ -136,7 +145,8 @@ def main() -> None:
                         totals.append(cached["total"])
                     print(f"{name} seed={seed} rep={rep} (cacheado)", flush=True)
                     continue
-                env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec)
+                env = Warehouse(horizon=args.horizon, seed=seed, long_spec=args.long_spec,
+                                apendice_b=args.apendice_b)
                 try:
                     results = run_episode(env, build(client, env))
                 except anthropic.BadRequestError as error:

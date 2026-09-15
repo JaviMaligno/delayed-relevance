@@ -231,3 +231,23 @@ def capturado_401(monkeypatch):
     monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
     monkeypatch.setenv("GEMINI_API_KEY", "ficticia")
     return estado
+
+
+def test_un_timeout_de_lectura_se_reintenta(vertex, monkeypatch):
+    # Un `TimeoutError` de socket NO es un `URLError`, asi que se escapaba del manejo
+    # de errores y mataba el proceso. Paso de verdad: la celda T=100 de la variante
+    # con Apendice B murio a los 40 minutos por esto, con cinco episodios ya pagados.
+    import dr.llm as llm
+
+    intentos = {"n": 0}
+
+    def _post(url, headers, payload):
+        intentos["n"] += 1
+        if intentos["n"] == 1:
+            raise TimeoutError("The read operation timed out")
+        return vertex["respuesta"]
+
+    monkeypatch.setattr(llm, "post_json", _post)
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+    assert _cliente().complete(system="s", user="u").text == "ok"
+    assert intentos["n"] == 2
