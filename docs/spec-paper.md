@@ -51,10 +51,21 @@ De ahí cuelgan cuatro contribuciones, con su estado:
    > (SKU-F, stored in step 12)» cuando él mismo guardó otro ahí. Casi siempre ~0,94, y
    > de vez en cuando una cascada temprana hunde la celda a 0,83.
    >
-   > Consecuencia operativa: **una tirada por celda no sostiene ninguna afirmación del
-   > paper**, que es justo lo que ya exigía el punto 3. Un efecto por debajo de ~5
-   > puntos medido con una tirada es indistinguible del ruido. Evidencia:
-   > `results/adj_T200_gemini-3-flash-preview_react_s2*.jsonl`, con traza por paso.
+   > **Medido en dos horizontes**, el ruido de repetición es pequeño y crece con T:
+   >
+   > | T | repeticiones | sd | amplitud |
+   > |---|---|---|---|
+   > | 100 | 0,96 / 0,97 / 0,97 (rejilla 0,96) | 0,006 | 0,010 |
+   > | 200 | 0,93 / 0,94 / 0,945 / 0,96 (rejilla 0,83) | 0,012 | 0,030 |
+   >
+   > Consecuencia operativa, y es **doble**. (a) El ruido ordinario es de medio punto a
+   > punto y medio, así que los efectos de varios puntos son señal. (b) La cola sí
+   > muerde: el 0,83 de la rejilla en T=200 no lo reprodujo ninguna de cuatro
+   > repeticiones. Una tirada por celda puede caer en la cola y arrastrar la media de
+   > cinco seeds casi dos puntos, así que **lo que se enseñe necesita repeticiones —no
+   > por el ruido, sino por las colas—**, que es lo que ya exigía el punto 3.
+   >
+   > Evidencia con traza por paso: `results/adj_T{100,200}_*_react_s2*.jsonl`.
 3. **Protocolo §7 para todo lo que se enseñe**: pocas seeds, muchas repeticiones por seed,
    acierto agregado sobre repeticiones y dispersión entre seeds aparte. Lo medido con una
    tirada por seed no entra en el paper, ni siquiera como indicio.
