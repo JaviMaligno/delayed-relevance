@@ -69,6 +69,32 @@ De ahí cuelgan cuatro contribuciones, con su estado:
 3. **Protocolo §7 para todo lo que se enseñe**: pocas seeds, muchas repeticiones por seed,
    acierto agregado sobre repeticiones y dispersión entre seeds aparte. Lo medido con una
    tirada por seed no entra en el paper, ni siquiera como indicio.
+
+   > **Enmienda del 2026-09-16, medida.** La segunda mitad de esta regla —reportar la
+   > dispersión **entre seeds**— da por hecho que la variación vive entre seeds y que
+   > dentro de una seed el resultado es estable. **No lo es.** Con tres tiradas por
+   > seed en ReAct / T=200 / entorno del Algoritmo 2:
+   >
+   > | seed | tiradas | recorrido |
+   > |---|---|---|
+   > | 0 | 0,715 / 0,825 / 0,920 | **0,205** |
+   > | 1 | 0,870 / 0,920 / 0,985 | 0,115 |
+   > | 2 | 0,830 … 0,985 (7 tiradas) | 0,155 |
+   > | 3 | 0,905 / 0,955 / 1,000 | 0,095 |
+   > | 4 | 0,875 / 0,960 / 0,985 | 0,110 |
+   >
+   > La dispersión **dentro** de una seed es del mismo orden que la que hay **entre**
+   > seeds (media de medias 0,912, sd entre seeds 0,053). Reportar solo la segunda
+   > subestima la incertidumbre alrededor de la mitad.
+   >
+   > Regla que sustituye a la anterior: **la barra de error de una celda se calcula
+   > sobre todas sus tiradas**, no sobre las medias por seed. La dispersión entre seeds
+   > se reporta además, como lo que es —cuánto varía la dificultad del guion—, no como
+   > la incertidumbre de la medida.
+   >
+   > Y una consecuencia que no es de reporte sino de diseño: con este recorrido, **una
+   > diferencia por debajo de ~5 puntos entre dos condiciones no se afirma sin tres
+   > tiradas por seed en las dos**. Evidencia: `results/adj_T200_*_react_s?_p?.jsonl`.
 4. **La ejecución va en GitHub Actions**, no en el portátil. Las corridas son I/O contra una
    API, la máquina local se satura y ya se perdieron tandas por eso.
 5. **Los datos crudos se commitean.** El argumento del trabajo es que este tipo de
