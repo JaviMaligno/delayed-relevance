@@ -45,9 +45,20 @@ on:
         description: Argumentos extra para el corredor (--ks, --oracle-schema, --k...)
         default: ''
         type: string
+      provider:
+        description: >-
+          Proveedor de inferencia. `vertex` usa el proyecto de pago con Workload
+          Identity Federation, sin ninguna clave: es el unico que aguanta una rejilla
+          larga. `auto` deja la ruta vieja de AI Studio con GEMINI_API_KEY.
+        default: vertex
+        type: choice
+        options: [vertex, auto, api, foundry, gemini]
 
 permissions:
   contents: write
+  # WIF funciona intercambiando el token OIDC que GitHub emite para este job por
+  # credenciales de GCP de vida corta. Sin `id-token: write` no hay token que cambiar.
+  id-token: write
 
 concurrency:
   # Dos lanzamientos de la misma celda se pisarian el checkpoint. Se encolan, no se
@@ -62,6 +73,7 @@ jobs:
 
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_VERTEX_PROJECT: ${{ vars.GCP_PROJECT }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       RAMA: runs/${{ inputs.experimento }}-${{ inputs.model }}
 
@@ -72,6 +84,24 @@ jobs:
         with:
           python-version: '3.12'
 
+      # La sesion SSO de gcloud en un portatil caduca cada pocas horas y se llevo por
+      # delante tres tandas. WIF no caduca a media rejilla: la credencial se emite
+      # para este job y muere con el. Y no hay ninguna clave en ningun sitio: el
+      # secreto es la identidad del repositorio, que GitHub firma.
+      - name: Autenticar contra GCP (Workload Identity Federation)
+        if: inputs.provider == 'vertex'
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      # El cliente pide el token con `gcloud auth print-access-token`, asi que gcloud
+      # tiene que estar en el PATH y ver las credenciales que acaba de dejar el paso
+      # anterior.
+      - name: Instalar gcloud
+        if: inputs.provider == 'vertex'
+        uses: google-github-actions/setup-gcloud@v2
+
       - name: Comprobar que la clave tiene valor
         # Un secreto creado sin valor -- `gh secret set` leyendo de un stdin vacio --
         # existe, se lista y llega aqui como cadena vacia. Sin esta comprobacion el
@@ -80,6 +110,13 @@ jobs:
         env:
           MODEL: ${{ inputs.model }}
         run: |
+          if [ "${{ inputs.provider }}" = "vertex" ]; then
+            echo "proveedor vertex: sin claves, credencial de vida corta via WIF"
+            gcloud auth print-access-token >/dev/null \
+              && echo "credencial de GCP operativa" \
+              || { echo "::error::WIF no ha dejado credencial utilizable"; exit 1; }
+            exit 0
+          fi
           if [ "${MODEL#gemini}" != "$MODEL" ] && [ -z "$GEMINI_API_KEY" ]; then
             echo "::error::GEMINI_API_KEY esta vacia. Ponla con:  gh secret set GEMINI_API_KEY --repo JaviMaligno/delayed-relevance --body '<clave>'"
             exit 1
@@ -113,26 +150,28 @@ jobs:
           REPEATS: ${{ inputs.repeats }}
           RUNTIMES: ${{ inputs.runtimes }}
           MAX_TOKENS: ${{ inputs.max_tokens }}
+          PROVIDER: ${{ inputs.provider }}
           EXTRA: ${{ inputs.extra }}
         run: |
           set -euo pipefail
           ONLY=""
           if [ -n "$RUNTIMES" ]; then ONLY="--only $RUNTIMES"; fi
+          PROV="--provider $PROVIDER"
           case "$EXPERIMENTO" in
             table1)
               # De menor a mayor: si el criterio de R1 queda decidido en un horizonte
               # corto, el largo no hace falta.
               for T in $HORIZONS; do
                 echo "::group::table1 T=$T"
-                python experiments/replicate_table1.py --horizon "$T" --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
+                python experiments/replicate_table1.py $PROV --horizon "$T" --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
                 echo "::endgroup::"
               done
               ;;
             probeA)
-              python experiments/probe_a.py --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
+              python experiments/probe_a.py $PROV --seeds "$SEEDS" --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $ONLY $EXTRA
               ;;
             probeC)
-              python experiments/diagnose_probeC.py --seeds $SEEDS --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $EXTRA
+              python experiments/diagnose_probeC.py $PROV --seeds $SEEDS --repeats "$REPEATS" --model "$MODEL" --max-tokens "$MAX_TOKENS" $EXTRA
               ;;
           esac
 

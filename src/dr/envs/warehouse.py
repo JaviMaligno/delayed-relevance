@@ -100,6 +100,8 @@ class Warehouse:
         long_spec: bool = False,
         invalidation_k: int | None = None,
         apendice_b: bool = False,
+        sin_telemetria: bool = False,
+        ruido: int = 0,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -139,6 +141,14 @@ class Warehouse:
         # cambiarlo por debajo invalidaria los 100 episodios de R1 de golpe; con
         # bandera, la diferencia entre las dos variantes ES la medida del hueco.
         self.apendice_b = apendice_b
+        # Hueco 3 de I4. Su Algoritmo 2 no tiene familia no accionable: `Receive`
+        # siempre, y `Order`/`Maintenance` en cuanto hay stock. Nuestra telemetria es
+        # un paso propio, asi que un tercio de nuestra historia no muta el estado: el
+        # transcript crece igual pero hay menos que recordar.
+        self.sin_telemetria = sin_telemetria
+        # Su ruido del Apendice C es otra cosa y va en su sitio: anexado a la
+        # observacion de un evento real, bajo su cabecera, y sin tocar el estado.
+        self.ruido = ruido
         self.rechazo: tuple[int, str] | None = None
         self.invalidation_k = invalidation_k
         self.invalidation_from: int | None = None
@@ -281,7 +291,9 @@ class Warehouse:
 
         for step in range(self.horizon):
             force_store = step == 0 or not stored
-            opciones = ["store", "ship", "telemetry"]
+            opciones = ["store"] if self.sin_telemetria else ["store", "ship", "telemetry"]
+            if self.sin_telemetria and stored:
+                opciones.append("ship")
             if self.apendice_b and canonico:
                 opciones.append("maintenance")
             kind = "store" if force_store else rng.choice(opciones)
@@ -410,7 +422,37 @@ class Warehouse:
                     f"| notes={rng.choice(NOTES)}" + _audit_block(rng)
                 )
                 script.append(Observation(step=step, text=text, actionable=False))
+        if self.ruido:
+            script = [Observation(step=o.step,
+                                  text=o.text + "\n" + self._bloque_de_ruido(rng),
+                                  actionable=o.actionable)
+                      for o in script]
         return script
+
+    def _bloque_de_ruido(self, rng: random.Random) -> str:
+        """Su Apendice C: distractores anexados bajo cabecera, aleatorios en cada paso
+        y sin efecto sobre el estado. Se generan con el mismo `rng` del guion para que
+        la reproducibilidad por seed siga valiendo."""
+        lineas = []
+        for _ in range(self.ruido):
+            clase = rng.choice(("robot", "sensor", "syslog"))
+            if clase == "robot":
+                lineas.append(
+                    f"[Robot-{rng.randint(1, 40)}] Battery: {rng.randint(10, 100)}%, "
+                    f"Temperature: {rng.randint(20, 60)}C, CPU Load: {rng.randint(5, 99)}%, "
+                    f"Speed: {rng.uniform(0.2, 2.0):.1f} m/s, "
+                    f"Nav Confidence: {rng.uniform(80.0, 99.9):.1f}%")
+            elif clase == "sensor":
+                lineas.append(
+                    f"[Sensor] Humidity: {rng.uniform(20.0, 70.0):.1f}%, "
+                    f"Ambient: {rng.uniform(12.0, 28.0):.1f}C, "
+                    f"Air Quality: {rng.randint(10, 90)}, "
+                    f"Zone: {rng.choice(('north', 'south', 'east', 'west'))}")
+            else:
+                lineas.append(
+                    f"[Syslog] Server-{rng.randint(10, 99)} CPU load: {rng.randint(5, 99)}%, "
+                    f"RAM usage: {rng.randint(20, 95)}%")
+        return "--- BACKGROUND TELEMETRY ---\n" + "\n".join(lineas)
 
     def reset(self) -> Observation:
         self.shelves = {i: None for i in range(SHELF_COUNT)}
@@ -571,8 +613,9 @@ class Warehouse:
             "      Load-bearing fields: sku, units, lot.\n"
             "  outbound_order - a customer order must be fulfilled from stock on hand.\n"
             "      Load-bearing field: sku.\n"
-            "  telemetry      - a status reading from equipment or facilities.\n"
-            "      No load-bearing fields. Telemetry never requires an action.\n"
+            + ("" if self.sin_telemetria else
+               "  telemetry      - a status reading from equipment or facilities.\n"
+               "      No load-bearing fields. Telemetry never requires an action.\n")
             + ("  maintenance_required - a shelf must be cleared for maintenance work.\n"
                "      Load-bearing field: shelf.\n" if self.apendice_b else "")
             + "\n"
@@ -597,7 +640,7 @@ class Warehouse:
             "     before any higher-numbered shelf that has never been filled.\n"
             "  2. On outbound_order: recall which shelf holds that SKU and Ship from it.\n"
             "     If the ordered SKU is not currently in stock, reply Wait({}).\n"
-            "  3. On telemetry: reply Wait({}).\n"
+            + ("" if self.sin_telemetria else "  3. On telemetry: reply Wait({}).\n")
             + ("  4. On maintenance_required: the named shelf must be emptied. Move its\n"
                "     pallet to the lowest-numbered shelf that is currently empty. If the\n"
                "     named shelf is already empty, reply Wait({}).\n"
@@ -632,11 +675,12 @@ class Warehouse:
             "  correct action is Wait({}). Do not invent a shelf number, and do not ship\n"
             "  from a shelf holding a different SKU.\n"
             "\n"
-            "  Example D. A telemetry event reports status=within_band on hvac_zone_b. No\n"
-            "  matter what the readings say, the correct action is Wait({}). Telemetry never\n"
-            "  changes shelf occupancy and never requires a Store, Ship or Move.\n"
-            "\n"
-            "CONVENTIONS AND EDGE CASES\n"
+            + ("" if self.sin_telemetria else
+               "  Example D. A telemetry event reports status=within_band on hvac_zone_b. No\n"
+               "  matter what the readings say, the correct action is Wait({}). Telemetry never\n"
+               "  changes shelf occupancy and never requires a Store, Ship or Move.\n"
+               "\n")
+            + "CONVENTIONS AND EDGE CASES\n"
             "  - Shelf numbering starts at 0, not 1. The first put-away of an empty\n"
             "    warehouse goes to shelf 0.\n"
             "  - Never Store onto a shelf that already holds a pallet. Single occupancy is\n"
