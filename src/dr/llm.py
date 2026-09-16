@@ -205,13 +205,46 @@ def _gcloud(*args: str) -> str:
     return salida.stdout.strip()
 
 
+ESPERA_MAXIMA_SESION = 3 * 60 * 60
+"""Cuanto se espera, como mucho, a que alguien renueve la sesion de gcloud.
+
+Esperar para siempre es peor que fallar: la tanda parece viva y no lo esta."""
+ESPERA_ENTRE_AVISOS = 60
+
+
+def _es_caducidad_de_sesion(error: Exception) -> bool:
+    """La credencial SSO caducada, que NO se arregla sola y SI se arregla si alguien
+    corre `gcloud auth login`. Se distingue de cualquier otro fallo de gcloud -- un
+    binario que no esta, un proyecto mal puesto -- que no mejora esperando."""
+    mensaje = str(error).lower()
+    return "reauthentication" in mensaje or "reauth" in mensaje
+
+
 def gcloud_access_token() -> str:
     """Token de las credenciales por defecto del CLI.
 
     Es el equivalente de lo que Foundry hace con `az login`: con la sesion de gcloud
     hecha no hace falta ninguna clave, y no queda ningun secreto en disco ni en el
-    entorno del proceso."""
-    return _gcloud("auth", "print-access-token")
+    entorno del proceso.
+
+    Si la sesion ha caducado, **espera** en vez de morir. La credencial SSO dura unas
+    horas y una rejilla dura mas; hoy se han perdido cuatro tandas por eso, una de 50
+    episodios. Con esto, la tanda se queda parada avisando por consola y continua por
+    donde iba en cuanto alguien corre `gcloud auth login` en otra terminal. Lo que
+    arreglaria esto de raiz es Workload Identity Federation (`docs/wif-actions.md`),
+    cuya alta esta bloqueada por permisos de IAM."""
+    esperado = 0.0
+    while True:
+        try:
+            return _gcloud("auth", "print-access-token")
+        except RuntimeError as error:
+            if not _es_caducidad_de_sesion(error) or esperado >= ESPERA_MAXIMA_SESION:
+                raise
+            print(f"  [sesion caducada] esperando a `gcloud auth login` "
+                  f"({esperado / 60:.0f} min de {ESPERA_MAXIMA_SESION // 60})",
+                  flush=True)
+            time.sleep(ESPERA_ENTRE_AVISOS)
+            esperado += ESPERA_ENTRE_AVISOS
 
 
 def gcloud_project() -> str:
