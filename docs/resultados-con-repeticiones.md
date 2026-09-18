@@ -44,21 +44,53 @@ distractores el modelo no es peor de forma estable, es errático.
 > 0,924 → 0,864). Era el orden accidental de tres tiradas sueltas separadas por menos
 > de una desviación típica.
 
-## 3. Memory replica; ReAct no
+## 3. La tabla entera, en el entorno fiel
 
-| Celda | Nuestro | Suyo | Diferencia |
+Tres runtimes, cinco horizontes, **15 tiradas por celda**. Entre paréntesis, su Tabla 1.
+
+| T | ReAct | Memory | SKILL.state |
 |---|---|---|---|
-| Memory, T=100 | 0,886 ± 0,105 (15) | 0,87 | +0,016 (0,6 SE) |
-| ReAct, T=200 | 0,913 ± 0,072 (19) | 0,74 | **+0,173 (7 SE)** |
-| SKILL.state, T=200 | 1,000 ± 0,000 | 0,94 | +0,060 |
+| 10 | 0,993 ± 0,026 (0,90) | 1,000 ± 0,000 (1,00) | 1,000 (1,00) |
+| 25 | 0,955 ± 0,050 (0,92) | 0,987 ± 0,042 (0,99) | 1,000 (1,00) |
+| 50 | 0,936 ± 0,057 (0,88) | 0,953 ± 0,077 (0,93) | 1,000 (0,96) |
+| 100 | 0,960 ± 0,063 (0,84) | 0,839 ± 0,096 (0,87) | 1,000 (0,94) |
+| 200 | 0,913 ± 0,072 (0,74) | 0,812 ± 0,078 (0,84) | 1,000 (0,94) |
 
-**El resultado del proyecto es la última fila de la tercera columna.** Con su modelo,
-sus ajustes de decodificación, su entorno reconstruido en las tres dimensiones que su
-propio apéndice permite cotejar y densidad de contexto por encima de la suya, el
-runtime que arrastra historia completa **no se degrada como ellos reportan**.
+**El resultado**: ReAct se queda en 0,913 donde ellos reportan 0,74 — siete errores
+estándar — y su ventaja sobre el valor del paper crece con el horizonte, de +0,09 en
+T=10 a +0,17 en T=200. SKILL.state no falla ni una vez en 75 episodios de hasta 200
+pasos: la tesis central del paper se confirma.
 
-Lo que sí se reproduce es la dirección de su tesis: el estado explícito no degrada
-(1,000 en todas las condiciones medidas) y el transcript sí, cuando el ruido aprieta.
+### El giro de la jerarquía
+
+Caídas de T=10 a T=200:
+
+| Runtime | Nuestra | Suya |
+|---|---|---|
+| ReAct | −0,080 | −0,160 |
+| **Memory** | **−0,188** | −0,160 |
+| SKILL.state | 0,000 | −0,060 |
+
+En nuestro entorno **el brazo que más se degrada con el horizonte no es ReAct, es
+Memory**. Su jerarquía —SKILL.state > Stateful > Memory > ReAct— aquí queda
+**SKILL.state > ReAct > Memory**.
+
+Esto se declara como limitación, no como hallazgo sobre el método: nuestro resumidor
+comprime **cinco veces más** que el suyo (5.874 tokens de prompt medio en T=200 frente
+a sus 84.364), así que lo medido es **nuestra política de resumen**, no «el resumen»
+como categoría. Su «Memory (Summary)» apenas resume; conserva casi tanto contexto como
+ReAct.
+
+### Qué se lleva uno de la tabla
+
+Con su modelo, sus ajustes de decodificación, su entorno reconstruido en las tres
+dimensiones que su propio apéndice permite cotejar y densidad de contexto por encima
+de la suya, **el runtime que arrastra historia completa no se degrada como ellos
+reportan**: 0,913 frente a 0,74 en T=200, y la distancia crece con el horizonte.
+
+Lo que sí se reproduce, y sin matices, es la dirección de su tesis: **el estado
+explícito no degrada** —1.000 en 75 episodios— mientras los otros dos brazos sí lo
+hacen, con el horizonte y con el ruido denso.
 
 ## 4. La adjudicación de los fallos
 
