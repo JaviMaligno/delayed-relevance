@@ -14,7 +14,7 @@ from __future__ import annotations
 import argparse
 
 from dr.config import load_env
-from dr.llm import AnthropicClient
+from dr.llm import build_client
 
 
 def prueba(cliente, tokens_objetivo: int) -> tuple[int, int]:
@@ -30,15 +30,21 @@ def prueba(cliente, tokens_objetivo: int) -> tuple[int, int]:
 def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--model", default="claude-haiku-4-5")
+    p.add_argument("--provider", default="auto",
+                   choices=["auto", "api", "foundry", "gemini", "vertex"])
     p.add_argument("--longitudes", nargs="*", type=int, default=[1300, 2500])
     args = p.parse_args()
     load_env()
-    cliente = AnthropicClient(model=args.model, max_tokens=16)
-    print(f"modelo {args.model}")
+    # La cache de Gemini es implicita y con su propio minimo, distinto del corte de
+    # prefijo de Anthropic. La afirmacion C1 -- que la cache invierte la contabilidad
+    # -- esta medida solo en Anthropic, y el spec dice que no es extrapolable: esto es
+    # lo que permite medirla en vez de suponerla.
+    cliente = build_client(args.model, args.provider, max_tokens=16)
+    print(f"modelo {args.model} via {cliente.provider}")
     for objetivo in args.longitudes:
         leidos, enviados = prueba(cliente, objetivo)
         print(f"  sistema ~{enviados:5} tokens -> segunda llamada lee de cache: {leidos}"
-              f"   {'CACHEA' if leidos else 'NO CACHEA'}")
+              f"   {'CACHEA' if leidos else 'NO CACHEA'}", flush=True)
 
 
 if __name__ == "__main__":
