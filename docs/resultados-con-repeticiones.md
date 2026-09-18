@@ -81,13 +81,16 @@ a sus 84.364), así que lo medido es **nuestra política de resumen**, no «el r
 como categoría. Su «Memory (Summary)» apenas resume; conserva casi tanto contexto como
 ReAct.
 
-**El resultado del proyecto es la última fila de la tercera columna.** Con su modelo,
-sus ajustes de decodificación, su entorno reconstruido en las tres dimensiones que su
-propio apéndice permite cotejar y densidad de contexto por encima de la suya, el
-runtime que arrastra historia completa **no se degrada como ellos reportan**.
+### Qué se lleva uno de la tabla
 
-Lo que sí se reproduce es la dirección de su tesis: el estado explícito no degrada
-(1,000 en todas las condiciones medidas) y el transcript sí, cuando el ruido aprieta.
+Con su modelo, sus ajustes de decodificación, su entorno reconstruido en las tres
+dimensiones que su propio apéndice permite cotejar y densidad de contexto por encima
+de la suya, **el runtime que arrastra historia completa no se degrada como ellos
+reportan**: 0,913 frente a 0,74 en T=200, y la distancia crece con el horizonte.
+
+Lo que sí se reproduce, y sin matices, es la dirección de su tesis: **el estado
+explícito no degrada** —1.000 en 75 episodios— mientras los otros dos brazos sí lo
+hacen, con el horizonte y con el ruido denso.
 
 ## 4. La adjudicación de los fallos
 
