@@ -1,5 +1,16 @@
 # Correr en Actions contra Vertex, sin ninguna clave
 
+> **Estado (2026-09-18): no se ha dado de alta, y se ha decidido no pedirlo.** La
+> cuenta disponible no tiene `iam.workloadIdentityPools.create`, y en vez de tramitar
+> permisos se ha optado por seguir corriendo en local con `gcloud auth login`,
+> renovando la sesion cuando caduca — las tandas esperan en vez de morir y se reanudan
+> sin re-pagar (`src/dr/llm.py`, `experiments/adjudicar.py`).
+>
+> El workflow conserva el camino de WIF, con `provider: auto` por defecto para que
+> nadie se lo encuentre fallando. Este documento queda como receta lista por si algun
+> dia interesa: el coste de la decision es una intervencion manual cada pocas horas en
+> las rejillas largas.
+
 El spec (decisión 4) dice que las rejillas van en GitHub Actions y no en el portátil:
 son espera contra una API, la máquina local se satura y ya se perdieron tandas por eso.
 Lo que impedía cumplirlo con Vertex era la autenticación, y esto lo resuelve.

@@ -47,10 +47,13 @@ on:
         type: string
       provider:
         description: >-
-          Proveedor de inferencia. `vertex` usa el proyecto de pago con Workload
-          Identity Federation, sin ninguna clave: es el unico que aguanta una rejilla
-          larga. `auto` deja la ruta vieja de AI Studio con GEMINI_API_KEY.
-        default: vertex
+          Proveedor de inferencia. `auto` usa la ruta de AI Studio con GEMINI_API_KEY,
+          que es la unica operativa hoy. `vertex` autentica con Workload Identity
+          Federation y NO funciona hasta que alguien con permisos de IAM haga el alta
+          descrita en docs/wif-actions.md: sin ella, el job falla en el paso de
+          autenticacion. Las rejillas largas se corren en local con `gcloud auth
+          login`, renovando la sesion cuando caduca.
+        default: auto
         type: choice
         options: [vertex, auto, api, foundry, gemini]
 
