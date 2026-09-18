@@ -8,6 +8,7 @@ reimplementacion contra su accion posicional de dos campos (hueco 4 de I4).
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -17,7 +18,25 @@ from dr.envs.warehouse import Warehouse
 from dr.llm import build_client
 from dr.metrics import score
 from dr.runner import run_episode
-from replicate_table1 import build_runtimes
+
+
+def episodio_ya_hecho(destino, horizonte: int) -> bool:
+    """True si esa traza corresponde a un episodio COMPLETO y legible.
+
+    Relanzar una cadena que se cayo -- por caducidad de sesion o por cuota -- no puede
+    re-pagar lo ya medido. Pero una traza a medias no vale: su score seria el de un
+    episodio que nunca termino, y un fichero cortado a mitad de linea, que es como
+    queda si el proceso muere escribiendo, tampoco."""
+    destino = Path(destino)
+    if not destino.exists():
+        return False
+    try:
+        filas = [json.loads(l) for l in destino.read_text(encoding="utf-8").splitlines()
+                 if l.strip()]
+    except json.JSONDecodeError:
+        return False
+    return len(filas) == horizonte
+
 
 
 def main() -> None:
@@ -37,6 +56,8 @@ def main() -> None:
     p.add_argument("--out", default="results")
     args = p.parse_args()
 
+    from replicate_table1 import build_runtimes
+
     cliente = build_client(args.model, args.provider, args.max_tokens,
                            thinking_budget=args.thinking_budget)
     env = Warehouse(horizon=args.horizon, seed=args.seed, apendice_b=args.apendice_b,
@@ -45,6 +66,9 @@ def main() -> None:
     sufijo = f"_{args.etiqueta}" if args.etiqueta else ""
     destino = Path(args.out) / (f"adj_T{args.horizon}_{args.model}_{args.runtime}"
                                 f"_s{args.seed}{sufijo}.jsonl")
+    if episodio_ya_hecho(destino, args.horizon):
+        print(f"ya hecho, se salta: {destino}", flush=True)
+        return
     destino.unlink(missing_ok=True)
     print(f"adjudicando {args.runtime} T={args.horizon} seed={args.seed} -> {destino}",
           flush=True)
