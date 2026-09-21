@@ -100,6 +100,16 @@ def main() -> None:
     client = build_client(args.model, args.provider, args.max_tokens,
                           thinking_budget=args.thinking_budget)
     sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "") + ("_reminder" if args.reminder else "")
+    # El tope de salida y el presupuesto de razonamiento CAMBIAN lo que se mide, asi
+    # que no pueden compartir fichero de checkpoint: si lo comparten, una corrida nueva
+    # lee como "ya hecho" lo medido con el otro ajuste y la celda mezcla condiciones.
+    # Paso de verdad: relanzar esta sonda con presupuesto 0 reanudo sobre 34 episodios
+    # medidos con el razonamiento por defecto. Mismo fallo que ya tenia replicate_table1
+    # y que aqui faltaba.
+    if args.max_tokens != 600:
+        sufijo += f"_mt{args.max_tokens}"
+    if args.thinking_budget is not None:
+        sufijo += f"_tb{args.thinking_budget}"
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
     Path(args.out).mkdir(exist_ok=True)
