@@ -28,14 +28,29 @@ def _anotar(destino, resultado, observation) -> None:
         "raw": {"respuestas": list(resultado.raw)},
         "observation": observation.text,
         "truncated": resultado.truncated,
+        # Sin el uso por paso, la densidad de contexto de una celda medida con el
+        # adjudicador no existe en ningun sitio, y hubo que citar la de otra condicion.
+        "prompt_tokens": resultado.prompt_tokens,
+        "output_tokens": resultado.output_tokens,
+        "cache_read": resultado.cache_read,
+        "thinking_tokens": resultado.thinking_tokens,
+        "model_version": resultado.model_version,
     }
     with open(destino, "a", encoding="utf-8") as fichero:
         fichero.write(json.dumps(fila, ensure_ascii=False) + "\n")
 
 
-def run_episode(env, runtime, traza=None) -> list[StepResult]:
+def run_episode(env, runtime, traza=None, condiciones=None) -> list[StepResult]:
     """Cruza un entorno con un runtime y devuelve un resultado por paso."""
     env.reset()
+    if traza is not None and condiciones:
+        # Cabecera con las condiciones de medida. Sin ella, dos ficheros de la misma
+        # celda pueden venir de topes de salida distintos y nada lo dice -- que es el
+        # error que ya invalido una comparacion entera. Va marcada con `kind` para no
+        # romper el conteo de pasos de quien ya lee estos ficheros.
+        with open(traza, "a", encoding="utf-8") as fichero:
+            fichero.write(json.dumps({"kind": "run_header", "condiciones": condiciones},
+                                     ensure_ascii=False) + "\n")
     results: list[StepResult] = []
     while not env.done:
         observation = env.observe()
@@ -48,6 +63,8 @@ def run_episode(env, runtime, traza=None) -> list[StepResult]:
                 correct=correct,
                 raw=tuple(c.text for c in completions),
                 esperado=expected.render(),
+                model_version=next((c.model_version for c in completions
+                                    if getattr(c, "model_version", "")), ""),
                 ejecutado=action.render() if action is not None else None,
                 prompt_tokens=sum(c.prompt_tokens for c in completions),
                 output_tokens=sum(c.output_tokens for c in completions),

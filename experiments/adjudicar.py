@@ -72,7 +72,13 @@ def main() -> None:
     destino.unlink(missing_ok=True)
     print(f"adjudicando {args.runtime} T={args.horizon} seed={args.seed} -> {destino}",
           flush=True)
-    resultados = run_episode(env, runtime, traza=destino)
+    resultados = run_episode(env, runtime, traza=destino, condiciones={
+        "model": args.model, "provider": cliente.provider,
+        "max_tokens": args.max_tokens, "thinking_budget": args.thinking_budget,
+        "horizon": args.horizon, "seed": args.seed, "runtime": args.runtime,
+        "apendice_b": args.apendice_b, "sin_telemetria": args.sin_telemetria,
+        "ruido": args.ruido,
+    })
     print(f"score={score(resultados):.3f}  pasos={len(resultados)}  "
           f"fallos={sum(1 for r in resultados if r.actionable and not r.correct)}")
 

@@ -98,6 +98,8 @@ class StepResult:
     """Accion del ground truth, renderizada."""
     ejecutado: str | None = None
     """Accion que se aplico, o None si la respuesta no parseo."""
+    model_version: str = ""
+    """Modelo que contesto de verdad, tal como lo declara el proveedor."""
     state_size: int = 0
     truncated: int = 0
     cache_read: int = 0

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import glob
+import json
 import os
 import re
 
@@ -26,12 +27,27 @@ def revisar(directorio: str) -> list[tuple[str, str]]:
         esperadas = int(m.group(1))
         try:
             with open(f, encoding="utf-8") as fh:
-                filas = sum(1 for l in fh if l.strip())
+                # La cabecera de condiciones no es un paso: si se contara, toda traza
+                # nueva pareceria tener uno de mas y el verificador daria falsos
+                # positivos justo sobre las trazas mejor instrumentadas.
+                filas = 0
+                for linea in fh:
+                    if not linea.strip():
+                        continue
+                    try:
+                        if json.loads(linea).get("kind") == "run_header":
+                            continue
+                    except json.JSONDecodeError:
+                        problemas.append((f, "linea JSON corrupta"))
+                        break
+                    filas += 1
+                else:
+                    if filas != esperadas:
+                        problemas.append((f, f"{filas} pasos, esperados {esperadas}"))
+                continue
         except OSError as error:
             problemas.append((f, f"ilegible: {error}"))
             continue
-        if filas != esperadas:
-            problemas.append((f, f"{filas} pasos, esperados {esperadas}"))
     return problemas
 
 
