@@ -87,13 +87,18 @@ def main() -> None:
                         help="Campo `notes` de texto libre: sitio sin decir para que.")
     parser.add_argument("--reminder", action="store_true",
                         help="Repetir el aviso en cada observacion posterior.")
+    parser.add_argument("--thinking-budget", type=int, default=None,
+                        help="Solo Gemini. La Tabla 1 se midio con 0; correr la sonda "
+                             "con el razonamiento por defecto la mide en otra "
+                             "condicion que el resto del trabajo.")
     parser.add_argument("--only", nargs="*", default=None)
     parser.add_argument("--out", default="results")
     args = parser.parse_args()
 
     load_env()
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
-    client = build_client(args.model, args.provider, args.max_tokens)
+    client = build_client(args.model, args.provider, args.max_tokens,
+                          thinking_budget=args.thinking_budget)
     sufijo = ("_control" if args.control else "") + ("_oracle" if args.oracle_schema else "") + ("_hatch" if args.hatch_schema else "") + ("_reminder" if args.reminder else "")
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
