@@ -26,7 +26,8 @@ def episodio_ya_hecho(destino, horizonte: int) -> bool:
     Relanzar una cadena que se cayo -- por caducidad de sesion o por cuota -- no puede
     re-pagar lo ya medido. Pero una traza a medias no vale: su score seria el de un
     episodio que nunca termino, y un fichero cortado a mitad de linea, que es como
-    queda si el proceso muere escribiendo, tampoco."""
+    queda si el proceso muere escribiendo, tampoco. La cabecera de condiciones no
+    es un paso: contarla desplazaba el total y hacia re-pagar episodios enteros."""
     destino = Path(destino)
     if not destino.exists():
         return False
@@ -35,7 +36,8 @@ def episodio_ya_hecho(destino, horizonte: int) -> bool:
                  if l.strip()]
     except json.JSONDecodeError:
         return False
-    return len(filas) == horizonte
+    pasos = [f for f in filas if f.get("kind") != "run_header"]
+    return len(pasos) == horizonte
 
 
 

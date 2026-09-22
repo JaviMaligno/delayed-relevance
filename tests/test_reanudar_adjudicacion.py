@@ -42,3 +42,16 @@ def test_una_traza_corrupta_no_cuenta(tmp_path):
     with open(f, "a", encoding="utf-8") as fh:
         fh.write('{"step": 200, "raw": {"respu')
     assert episodio_ya_hecho(f, horizonte=200) is False
+
+
+def test_la_cabecera_de_condiciones_no_cuenta_como_paso(tmp_path):
+    # La traza lleva una primera fila con las condiciones de la corrida. Contarla
+    # como un paso mas desplazaba el total en uno: ningun episodio cuadraba con su
+    # horizonte y la cadena volvia a pagar episodios ya medidos.
+    f = tmp_path / "traza.jsonl"
+    with open(f, "w", encoding="utf-8") as fh:
+        fh.write(json.dumps({"kind": "run_header",
+                             "condiciones": {"horizon": 200}}) + "\n")
+        for i in range(200):
+            fh.write(json.dumps({"step": i, "http": 200, "correct": True}) + "\n")
+    assert episodio_ya_hecho(f, horizonte=200) is True
