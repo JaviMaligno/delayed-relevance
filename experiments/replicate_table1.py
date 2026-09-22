@@ -162,7 +162,17 @@ def main() -> None:
                 try:
                     traza = Path(args.out) / f"traza_{stem}_{name}_s{seed}r{rep}.jsonl"
                     traza.unlink(missing_ok=True)
-                    results = run_episode(env, build(client, env), traza=traza)
+                    results = run_episode(env, build(client, env), traza=traza,
+                                          condiciones={
+                                              "model": args.model, "provider": client.provider,
+                                              "max_tokens": args.max_tokens,
+                                              "thinking_budget": args.thinking_budget,
+                                              "horizon": args.horizon, "seed": seed,
+                                              "runtime": name, "merge": args.merge,
+                                              "apendice_b": args.apendice_b,
+                                              "sin_telemetria": args.sin_telemetria,
+                                              "ruido": args.ruido, "long_spec": args.long_spec,
+                                          })
                 except anthropic.BadRequestError as error:
                     if "prompt is too long" not in str(error).lower():
                         raise

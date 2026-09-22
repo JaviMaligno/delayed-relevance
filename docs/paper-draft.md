@@ -126,10 +126,11 @@ level:
 | 20 | 0.959 ± 0.056 | 0.61 |
 | 50 | 0.859 ± 0.121 | 0.53 |
 
-From 0 to 50 events: **−0.103, 3.1 standard errors**. Theirs: −0.350. **The effect is
-real but not gradual**: 0, 5 and 20 are not distinguishable at this sample size — their
-means span 0.009 with standard deviations near 0.06 — and all of the measured effect is
-in the jump to 50.
+From 0 to 50 events: **−0.103, 3.1 standard errors**. Theirs: −0.350. **The effect is real, and what we can
+resolve is the extreme**: 0, 5 and 20 are not distinguishable at this sample size — their
+means span 0.009 with standard deviations near 0.06 — so the measured effect is carried
+by the jump to 50. A gradual decline of a few points across the lower levels would be
+invisible here.
 And what changes most is not the mean but the dispersion, which triples: under 50
 distractors the model is not stably worse — it is **erratic**.
 
@@ -183,40 +184,52 @@ Three consequences:
 
 ### The magnitude does not transfer across providers
 
-Measured on Vertex with `gemini-3-flash-preview`, over the grids themselves (fraction of
-input served from cache, mean over episodes):
+Measured on Vertex with `gemini-3-flash-preview`, **within a single grid** (original
+environment, output cap 600, reasoning budget 0, n=5 episodes per cell) so that the
+comparison is not mixing conditions. The figure is cache-read tokens over total input
+tokens:
 
 | Runtime | T=25 | T=50 | T=100 | T=200 |
 |---|---|---|---|---|
-| ReAct | 1.1 % | 3.4 % | 5.3 % | **5.8 %** |
-| Stateful | — | 2.6 % | 4.3 % | 4.3 % |
+| ReAct | 1.1 % | 4.6 % | 6.8 % | **7.0 %** |
+| Stateful | 0 % | 2.6 % | 4.3 % | 4.3 % |
 | Memory, SKILL.state | 0 % | 0 % | 0 % | 0 % |
 
 Implicit caching therefore **exists on Vertex and favours exactly the arms whose prefix
 is append-only**, growing with the horizon — the same qualitative pattern as Anthropic,
-an order of magnitude smaller: **5.8 % against 82 %**.
+an order of magnitude smaller: **7 % against 82 %**. Other grids in other conditions give
+between 1 % and 16 % for ReAct; the spread across conditions is not characterised here.
+
+Paired within that grid, the cost ratio barely moves:
+
+| | Raw input | Effective input |
+|---|---|---|
+| T=50, ReAct / SKILL.state | 7.90x | **7.57x** |
+| T=200, ReAct / SKILL.state | 29.16x | **27.32x** |
 
 A direct probe adds nuance and a warning. Repeating an identical 13,346-token request,
-the second call read 12,262 cached tokens; issuing eight calls whose prefix grows by
-~3,300 tokens each, none read any. Implicit caching is **opportunistic**: our probe of
-the growing-prefix pattern registered nothing while the long grids of the same pattern
-registered 5.8 %. We report the grid figures, which are the ones the experiment
-actually incurred.
+one run read 12,262 cached tokens on the second call and a later run read none; issuing
+eight calls whose prefix grows by ~3,300 tokens each, none read any. Implicit caching is
+**opportunistic and not reproducible on demand**: our probes of the growing-prefix
+pattern registered nothing while the grids of that same pattern registered 7 %. We report
+the grid figures, which are the ones the experiment actually incurred. Probe outputs are
+persisted in `results/probe_cache_vertex_*.json`.
 
 > An earlier version of this section stated that Vertex has no implicit cache. It was
 > wrong: it generalised from the identical-request probe, and the project's own grids
 > contradicted it — 503,600 cached tokens in a single ReAct episode at T=200. A clean
 > measurement of the wrong thing.
 
-Explicit caching works (20,013 of 20,016 tokens discounted) but does not fit ReAct: its
-prefix grows every step, so the object would have to be rebuilt each turn, paying the
-write, to cache something that will not recur. It fits a **fixed** large block: the
-profile of a long procedure.
+Explicit caching works (20,013 of 20,016 tokens discounted, and 13,343 of 13,346 in a
+second run) but does not fit ReAct's pattern: its prefix grows every step, so an object
+cached at step *k* covers a shrinking fraction of the prompt at step *k+n*. We did not
+measure whether repeatedly rebuilding it pays off; the claim here is only that the
+naive use — one fixed cached block — does not apply.
 
-Resulting statement: **prefix caching helps only the transcript, in both providers, and
-by an order of magnitude more on Anthropic. The inversion of the accounting we measured
-there does not reproduce on Vertex, where 7.5x in tokens remains ~7.1x in effective
-input.**
+Resulting statement: **prefix caching helps only the append-only arms, in both providers,
+and by an order of magnitude more on Anthropic. The inversion of the accounting we
+measured there does not reproduce on Vertex, where 7.9x in tokens remains 7.6x in
+effective input.**
 
 ---
 
@@ -269,8 +282,10 @@ flawless agent that **never updated a fact**.
 
 ### Both probes on the third model
 
-Repeated on `gemini-3-flash-preview` via Vertex, same output cap and reasoning budget as
-Table 1 (8192 / 0), 3 seeds × 8 repetitions per cell:
+Repeated on `gemini-3-flash-preview` via Vertex. **L1** uses the same output cap and
+reasoning budget as Table 1 (8192 / 0), 3 seeds × 8 repetitions per cell. **L2** uses cap
+8192 with the provider's default reasoning — its runner does not expose the budget flag —
+and 3 seeds × 2 repetitions:
 
 | L1 condition | ReAct | SKILL.state |
 |---|---|---|
@@ -279,19 +294,25 @@ Table 1 (8192 / 0), 3 seeds × 8 repetitions per cell:
 | Schema field naming the fact | 0/24 = 0 % [0–14] | **16/24 = 67 % [47–82]** |
 | Reminder on the observation | **16/24 = 67 % [47–82]** | 8/24 = 33 % [18–53] |
 
-The floor is **exactly zero** here, where in Claude it was a noisy 12 %, and the
-intervals of the working conditions do not touch it. Three things follow:
+The floor is **zero in every run**, where in Claude it was a noisy 12 %; its Wilson
+interval still admits up to 14 %, so "zero" describes the sample, not the population. The
+intervals of the working conditions do not overlap it. Three things follow, with one
+caveat stated first: **the successes concentrate by scenario, not by trial.** Per seed,
+SKILL.state with the schema field scores 0/8, 8/8, 8/8, and with the reminder 0/8, 8/8,
+0/8. Binomial intervals over 24 runs do not capture the uncertainty of generalising to
+new scenarios, and the 67 %-vs-33 % difference between those two conditions comes
+entirely from one seed.
 
 - **The free-form field fails in both models.** 0/24 in Gemini, indistinguishable from
   having no field at all. The recommendation this project once made and then withdrew
-  ("leave a hatch in your schema") is now refuted in two models, and here without
-  ambiguity.
+  ("leave a hatch in your schema") finds no support in either model.
 - **Naming the field works** (67 %), reproducing L1: explicit state protects what its
   designer anticipated.
 - **The reminder works for the runtime that has nowhere to store anything.** ReAct with
   the fact attached to the observation reaches the same 67 % that SKILL.state reaches
-  with a dedicated schema field. For SKILL.state the reminder is *worse* than its own
-  schema field (33 % against 67 %) — worth noting, not yet explained.
+  with a dedicated schema field. For SKILL.state the reminder scores lower than its own
+  schema field (33 % against 67 %), but that gap rests on a single seed and we do not
+  claim it.
 
 L2 on the same model, counted over dependent steps:
 
@@ -301,11 +322,15 @@ L2 on the same model, counted over dependent steps:
 | Sonnet 5 | 8/44 | 44/44 |
 | **Gemini 3 Flash** | **0/44** | **44/44** |
 
-**132 of 132 dependent steps with explicit state, across three models and two providers,
-against 11 of 132 with full history.** And a reading the paper does not offer: the model
-that executes the long procedure best — Gemini, 0.913 in Table 1 where Haiku scores
-lower — is the one that never updates a fact, 0 out of 44. General capability does not
-protect against the failure mode explicit state removes.
+**132 of 132 dependent steps with explicit state, across three models and three
+services, against 11 of 132 with full history.**
+
+Gemini is the model that never updates a fact — 0 of 44 — while scoring 0.913 on the
+long procedure. We resist the tempting reading that general capability does not protect
+against this failure mode: our Haiku and Gemini numbers come from different environments
+and settings and are not comparable (Haiku's ReAct scores 0.986 at T=200 in the original
+environment). What the table supports is narrower and still worth stating: **within each
+model, the runtime decides this failure mode and the model does not fix it.**
 
 **Declared scope**: L1 in Gemini is measured with reasoning budget 0, matching Table 1;
 the Claude measurements predate that control and use each provider's default.
@@ -322,7 +347,7 @@ declared, and the result depended on whether the model guessed right. The first 
 cost entire grids; **two surfaced in the audit before publication, and both had produced
 a written result, with tables and intervals, ready to send**.
 
-This second block added four more, and they are worth enumerating because they transfer:
+This second block added six more, and they are worth enumerating because they transfer:
 
 1. **Greedy decoding does not guarantee reproducibility.** The protocol assumed that at
    `temperature=0` seeds are environment instances and one run per cell suffices. The
@@ -330,9 +355,11 @@ This second block added four more, and they are worth enumerating because they t
    conclusions collapsed on repetition**: an environment effect of −5.8 points that
    turned out to be +0.008, a "monotonic" noise curve that turned out flat, and a
    noise estimate of eleven points that turned out to be a tail.
-2. **The distribution has a left tail because failures cascade.** Ordinary run-to-run
-   noise is 0.006 (T=100) to 0.012 (T=200), but a single run can land at 0.83. What
-   forces repetition is not the noise: it is the tails.
+2. **The distribution has a left tail because failures cascade.** Across five runs of one
+   cell the sample deviation is 0.052; **excluding the 0.830 outlier** it is 0.012, and
+   three runs of the same cell at T=100 give 0.006. We quote both, because the second
+   number is conditional on removing the very run that motivates the point. What forces
+   repetition is not the ordinary spread: it is the tails.
 3. **The runner discarded the model's responses.** It kept the score and the token
    counts, so `correct=False` was an indistinguishable zero: you could not tell whether
    the model lost track of state — what the experiment measures — or miscopied a JSON
@@ -345,8 +372,11 @@ This second block added four more, and they are worth enumerating because they t
 5. **Traces that did not record their own conditions.** For most of this work the traces
    stored no output cap, reasoning budget, provider or responding model ID. Two files
    from the same cell could come from different caps and nothing would say so — which is
-   how a −5.8-point "environment effect" survived long enough to be written down. They
-   now open with a conditions header and record per-step token usage.
+   how a −5.8-point "environment effect" survived long enough to be written down. The
+   runners now write a conditions header and per-step token usage — but **only runs made
+   after that change carry it**: the 367 traces behind the tables in this draft do not,
+   so their conditions are certified by the filename and the run log, not by the
+   artefact itself.
 6. **A probe that measured the wrong pattern.** The cache probe repeated an identical
    request and concluded that Vertex has no implicit cache, while the project's own
    grids recorded 503,600 cached tokens in one episode. The probe was correct; the
@@ -364,9 +394,11 @@ had itself stored SKU-B there. **The early error contaminates later decisions** 
 that, not sampling noise, is what produces the tail.
 
 **The transferable claim**: the paper treats the runtime as neutral infrastructure — a
-merge operator, a patch format, a schema, a prompt order — when each of those
-undocumented decisions is worth between 20 and 90 points, **more than the difference
-between the methods it compares**.
+merge operator, a patch format, a schema, a prompt order. In this project, individual
+runtime decisions moved results by amounts comparable to or larger than the difference
+between the methods being compared: the schema field decides 0 % versus 67 % on the
+dependent step (§5), and prompt order decides an 82 % cache saving versus none (§4). We
+have not measured every such decision, so we make no claim about a general range.
 
 **Repository artefacts**: environment with fidelity flags, per-step traces, completeness
 verifier, a density meter that does not call the API, truncation counters, per-episode
@@ -382,7 +414,8 @@ checkpointing and end-to-end cache accounting.
 - **A reimplemented environment is not their environment.** We matched what their
   appendix allows us to compare, and the remaining differences are in §2. The shelf
   choice in `Store` still awaits an answer from the authors.
-- **Our Memory is not comparable to theirs.** Our summariser compresses five times more.
+- **Our Memory is not comparable to theirs.** Our summariser compresses fourteen times
+  more (5,770-token mean prompt against their 84,364 at T=200).
   What we measured is our summarisation policy, not "summarisation" as a category.
 - **We have not proven the environment gaps have no effect**; we measured that, at the
   power available, none above ~5 points is detectable. The same caveat applies to the
@@ -392,10 +425,11 @@ checkpointing and end-to-end cache accounting.
   aggregates, without traces.
 - **Cost figures price input only**, and the caching results depend on the length of the
   static prefix (§4).
-- **The probes now cover all three models**, but not under identical settings: the
-  Gemini runs fix the reasoning budget at 0 to match Table 1, while the Claude runs
-  (Sonnet 5 via the Anthropic API, Haiku 4.5 via Microsoft Foundry) predate that control.
-  Their counts carry the exclusions listed in §5.
+- **The probes now cover all three models**, across three services (Vertex, the
+  Anthropic API and Microsoft Foundry), but not under identical settings: L1 on Gemini
+  fixes the reasoning budget at 0 to match Table 1; L2 uses the provider default because
+  its runner does not expose the flag; and the Claude runs predate that control. Their
+  counts carry the exclusions listed in §5.
 - **One environment.** The second (Software Repository) was retired: it did not
   discriminate between runtimes and would have added noise without information.
 - **SKILL.state at 1.000 with zero variance also means the task does not discriminate at
