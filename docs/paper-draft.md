@@ -267,8 +267,48 @@ failure is all-or-nothing per scenario: in Haiku it misses all 11 dependent step
 episode, all 7 of another, all 4 of a third. This is not an agent that slips; it is a
 flawless agent that **never updated a fact**.
 
-**Declared scope**: both probes are measured on Claude (Haiku 4.5 and Sonnet 5), not on
-Gemini. Replicating them on the third model is pending.
+### Both probes on the third model
+
+Repeated on `gemini-3-flash-preview` via Vertex, same output cap and reasoning budget as
+Table 1 (8192 / 0), 3 seeds × 8 repetitions per cell:
+
+| L1 condition | ReAct | SKILL.state |
+|---|---|---|
+| No field to store it | 0/24 = 0 % [0–14] | 0/24 = 0 % [0–14] |
+| Free-form `notes` field | 0/24 = 0 % [0–14] | **0/24 = 0 % [0–14]** |
+| Schema field naming the fact | 0/24 = 0 % [0–14] | **16/24 = 67 % [47–82]** |
+| Reminder on the observation | **16/24 = 67 % [47–82]** | 8/24 = 33 % [18–53] |
+
+The floor is **exactly zero** here, where in Claude it was a noisy 12 %, and the
+intervals of the working conditions do not touch it. Three things follow:
+
+- **The free-form field fails in both models.** 0/24 in Gemini, indistinguishable from
+  having no field at all. The recommendation this project once made and then withdrew
+  ("leave a hatch in your schema") is now refuted in two models, and here without
+  ambiguity.
+- **Naming the field works** (67 %), reproducing L1: explicit state protects what its
+  designer anticipated.
+- **The reminder works for the runtime that has nowhere to store anything.** ReAct with
+  the fact attached to the observation reaches the same 67 % that SKILL.state reaches
+  with a dedicated schema field. For SKILL.state the reminder is *worse* than its own
+  schema field (33 % against 67 %) — worth noting, not yet explained.
+
+L2 on the same model, counted over dependent steps:
+
+| Model | ReAct applies the correction | SKILL.state |
+|---|---|---|
+| Haiku 4.5 | 3/44 | 44/44 |
+| Sonnet 5 | 8/44 | 44/44 |
+| **Gemini 3 Flash** | **0/44** | **44/44** |
+
+**132 of 132 dependent steps with explicit state, across three models and two providers,
+against 11 of 132 with full history.** And a reading the paper does not offer: the model
+that executes the long procedure best — Gemini, 0.913 in Table 1 where Haiku scores
+lower — is the one that never updates a fact, 0 out of 44. General capability does not
+protect against the failure mode explicit state removes.
+
+**Declared scope**: L1 in Gemini is measured with reasoning budget 0, matching Table 1;
+the Claude measurements predate that control and use each provider's default.
 
 ---
 
@@ -352,9 +392,10 @@ checkpointing and end-to-end cache accounting.
   aggregates, without traces.
 - **Cost figures price input only**, and the caching results depend on the length of the
   static prefix (§4).
-- **The probes are measured on Claude** — Sonnet 5 via the Anthropic API and Haiku 4.5
-  via Microsoft Foundry — **not on Gemini**, and their counts carry the exclusions
-  listed in §5.
+- **The probes now cover all three models**, but not under identical settings: the
+  Gemini runs fix the reasoning budget at 0 to match Table 1, while the Claude runs
+  (Sonnet 5 via the Anthropic API, Haiku 4.5 via Microsoft Foundry) predate that control.
+  Their counts carry the exclusions listed in §5.
 - **One environment.** The second (Software Repository) was retired: it did not
   discriminate between runtimes and would have added noise without information.
 - **SKILL.state at 1.000 with zero variance also means the task does not discriminate at
