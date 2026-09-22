@@ -83,10 +83,11 @@ def resolve_provider(requested: str = "auto") -> str:
 
 
 AZURE_TOKEN_TTL = 45 * 60
-"""Cuanto se reutiliza el token de Foundry antes de volver a invocar `az`.
-
-El token dura una hora larga; esto deja margen y evita que ocho episodios en paralelo
-conviertan cada peticion en una invocacion del CLI."""
+"""Tope de reutilizacion del token de Foundry antes de volver a invocar `az`."""
+AZURE_MARGEN_CADUCIDAD = 5 * 60
+"""Se renueva este tiempo ANTES de la caducidad real. `az` entrega el token que ya
+tiene en cache con la vida que le quede -- a veces minutos --, asi que contar el TTL
+desde que se pide dejo morir ocho episodios de R2 con un 401 a mitad."""
 AZURE_REINTENTOS = 6
 
 _token_azure: tuple[str, float] | None = None
@@ -131,8 +132,8 @@ def azure_access_token() -> str:
     intento = 0
     while True:
         try:
-            token = _az("account", "get-access-token", "--scope", AZURE_SCOPE,
-                        "--query", "accessToken", "-o", "tsv")
+            salida = json.loads(_az("account", "get-access-token", "--scope",
+                                    AZURE_SCOPE, "-o", "json"))
         except RuntimeError as error:
             if _es_caducidad_de_azure(error):
                 if esperado >= ESPERA_MAXIMA_SESION:
@@ -151,7 +152,10 @@ def azure_access_token() -> str:
             time.sleep(espera)
             espera = min(espera * 2, 30.0)
         else:
-            _token_azure = (token, time.time() + AZURE_TOKEN_TTL)
+            token = salida["accessToken"]
+            caduca = float(salida.get("expires_on") or time.time() + AZURE_TOKEN_TTL)
+            _token_azure = (token, min(caduca - AZURE_MARGEN_CADUCIDAD,
+                                       time.time() + AZURE_TOKEN_TTL))
             return token
 
 
@@ -202,9 +206,19 @@ class AnthropicClient:
         por un parpadeo de red. Los errores de autenticacion o de peticion invalida
         NO se reintentan, porque no se arreglan esperando."""
         delay = 2.0
+        token_renovado = False
         for attempt in range(RETRY_ATTEMPTS):
             try:
                 return self._create(system, user, max_tokens, cache_prefix)
+            except anthropic.AuthenticationError:
+                # Con Entra ID un 401 es un token caducado y se arregla pidiendo otro;
+                # con clave de API es una clave mala y reintentar no la arregla.
+                if (self.provider != "foundry" or token_renovado
+                        or os.environ.get("ANTHROPIC_FOUNDRY_API_KEY")):
+                    raise
+                print("  [401] token de Foundry caducado, pidiendo otro", flush=True)
+                olvidar_token_azure()
+                token_renovado = True
             except (anthropic.APIConnectionError, anthropic.RateLimitError) as error:
                 if attempt == RETRY_ATTEMPTS - 1:
                     raise
