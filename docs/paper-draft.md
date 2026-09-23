@@ -21,10 +21,13 @@ public — and measured three things:
 3. **What explicit state protects against**, through two probes aimed at the
    limitations the paper itself declares but does not measure (§5).
 
-The short version: **their thesis holds, their ordering nearly holds, their magnitude
-does not, and their cost accounting inverts once you bill it**. And the largest effects
-in the whole experiment come not from any of the compared methods, but from runtime
-implementation decisions the paper treats as neutral.
+The short version: **their thesis holds, their magnitude does not, and their cost
+accounting inverts once you bill it**. Explicit state protects against losing track of
+the procedure; on a second model it does not protect against **writing the state
+wrong**, and that failure — not the one the paper studies — is what ends up limiting it.
+And the largest effects in the whole experiment come not from any of the compared
+methods, but from runtime implementation decisions the paper treats as neutral: one of
+them silently disabled one of our four arms for the whole project (§6).
 
 ---
 
@@ -77,7 +80,12 @@ noise (§6); its mean over the balanced 15 is 0.905 ± 0.079 and over all 19, 0.
 0.072. In total, 299 episodes have per-step traces and five are aggregate-only. Their
 Table 1 in parentheses.
 
-| T | ReAct | Memory | Stateful | SKILL.state |
+> **The Stateful column below is not Stateful.** Its runner discarded every nested state
+> patch — 40 of 5,773 applied, 0.7 % — so it measured full history plus an empty state
+> block (§6, item 7). It is kept only so the correction is visible; the re-measurement
+> with the fixed parser is in progress and will replace it at T=50 and T=200.
+
+| T | ReAct | Memory | Stateful† | SKILL.state |
 |---|---|---|---|---|
 | 10 | 0.993 ± 0.026 (0.90) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) |
 | 25 | 0.955 ± 0.050 (0.92) | 0.987 ± 0.042 (0.99) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) |
@@ -86,16 +94,14 @@ Table 1 in parentheses.
 | 200 | 0.913 ± 0.072 (0.74) | 0.810 ± 0.083 (0.84) | 0.912 ± 0.126 (0.88) | 1.000 ± 0.000 (0.94) |
 
 Drop from T=10 to T=200 (ours / theirs): ReAct −0.080/−0.160 · Memory −0.190/−0.160 ·
-Stateful −0.088/−0.120 · **SKILL.state 0.000/−0.060**.
+**SKILL.state 0.000/−0.060**. († history plus an empty state block; see the note above.)
 
 **What reproduces.** Their central thesis, with room to spare: SKILL.state does not fail
 **once in 75 episodes** of up to 200 steps. It is the only arm with zero degradation;
-theirs loses six points. The overall ordering reproduces too — both explicit-state
-runtimes above both text-reconstruction ones.
+theirs loses six points. With this model, which does not hold on the second one (below).
 
 **What does not.** The magnitude, and only for ReAct: it loses 0.080 where theirs loses
-0.160. Stateful loses 0.088 against their 0.120, and **Memory loses more than theirs**
-(0.190 against 0.160). At T=200 our ReAct sits **17 points above** theirs, and the gap
+0.160, and **Memory loses more than theirs** (0.190 against 0.160). At T=200 our ReAct sits **17 points above** theirs, and the gap
 widens with the horizon (+0.09 at T=10, +0.17 at T=200).
 
 Reasoning effort, the output cap and the three environment gaps were each varied and
@@ -103,16 +109,67 @@ none accounts for it (§2, §6). The model is nominally theirs, but §7 records 
 `gemini-3-flash-preview` may not be the checkpoint behind their `Gemini-3-Flash`, so we
 cannot rule the model out either — only note that we did not change it.
 
-One ordering the table does **not** support: at T=200, Stateful (0.912 ± 0.126) and
-ReAct (0.913 ± 0.072) are separated by 0.001. Explicit state beats text reconstruction
-at that horizon only through SKILL.state and only against Memory.
-
 **Where their ordering breaks.** Memory comes last in our environment; they place it
 above ReAct. **This is a difference of ours, not a finding**: our summariser compresses to a
 5,770-token mean prompt at T=200 (measured in the Appendix-B environment at the same
 output cap; the faithful-environment cells were measured with an instrument that did
 not record tokens, §6) where theirs occupies 84,364 — a factor of **14**. Their
 "Memory (Summary)" barely summarises; it retains almost as much context as ReAct.
+
+### The same protocol on a second model
+
+Claude Haiku 4.5 via Microsoft Foundry, **in exactly the conditions of the table above**
+— faithful environment, output cap 8192 — at the two ends of the horizon, 3 seeds × 8
+repetitions = **24 runs per cell**, every episode with a per-step trace and a conditions
+header. Gemini's figures from the table above in parentheses.
+
+| T | ReAct | Memory | Stateful† | SKILL.state |
+|---|---|---|---|---|
+| 50 | 0.978 ± 0.045 (0.936) | 0.809 ± 0.184 (0.953) | *re-measuring* | 0.999 ± 0.004 (1.000) |
+| 200 | 0.974 ± 0.070 (0.913) | 0.653 ± 0.157 (0.810) | *re-measuring* | **0.958 ± 0.058** (1.000) |
+
+ReAct is flat on Haiku: −0.004 between T=50 and T=200, against −0.023 on Gemini and
+−0.160 in the paper. The full-history arm the paper shows collapsing is, on Haiku, the
+one that degrades **least of all** — less than SKILL.state (−0.041).
+
+**SKILL.state fails on Haiku, and the adjudication says why.** Replaying the environment
+with the actions the model executed and comparing, step by step, the `shelf_contents` the
+model believes against the real one (`experiments/adjudicar_estado.py`):
+
+- **181 of its 201 failures at T=200 (90 %) are inherited state**: the model already
+  believed something false before acting. The other 20 are wrong actions taken on a
+  correct state.
+- **In all 15 episodes where the belief departed from reality, the origin is the same:
+  a `Move` executed correctly with a state patch written wrong.** `Move` is the only
+  transition that requires copying one shelf's contents into another key of the state,
+  and that copy is where it breaks — the model writes the contents of a different shelf,
+  or the lot of the pallet it stored one step earlier.
+- The error is systematic, not sampling: in 6 of the 8 runs of seed 2 it happens at the
+  same step (132), after which the model ships from a shelf that does not hold the SKU,
+  cascades through ~27 failures and does not correct its state even when the environment
+  rejects the action. In seed 0 the corrupted field is a lot number that no later
+  decision reads, and the next `Move` overwrites it; those runs lose at most one step to
+it.
+
+What SKILL.state removes is the need to **reconstruct** the state from history. What it
+introduces is the need to **write** it correctly at every transition, and nothing in the
+runtime checks that the write matches what the action did. Gemini never made that error
+in 75 episodes; Haiku wrote at least one wrong patch in 15 of 24 at T=200, and in 8 of
+them the error reached a decision. The paper's thesis survives in
+direction — SKILL.state is still the best arm on Gemini and within 0.02 of ReAct on
+Haiku — but "explicit state does not degrade" is a property of the model as much as of
+the runtime.
+
+**Memory on Haiku is partly an artefact of our summariser cap, and the size of the part
+is measured.** The summariser has its own output cap (1,200 tokens, with an instruction
+to stay under 400 words). Gemini never reaches it — 0 truncated summaries in 30 episodes.
+Haiku overruns it constantly: 194 truncated summaries in the 24 episodes at T=50 and
+**2,386 at T=200**, about half of all summaries. A control arm at T=50 with the cap
+raised to 4,096 (3 seeds × 3, `--summary-max-tokens`) truncates nothing and scores
+**0.889 ± 0.126 (n=9) against 0.809 ± 0.184 (n=24)**: +0.080, 1.4 standard errors. The
+cut accounts for part of Memory's drop on Haiku; even uncut, Memory stays well below
+ReAct (0.978). Haiku's Memory column is therefore read as *our summariser with a cap one
+model respects and the other does not*, and we draw no cross-model conclusion from it.
 
 ### Dense noise (their Experiment 2)
 
@@ -177,7 +234,11 @@ Three consequences:
    mutating state block and saves 0 %, a 5.7x difference in effective input. The two
    arms differ in more than order — Stateful also maintains the state block — so this
    is an upper bound on the effect of ordering alone, not an isolated measurement of
-   it. Their Appendix A.3 template uses the worse arrangement.
+   it. And the Stateful figure was measured with the defective parser of §6 (item 7):
+   its state block was empty, i.e. constant, so the 0 % comes from the runner not
+   marking the history as a cacheable prefix, not from a mutating block. With the parser
+   fixed the block does mutate every step, which is the case the argument is about.
+   Their Appendix A.3 template uses the worse arrangement.
 3. **It reconciles an anomaly in their table.** Their totals column sits ~3.5x below
    horizon × mean prompt at every horizon. With caching it fits: their totals would be
    billed, their mean prompt raw.
@@ -326,11 +387,11 @@ L2 on the same model, counted over dependent steps:
 services, against 11 of 132 with full history.**
 
 Gemini is the model that never updates a fact — 0 of 44 — while scoring 0.913 on the
-long procedure. We resist the tempting reading that general capability does not protect
-against this failure mode: our Haiku and Gemini numbers come from different environments
-and settings and are not comparable (Haiku's ReAct scores 0.986 at T=200 in the original
-environment). What the table supports is narrower and still worth stating: **within each
-model, the runtime decides this failure mode and the model does not fix it.**
+long procedure. Haiku, measured now under the same conditions as Gemini's Table 1 (§3),
+scores **0.974** on that procedure at T=200 and still misses 41 of 44 corrections. The two
+L2 measurements do not share every setting (§7), so we do not rank the models on it;
+what holds on both is that **the long-procedure score does not predict this failure, and
+within each model the runtime decides it.**
 
 **Declared scope**: L1 in Gemini is measured with reasoning budget 0, matching Table 1;
 the Claude measurements predate that control and use each provider's default.
@@ -382,6 +443,25 @@ This second block added six more, and they are worth enumerating because they tr
    grids recorded 503,600 cached tokens in one episode. The probe was correct; the
    pattern it probed was not the one the experiment uses.
 
+A third block, found while measuring the second model, contains the most expensive
+artefact of the project:
+
+7. **One of the four arms never ran.** Stateful read its state patch with a non-greedy
+   regex that stopped at the first closing brace. Every nested patch — the normal case,
+   `{"shelf_contents": {"3": {...}}}` — was truncated, failed to parse, and was dropped
+   without a warning: **40 of 5,773 applied on Gemini, 0 of 6,000 on Haiku**. What both
+   Stateful columns measured is full history plus an empty state block. Its unit test
+   used a flat value and passed. It surfaced only because Stateful beat SKILL.state on
+   Haiku and we went to the traces to find out why.
+8. **A cap one model respects and the other does not.** The summariser's own cap was
+   never reached on Gemini and was exceeded in half the summaries on Haiku (§3). A cap
+   is not a neutral constant across models; it has to be checked per model, in the
+   traces.
+9. **Resuming re-paid finished work.** The completeness check counted the conditions
+   header as a step, so no episode ever matched its horizon and every relaunch re-ran
+   episodes already measured. It was caught on the first relaunch of R2 because a cell
+   finished minutes earlier started again.
+
 Items 5 and 6 were found by an **independent adversarial review of this draft against
 the raw traces**, not by us. That review also corrected the failure classification
 above, the maintenance-event range in §2, the compression factor in §3 and the sample
@@ -432,6 +512,11 @@ checkpointing and end-to-end cache accounting.
   counts carry the exclusions listed in §5.
 - **One environment.** The second (Software Repository) was retired: it did not
   discriminate between runtimes and would have added noise without information.
-- **SKILL.state at 1.000 with zero variance also means the task does not discriminate at
-  the top.** That it never fails does not prove it is infallible: it proves that here
-  the ceiling is the ceiling.
+- **SKILL.state's ceiling depends on the model.** At 1.000 with zero variance on Gemini
+  the task did not discriminate at the top; on Haiku it does (0.958 at T=200), and the
+  failure is in writing the state (§3). Two models are not enough to say which models
+  make that error.
+- **Stateful has been re-measured only at T=50 and T=200.** The intermediate horizons of
+  Gemini's Table 1 keep the defective measurement, marked as such.
+- **Haiku's Memory column mixes the summarisation policy with summary truncation** (§3);
+  the control arm has n=9 and bounds the effect at T=50 only.
