@@ -60,6 +60,14 @@ def main() -> None:
     p.add_argument("--out", default="results")
     args = p.parse_args()
 
+    sufijo = f"_{args.etiqueta}" if args.etiqueta else ""
+    destino = Path(args.out) / (f"adj_T{args.horizon}_{args.model}_{args.runtime}"
+                                f"_s{args.seed}{sufijo}.jsonl")
+    # Antes de construir el cliente: el de Vertex pide proyecto y token a gcloud, que
+    # con el portatil cargado tarda minutos, y saltar lo ya hecho no puede costar eso.
+    if episodio_ya_hecho(destino, args.horizon):
+        print(f"ya hecho, se salta: {destino}", flush=True)
+        return
     from replicate_table1 import build_runtimes
 
     cliente = build_client(args.model, args.provider, args.max_tokens,
@@ -67,12 +75,6 @@ def main() -> None:
     env = Warehouse(horizon=args.horizon, seed=args.seed, apendice_b=args.apendice_b,
                     sin_telemetria=args.sin_telemetria, ruido=args.ruido)
     runtime = build_runtimes(True, True, args.summary_max_tokens)[args.runtime](cliente, env)
-    sufijo = f"_{args.etiqueta}" if args.etiqueta else ""
-    destino = Path(args.out) / (f"adj_T{args.horizon}_{args.model}_{args.runtime}"
-                                f"_s{args.seed}{sufijo}.jsonl")
-    if episodio_ya_hecho(destino, args.horizon):
-        print(f"ya hecho, se salta: {destino}", flush=True)
-        return
     destino.unlink(missing_ok=True)
     print(f"adjudicando {args.runtime} T={args.horizon} seed={args.seed} -> {destino}",
           flush=True)

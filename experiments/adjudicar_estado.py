@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from dr.envs.warehouse import Warehouse
 from dr.runner import NO_OP
 from dr.runtimes.skillstate import SkillStateRuntime, _merge_into
+from dr.runtimes.stateful import StatefulRuntime
 from dr.types import Action
 
 
@@ -58,6 +59,10 @@ def adjudicar(fichero: Path) -> dict:
     env.reset()
     campos = set(env.schema_fields())
     estado: dict = {}
+    # Stateful escribe `StateUpdate: {...}` y no reintenta; se aplica con su propio
+    # parser para reproducir exactamente el estado que vio el modelo.
+    stateful = (StatefulRuntime(client=None, spec="", schema_fields=sorted(campos))
+                if cabecera.get("runtime") == "stateful" else None)
     origen = None
     clases = {"estado_heredado": 0, "accion_con_estado_correcto": 0}
     for paso in pasos:
@@ -65,11 +70,15 @@ def adjudicar(fichero: Path) -> dict:
         bien_antes = _coincide(_creencia(estado), _realidad(env))
         if paso.get("actionable") and not paso.get("correct"):
             clases["estado_heredado" if not bien_antes else "accion_con_estado_correcto"] += 1
-        for respuesta in paso["raw"]["respuestas"]:
-            leido = SkillStateRuntime._parse(respuesta)
-            if leido is not None and all(k in campos for k in leido[0]):
-                _merge_into(estado, leido[0], deep=True)
-                break
+        if stateful is not None:
+            stateful._apply_state_update(paso["raw"]["respuestas"][-1])
+            estado = stateful.state
+        else:
+            for respuesta in paso["raw"]["respuestas"]:
+                leido = SkillStateRuntime._parse(respuesta)
+                if leido is not None and all(k in campos for k in leido[0]):
+                    _merge_into(estado, leido[0], deep=True)
+                    break
         accion = Action.parse(paso["ejecutado"]) if paso.get("ejecutado") else None
         env.apply(accion if accion is not None else NO_OP)
         if origen is None and bien_antes and not _coincide(_creencia(estado), _realidad(env)):

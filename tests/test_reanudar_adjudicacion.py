@@ -55,3 +55,21 @@ def test_la_cabecera_de_condiciones_no_cuenta_como_paso(tmp_path):
         for i in range(200):
             fh.write(json.dumps({"step": i, "http": 200, "correct": True}) + "\n")
     assert episodio_ya_hecho(f, horizonte=200) is True
+
+
+def test_saltar_un_episodio_hecho_no_construye_el_cliente(tmp_path, monkeypatch):
+    # Construir el cliente de Vertex pide proyecto y token a gcloud, que con el
+    # portatil cargado tarda minutos. Relanzar una cadena tiene que saltar lo hecho
+    # sin pagar ese coste por cada episodio.
+    import sys
+    import experiments.adjudicar as adj
+
+    destino = tmp_path / "adj_T200_m_stateful_s0_f1.jsonl"
+    _escribir(destino, 200)
+    llamadas = []
+    monkeypatch.setattr(adj, "build_client", lambda *a, **k: llamadas.append(1))
+    monkeypatch.setattr(sys, "argv", ["adjudicar.py", "--horizon", "200", "--seed", "0",
+                                      "--runtime", "stateful", "--model", "m",
+                                      "--etiqueta", "f1", "--out", str(tmp_path)])
+    adj.main()
+    assert llamadas == []
