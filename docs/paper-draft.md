@@ -83,9 +83,11 @@ Table 1 in parentheses.
 > **Stateful was re-measured.** Its runner discarded every nested state patch — 40 of
 > 5,773 applied, 0.7 % — so its original cells measured full history plus an empty state
 > block (§6, item 7). T=50 and T=200 below come from a re-measurement with the parser
-> fixed (15 runs each, every trace recording the parser version); T=10, 25 and 100,
-> marked †, keep the defective measurement. Fixing it moved neither cell beyond noise
-> (0.996 → 0.996 and 0.912 → 0.930), for a reason given below.
+> fixed (15 runs each, every trace recording the parser version; on Gemini the fixed
+> parser applied 3,748 of 3,750 patches); T=10, 25 and 100, marked †, keep the defective
+> measurement. No change was detected: 0.996 → 0.996 and 0.912 → 0.930 (+0.017, Welch
+> 95 % interval −0.066 to +0.100). That rules out a large effect of the fix, not a
+> moderate one.
 
 | T | ReAct | Memory | Stateful | SKILL.state |
 |---|---|---|---|---|
@@ -120,81 +122,97 @@ not record tokens, §6) where theirs occupies 84,364 — a factor of **14**. The
 
 ### The same protocol on a second model
 
-Claude Haiku 4.5 via Microsoft Foundry, **in exactly the conditions of the table above**
-— faithful environment, output cap 8192 — at the two ends of the horizon, 3 seeds × 8
+Claude Haiku 4.5 via Microsoft Foundry, **with the environment and decision cap of the
+table above** — faithful environment, output cap 8192 — but not its decoding: Gemini runs
+with `temperature=0`, `top_p=1` and reasoning budget 0, while Haiku receives neither
+setting (the SDK no longer accepts `temperature`) and runs without extended thinking. At
+the two ends of the horizon, 3 seeds × 8
 repetitions = **24 runs per cell**, every episode with a per-step trace and a conditions
 header. Gemini's figures from the table above in parentheses.
 
 | T | ReAct | Memory | Stateful | SKILL.state |
 |---|---|---|---|---|
-| 50 | 0.978 ± 0.045 (0.936) | 0.809 ± 0.184 (0.953) | 0.997 ± 0.007 (0.996) | 0.999 ± 0.004 (1.000) |
-| 200 | 0.974 ± 0.070 (0.913) | 0.653 ± 0.157 (0.810) | **0.999 ± 0.004** (0.930) | **0.958 ± 0.058** (1.000) |
+| 50 | 0.978 ± 0.045 (0.936) | 0.809 ± 0.184 (0.953) | 0.991 ± 0.026 (0.996) | 0.999 ± 0.004 (1.000) |
+| 200 | 0.974 ± 0.070 (0.913) | 0.653 ± 0.157 (0.810) | **0.999 ± 0.002** (0.930) | **0.958 ± 0.058** (1.000) |
 
-Stateful cells are 15 runs (3 seeds × 5) with the fixed parser; the rest, 24.
+Stateful cells are 15 runs (3 seeds × 5); the rest, 24. Haiku's Stateful needed a third
+parser version: the second still dropped the patches Haiku writes in Markdown
+(`**StateUpdate:**` followed by a code block) — 731 of 3,000 at T=200, in 7 of 15
+episodes — which an adversarial review found (§6, item 7). The cells above use the third,
+which applies 2,995 of 3,000 at T=200 and 747 of 750 at T=50; the remainder carry no
+JSON object or keys outside the schema.
 
-ReAct is flat on Haiku: −0.004 between T=50 and T=200, against −0.023 on Gemini and
-−0.160 in the paper. The full-history arm the paper shows collapsing is, on Haiku, the
-one that degrades **least of all** — less than SKILL.state (−0.041).
+ReAct is flat on Haiku: −0.005 between T=50 and T=200, against −0.023 on Gemini and
+−0.140 in the paper over the same interval. The full-history arm the paper shows
+collapsing degrades on Haiku less than SKILL.state (−0.041); only Stateful degrades less.
 
-**SKILL.state fails on Haiku, and the adjudication says why.** Replaying the environment
-with the actions the model executed and comparing, step by step, the `shelf_contents` the
-model believes against the real one (`experiments/adjudicar_estado.py`):
+**SKILL.state fails on Haiku, and the adjudication says where.** We replay the
+environment with the actions the model executed and compare, step by step, the inventory
+the model believes (SKU, units and lot per shelf) against the real one
+(`experiments/adjudicar_estado.py`). A failure is attributed to the state only when the
+believed inventory prescribes a **different** action than the real one and the model
+executed exactly the action the believed inventory prescribes. Of the 201 failures at
+T=200:
 
-- **181 of its 201 failures at T=200 (90 %) are inherited state**: the model already
-  believed something false before acting. The other 20 are wrong actions taken on a
-  correct state.
-- **In all 15 episodes where the belief departed from reality, the origin is the same:
+- **167 are caused by the state** in that sense; **17** occur while the belief differed
+  from reality but the discrepancy does not explain them (both inventories prescribe the
+  same action, or the model followed neither); **17** occur with a correct state.
+- **In all 17 episodes where the belief departed from reality, the origin is the same:
   a `Move` executed correctly with a state patch written wrong.** `Move` is the only
   transition that requires copying one shelf's contents into another key of the state,
   and that copy is where it breaks — the model writes the contents of a different shelf,
-  or the lot of the pallet it stored one step earlier.
-- The error is systematic, not sampling: in 6 of the 8 runs of seed 2 it happens at the
-  same step (132), after which the model ships from a shelf that does not hold the SKU,
-  cascades through ~27 failures and does not correct its state even when the environment
-  rejects the action. In seed 0 the corrupted field is a lot number that no later
-  decision reads, and the next `Move` overwrites it; those runs lose at most one step to
-it.
+  the lot of the pallet it stored one step earlier, or the wrong number of units.
+- **Only in 7 of those 17 did the error reach a decision, all in seed 2.** In 6 of its
+  8 runs the corruption happens at the same step (132), after which the model ships from
+  a shelf that does not hold the SKU, cascades through ~25 state-caused failures and does
+  not correct its state even when the environment rejects the action. In seed 0 the
+  corrupted field is a lot number that no later decision reads: 8 corrupted runs, no
+  failure caused by it.
 
 What SKILL.state removes is the need to **reconstruct** the state from history. What it
 introduces is the need to **write** it correctly at every transition, and nothing in the
-runtime checks that the write matches what the action did. Gemini never made that error
-in 75 episodes; Haiku wrote at least one wrong patch in 15 of 24 at T=200, and in 8 of
-them the error reached a decision. The paper's thesis survives in
+runtime checks that the write matches what the action did. Gemini's belief never departed
+from reality in any of its 75 episodes; Haiku wrote at least one wrong patch in 17 of 24
+at T=200, and in 7 of them the error reached a decision. The paper's thesis survives in
 direction — SKILL.state is still the best arm on Gemini and within 0.02 of ReAct on
 Haiku — but "explicit state does not degrade" is a property of the model as much as of
 the runtime.
 
-**Stateful, measured properly, orders the two models in opposite directions.** At T=200
-Stateful is the best arm on Haiku (0.999, above SKILL.state's 0.958) and, on Gemini, is
-indistinguishable from ReAct (0.930 against 0.913) and well below SKILL.state (1.000).
-The same adjudication explains both:
+**Stateful orders the two models in opposite directions.** At T=200 Stateful is the best
+arm on Haiku (0.999, above SKILL.state's 0.958) and, on Gemini, is indistinguishable
+from ReAct (0.930 against 0.913) and well below SKILL.state (1.000). The same
+adjudication describes both — it describes, it does not separate causes, because
+Stateful and SKILL.state also differ in response format, parsing, retries and prompt
+construction, not only in carrying the history:
 
-- **On Haiku, Stateful writes its state as badly as SKILL.state and loses almost nothing
-  to it.** The belief departs from reality in 10 of 15 episodes at T=200 — always a
-  correct action with a miswritten patch, the same failure as above — yet only 2 of its
-  3 failures come from that state. With the history in the prompt, a wrong state block
-  stops being the only source of truth.
-- **On Gemini, the history makes it worse at both things.** Its state departs from
-  reality in 11 of 15 episodes at T=200 (5 from a miswritten patch, 6 from a wrong
-  action the state did not reflect), where SKILL.state on the same model never did in
-  75; and 77 of its 211 failures happen **with a correct state in front of it**.
+- **On Haiku, Stateful writes its state as badly as SKILL.state and loses nothing to
+  it.** Its belief departs from reality in 8 of 15 episodes at T=200 — always a correct
+  action with a miswritten patch, the same failure as above — yet **none** of its 2
+  failures is caused by the state; both happen with a correct one. With the history in
+  the prompt, the model does not follow its own wrong state block into a decision.
+- **On Gemini it is the other way round.** Its belief departs from reality in 11 of 15
+  episodes at T=200 (5 from a miswritten patch, 6 from a wrong action the state did not
+  reflect), where SKILL.state on the same model never did in 75. Of its 211 failures, 86
+  are caused by the state, 48 occur with a discrepancy that does not explain them, and
+  **77 happen with a correct state in front of it**.
 
-Why fixing the parser changed so little: in Stateful the model's responses go into the
-history, and each response contains its own `StateUpdate: {...}`. The transcript already
-carried a state written by the model, step after step, whether or not the runtime
-applied it. What the defective arm measured was not "no state"; it was "state kept only
-in the transcript". On both models that turned out to be worth about as much as the
-applied block.
+A hypothesis for why fixing the parser changed so little, which we have not tested: in
+Stateful the model's responses go into the history, and each contains its own
+`StateUpdate: {...}`. The transcript therefore carried a state written by the model
+whether or not the runtime applied it, so the defective arm measured "state kept only in
+the transcript" rather than "no state".
 
-**Memory on Haiku is partly an artefact of our summariser cap, and the size of the part
-is measured.** The summariser has its own output cap (1,200 tokens, with an instruction
+**Memory on Haiku runs into our summariser cap, and a control bounds — but does not
+establish — what that costs it.** The summariser has its own output cap (1,200 tokens, with an instruction
 to stay under 400 words). Gemini never reaches it — 0 truncated summaries in 30 episodes.
 Haiku overruns it constantly: 194 truncated summaries in the 24 episodes at T=50 and
 **2,386 at T=200**, about half of all summaries. A control arm at T=50 with the cap
 raised to 4,096 (3 seeds × 3, `--summary-max-tokens`) truncates nothing and scores
-**0.889 ± 0.126 (n=9) against 0.809 ± 0.184 (n=24)**: +0.080, 1.4 standard errors. The
-cut accounts for part of Memory's drop on Haiku; even uncut, Memory stays well below
-ReAct (0.978). Haiku's Memory column is therefore read as *our summariser with a cap one
+**0.889 ± 0.126 (n=9) against 0.809 ± 0.184 (n=24)**: +0.080, Welch 95 % interval
+−0.037 to +0.197. The control removes the truncation and raises the observed mean, but
+does not establish an effect on the score, and raising the cap also changes how long a
+summary may be, not only whether the same summary is cut. Uncut, Memory still stays well
+below ReAct (0.978). Haiku's Memory column is therefore read as *our summariser with a cap one
 model respects and the other does not*, and we draw no cross-model conclusion from it.
 
 ### Dense noise (their Experiment 2)
@@ -255,16 +273,18 @@ Three consequences:
    method that compresses rewrites the prefix, and rewriting the prefix costs the
    cache. With a long static prefix the conflict softens: the fixed block caches even
    for the compressing arms.
-2. **Prompt order is a first-order cost variable.** ReAct and Stateful send nearly the
-   same content; ReAct puts history first and saves 82 %, Stateful puts it after a
-   mutating state block and saves 0 %, a 5.7x difference in effective input. The two
-   arms differ in more than order — Stateful also maintains the state block — so this
-   is an upper bound on the effect of ordering alone, not an isolated measurement of
-   it. And the Stateful figure was measured with the defective parser of §6 (item 7):
-   its state block was empty, i.e. constant, so the 0 % comes from the runner not
-   marking the history as a cacheable prefix, not from a mutating block. With the parser
-   fixed the block does mutate every step, which is the case the argument is about.
-   Their Appendix A.3 template uses the worse arrangement.
+2. **ReAct and Stateful send nearly the same content and are billed 5.7x apart.**
+   ReAct saves 82 %, Stateful 0 %. This contrast does **not** isolate prompt order: the
+   two runners also differ in whether the history is marked as a cacheable prefix (only
+   ReAct marks it), and the Stateful figure was measured with the defective parser of §6
+   (item 7), whose state block was empty and therefore constant. Order, cache marking
+   and a mutating block are confounded here. **Isolated, the effect of order is 5.2x.**
+   Stateful on Haiku at T=50, 3 seeds × 2 runs per arm, both arms marking the history
+   as a cacheable prefix and sending the same content (~880k raw input tokens per
+   episode); only the position of the state block changes. State first: 74 % of the
+   input is cache *writes* and 22 % reads, an effective 869k per episode, a 1 % saving.
+   History first: 91 % reads and 4 % writes, an effective 168k, an 81 % saving. Scores do
+   not differ (0.997 and 1.000). Their Appendix A.3 template puts the state block first.
 3. **It reconciles an anomaly in their table.** Their totals column sits ~3.5x below
    horizon × mean prompt at every horizon. With caching it fits: their totals would be
    billed, their mean prompt raw.
@@ -476,12 +496,15 @@ artefact of the project:
    regex that stopped at the first closing brace. Every nested patch — the normal case,
    `{"shelf_contents": {"3": {...}}}` — was truncated, failed to parse, and was dropped
    without a warning: **40 of 5,773 applied on Gemini, 0 of 6,000 on Haiku**. What both
-   Stateful columns measured is full history plus an empty state block. Its unit test
+   Stateful columns measured is full history plus a state block with no inventory — empty
+   on Haiku, and on Gemini holding only the occasional `last_event` (the 40 patches, in
+   11 episodes). Its unit test
    used a flat value and passed. It surfaced only because Stateful beat SKILL.state on
    Haiku and we went to the traces to find out why. Re-measured with the parser fixed,
-   the scores barely moved (§3): the model restates its state in every response, so the
-   history carried it anyway. A defect that changes nothing measurable is still a
-   defect in what the column claims to measure.
+   no change was detected (§3). The first fix was itself incomplete: on Haiku it still
+   dropped every patch written in Markdown — 731 of 3,000 at T=200 — which the third
+   adversarial review found, not us; a third parser version closed it. A defect that
+   changes nothing measurable is still a defect in what the column claims to measure.
 8. **A cap one model respects and the other does not.** The summariser's own cap was
    never reached on Gemini and was exceeded in half the summaries on Haiku (§3). A cap
    is not a neutral constant across models; it has to be checked per model, in the
@@ -490,6 +513,12 @@ artefact of the project:
    header as a step, so no episode ever matched its horizon and every relaunch re-ran
    episodes already measured. It was caught on the first relaunch of R2 because a cell
    finished minutes earlier started again.
+10. **The traces did not record cache writes.** The client received them; the trace row
+    did not store them. In the first run of the prompt-order experiment the arm that
+    rewrites its cache every step — the most expensive case — showed ~540 prompt tokens
+    per step and looked the cheapest. Those twelve episodes were discarded and re-run.
+    The §4 table does not depend on it: it was computed by the grid runner, which counted
+    writes.
 
 Items 5 and 6 were found by an **independent adversarial review of this draft against
 the raw traces**, not by us. That review also corrected the failure classification
@@ -506,8 +535,9 @@ that, not sampling noise, is what produces the tail.
 merge operator, a patch format, a schema, a prompt order. In this project, individual
 runtime decisions moved results by amounts comparable to or larger than the difference
 between the methods being compared: the schema field decides 0 % versus 67 % on the
-dependent step (§5), and prompt order decides an 82 % cache saving versus none (§4). We
-have not measured every such decision, so we make no claim about a general range.
+dependent step (§5), and a parser that silently dropped state patches decided what one
+of four arms measured for the whole project (§6, item 7). We have not measured every such
+decision, so we make no claim about a general range.
 
 **Repository artefacts**: environment with fidelity flags, per-step traces, completeness
 verifier, a density meter that does not call the API, truncation counters, per-episode
@@ -518,8 +548,10 @@ checkpointing and end-to-end cache accounting.
 ## 7. Limitations
 
 - **`gemini-3-flash-preview` may not be their `Gemini-3-Flash`.** Declared as a risk
-  from the outset. The responding model ID is returned by the provider on every call and
-  is now recorded per step; the traces measured before that change do not carry it.
+  from the outset. Vertex returns the responding model ID on every call and it is
+  recorded per step, but not in the traces measured before that change. The Anthropic
+  client did not copy it at all until the last Stateful re-measurement: every other Haiku
+  trace records the requested alias in its header, not the model that answered.
 - **A reimplemented environment is not their environment.** We matched what their
   appendix allows us to compare, and the remaining differences are in §2. The shelf
   choice in `Store` still awaits an answer from the authors.
@@ -545,7 +577,11 @@ checkpointing and end-to-end cache accounting.
   the task did not discriminate at the top; on Haiku it does (0.958 at T=200), and the
   failure is in writing the state (§3). Two models are not enough to say which models
   make that error.
-- **Stateful has been re-measured only at T=50 and T=200.** The intermediate horizons of
-  Gemini's Table 1 keep the defective measurement, marked as such.
+- **Stateful has been re-measured only at T=50 and T=200**, with parser version 2 on
+  Gemini (which applied 3,748 of 3,750 of its patches) and version 3 on Haiku. The
+  intermediate horizons of Gemini's Table 1 keep the defective measurement, marked as
+  such.
+- **Haiku and Gemini do not share decoding settings** (§3): the cross-model differences
+  are between two configured systems, not two models under identical conditions.
 - **Haiku's Memory column mixes the summarisation policy with summary truncation** (§3);
   the control arm has n=9 and bounds the effect at T=50 only.
