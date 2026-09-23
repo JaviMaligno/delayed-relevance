@@ -26,7 +26,9 @@ def finite(value: float) -> float | None:
 
 
 def build_runtimes(deep_merge: bool, declare_merge: bool = True,
-                   summary_max_tokens: int | None = None) -> dict:
+                   summary_max_tokens: int | None = None,
+                   stateful_orden: str = "estado_primero",
+                   stateful_cache: bool = False) -> dict:
     """Los dos brazos con estado comparten profundidad de merge: si uno conserva las
     sub-claves hermanas y el otro no, la comparacion queda sesgada."""
     return {
@@ -35,7 +37,8 @@ def build_runtimes(deep_merge: bool, declare_merge: bool = True,
             client, env.spec(),
             **({"summary_max_tokens": summary_max_tokens} if summary_max_tokens else {})),
         "stateful": lambda client, env: StatefulRuntime(
-            client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
+            client, env.spec(), env.schema_fields(), deep_merge=deep_merge,
+            orden=stateful_orden, cachear=stateful_cache),
         "skillstate": lambda client, env: SkillStateRuntime(
             client, env.spec(), env.schema_fields(), deep_merge=deep_merge,
             declare_merge=declare_merge),

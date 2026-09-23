@@ -101,3 +101,44 @@ def test_sin_objeto_json_no_se_aplica_nada():
     rt = StatefulRuntime(client=None, spec="", schema_fields=["last_event"])
     rt._apply_state_update("StateUpdate: none this step\nAction: Wait({})")
     assert rt.state == {}
+
+
+class _ClienteQueAnotaPrefijos(FakeClient):
+    def __init__(self, responses):
+        super().__init__(responses=responses)
+        self.prefijos = []
+
+    def complete(self, system, user, max_tokens=None, cache_prefix=None):
+        self.prefijos.append(cache_prefix)
+        return super().complete(system, user, max_tokens, cache_prefix)
+
+
+def _dos_pasos(**opciones):
+    cliente = _ClienteQueAnotaPrefijos(
+        ['StateUpdate: {"last_event": "a"}\nAction: Wait({})',
+         'StateUpdate: {"last_event": "b"}\nAction: Wait({})'])
+    rt = StatefulRuntime(client=cliente, spec="E", schema_fields=["last_event"], **opciones)
+    rt.act(Observation(step=0, text="evento uno", actionable=False))
+    rt.act(Observation(step=1, text="evento dos", actionable=False))
+    return cliente
+
+
+def test_por_defecto_no_se_marca_prefijo_cacheable():
+    # Lo ya medido se hizo asi; el valor por defecto no puede cambiarlo.
+    assert _dos_pasos().prefijos == [None, None]
+
+
+def test_con_historia_primero_la_historia_es_el_prefijo_y_el_estado_va_detras():
+    # Aislar el efecto del orden en el coste (revision adversarial 3, hallazgo 9): los
+    # dos ordenes marcan cache; lo unico que cambia es que va primero.
+    cliente = _dos_pasos(orden="historia_primero", cachear=True)
+    prefijo = "".join(cliente.prefijos[1])
+    assert "evento uno" in prefijo and "Current State:" not in prefijo
+    assert "Current State:" in cliente.calls[1][1].split(prefijo, 1)[1]
+
+
+def test_con_estado_primero_y_cache_el_estado_encabeza_el_prefijo():
+    cliente = _dos_pasos(orden="estado_primero", cachear=True)
+    prefijo = cliente.prefijos[1]
+    assert prefijo[0].startswith("Current State:") and '"last_event": "a"' in prefijo[0]
+    assert "evento uno" in "".join(prefijo[1:])

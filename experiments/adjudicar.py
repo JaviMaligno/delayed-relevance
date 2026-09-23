@@ -55,6 +55,10 @@ def main() -> None:
     p.add_argument("--ruido", type=int, default=0)
     p.add_argument("--summary-max-tokens", type=int, default=None,
                    help="Tope del resumidor de Memory. Sin la bandera, el de serie.")
+    p.add_argument("--stateful-orden", default="estado_primero",
+                   choices=["estado_primero", "historia_primero"])
+    p.add_argument("--stateful-cache", action="store_true",
+                   help="Marca la historia de Stateful como prefijo cacheable.")
     p.add_argument("--etiqueta", default="",
                    help="Sufijo del fichero de traza. Repetir la MISMA celda es\nla unica forma de medir el ruido de corrida a corrida, y sin etiqueta\ncada repeticion pisaria a la anterior.")
     p.add_argument("--out", default="results")
@@ -74,7 +78,8 @@ def main() -> None:
                            thinking_budget=args.thinking_budget)
     env = Warehouse(horizon=args.horizon, seed=args.seed, apendice_b=args.apendice_b,
                     sin_telemetria=args.sin_telemetria, ruido=args.ruido)
-    runtime = build_runtimes(True, True, args.summary_max_tokens)[args.runtime](cliente, env)
+    runtime = build_runtimes(True, True, args.summary_max_tokens, args.stateful_orden,
+                             args.stateful_cache)[args.runtime](cliente, env)
     destino.unlink(missing_ok=True)
     print(f"adjudicando {args.runtime} T={args.horizon} seed={args.seed} -> {destino}",
           flush=True)
@@ -87,6 +92,8 @@ def main() -> None:
         "summary_max_tokens": getattr(runtime, "summary_max_tokens", None),
         "stateful_parser": (__import__("dr.runtimes.stateful", fromlist=["x"]).PARSER_VERSION
                             if args.runtime == "stateful" else None),
+        "stateful_orden": args.stateful_orden if args.runtime == "stateful" else None,
+        "stateful_cache": args.stateful_cache if args.runtime == "stateful" else None,
     })
     print(f"score={score(resultados):.3f}  pasos={len(resultados)}  "
           f"fallos={sum(1 for r in resultados if r.actionable and not r.correct)}")

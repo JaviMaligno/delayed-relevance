@@ -25,7 +25,16 @@ class StatefulRuntime:
         spec: str,
         schema_fields: list[str],
         deep_merge: bool = True,
+        orden: str = "estado_primero",
+        cachear: bool = False,
     ) -> None:
+        """`orden` y `cachear` existen para aislar el efecto del orden del prompt en el
+        coste: con los dos ordenes marcando cache, lo unico que cambia es que va primero.
+        Los valores por defecto reproducen exactamente el runtime ya medido."""
+        if orden not in ("estado_primero", "historia_primero"):
+            raise ValueError(f"orden desconocido: {orden}")
+        self.orden = orden
+        self.cachear = cachear
         self.client = client
         self.spec = spec
         self.schema_fields = schema_fields
@@ -34,6 +43,8 @@ class StatefulRuntime:
         self.history: list[str] = []
 
     def act(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
+        if self.cachear:
+            return self._act_con_cache(observation)
         history_block = "\n".join(self.history)
         user = (
             f"Current State:\n{json.dumps(self.state, indent=2)}\n"
@@ -45,6 +56,32 @@ class StatefulRuntime:
             f"Patch semantics: {self._merge_doc()}"
         )
         completion = self.client.complete(system=f"Instructions:\n{self.spec}", user=user)
+        self._apply_state_update(completion.text)
+        self.history.append(f"Observation: {observation.render()}")
+        self.history.append(f"Response: {completion.text}")
+        return Action.parse(completion.text), [completion]
+
+    def _cola(self, observation: Observation) -> str:
+        return (
+            f"Latest Observation: {observation.render()}\n"
+            "Update the state if necessary, provide reasoning, and output 'Action: <cmd>'.\n"
+            'To update state, use the format: StateUpdate: {"key": "value"}\n'
+            f"Patch semantics: {self._merge_doc()}"
+        )
+
+    def _act_con_cache(self, observation: Observation) -> tuple[Action | None, list[Completion]]:
+        """Mismo contenido que `act`, con la historia en bloques inmutables marcados como
+        prefijo cacheable. Con `estado_primero` el bloque de estado encabeza el prefijo y
+        muta en cada paso; con `historia_primero` va detras, fuera del prefijo."""
+        estado = (f"Current State:\n{json.dumps(self.state, indent=2)}\n"
+                  f"State schema (only these keys are valid): {', '.join(self.schema_fields)}\n\n")
+        historia = ["History:\n"] + [linea + "\n" for linea in self.history]
+        if self.orden == "historia_primero":
+            prefijo, user = historia, "\n" + estado + self._cola(observation)
+        else:
+            prefijo, user = [estado] + historia, "\n" + self._cola(observation)
+        completion = self.client.complete(system=f"Instructions:\n{self.spec}", user=user,
+                                          cache_prefix=prefijo)
         self._apply_state_update(completion.text)
         self.history.append(f"Observation: {observation.render()}")
         self.history.append(f"Response: {completion.text}")
