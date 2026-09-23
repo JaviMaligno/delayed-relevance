@@ -9,6 +9,11 @@ from dr.runtimes.skillstate import _merge_into
 from dr.types import Action, Observation
 
 
+PARSER_VERSION = 2
+"""1: regex no codiciosa, tiraba todo parche anidado. 2: raw_decode. Va en la cabecera
+de cada traza para que ningun agregado mezcle las dos."""
+
+
 class StatefulRuntime:
     """Estado estructurado junto al transcript completo (estilo LangGraph)."""
 

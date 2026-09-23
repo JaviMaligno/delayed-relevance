@@ -83,6 +83,8 @@ def main() -> None:
         "apendice_b": args.apendice_b, "sin_telemetria": args.sin_telemetria,
         "ruido": args.ruido,
         "summary_max_tokens": getattr(runtime, "summary_max_tokens", None),
+        "stateful_parser": (__import__("dr.runtimes.stateful", fromlist=["x"]).PARSER_VERSION
+                            if args.runtime == "stateful" else None),
     })
     print(f"score={score(resultados):.3f}  pasos={len(resultados)}  "
           f"fallos={sum(1 for r in resultados if r.actionable and not r.correct)}")
