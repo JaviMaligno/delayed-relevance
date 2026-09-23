@@ -80,21 +80,23 @@ noise (§6); its mean over the balanced 15 is 0.905 ± 0.079 and over all 19, 0.
 0.072. In total, 299 episodes have per-step traces and five are aggregate-only. Their
 Table 1 in parentheses.
 
-> **The Stateful column below is not Stateful.** Its runner discarded every nested state
-> patch — 40 of 5,773 applied, 0.7 % — so it measured full history plus an empty state
-> block (§6, item 7). It is kept only so the correction is visible; the re-measurement
-> with the fixed parser is in progress and will replace it at T=50 and T=200.
+> **Stateful was re-measured.** Its runner discarded every nested state patch — 40 of
+> 5,773 applied, 0.7 % — so its original cells measured full history plus an empty state
+> block (§6, item 7). T=50 and T=200 below come from a re-measurement with the parser
+> fixed (15 runs each, every trace recording the parser version); T=10, 25 and 100,
+> marked †, keep the defective measurement. Fixing it moved neither cell beyond noise
+> (0.996 → 0.996 and 0.912 → 0.930), for a reason given below.
 
-| T | ReAct | Memory | Stateful† | SKILL.state |
+| T | ReAct | Memory | Stateful | SKILL.state |
 |---|---|---|---|---|
-| 10 | 0.993 ± 0.026 (0.90) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) |
-| 25 | 0.955 ± 0.050 (0.92) | 0.987 ± 0.042 (0.99) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000 (1.00) |
+| 10 | 0.993 ± 0.026 (0.90) | 1.000 ± 0.000 (1.00) | 1.000 ± 0.000† (1.00) | 1.000 ± 0.000 (1.00) |
+| 25 | 0.955 ± 0.050 (0.92) | 0.987 ± 0.042 (0.99) | 1.000 ± 0.000† (1.00) | 1.000 ± 0.000 (1.00) |
 | 50 | 0.936 ± 0.057 (0.88) | 0.953 ± 0.077 (0.93) | 0.996 ± 0.008 (0.94) | 1.000 ± 0.000 (0.96) |
-| 100 | 0.960 ± 0.063 (0.84) | 0.839 ± 0.096 (0.87) | 0.995 ± 0.008 (0.91) | 1.000 ± 0.000 (0.94) |
-| 200 | 0.913 ± 0.072 (0.74) | 0.810 ± 0.083 (0.84) | 0.912 ± 0.126 (0.88) | 1.000 ± 0.000 (0.94) |
+| 100 | 0.960 ± 0.063 (0.84) | 0.839 ± 0.096 (0.87) | 0.995 ± 0.008† (0.91) | 1.000 ± 0.000 (0.94) |
+| 200 | 0.913 ± 0.072 (0.74) | 0.810 ± 0.083 (0.84) | 0.930 ± 0.092 (0.88) | 1.000 ± 0.000 (0.94) |
 
 Drop from T=10 to T=200 (ours / theirs): ReAct −0.080/−0.160 · Memory −0.190/−0.160 ·
-**SKILL.state 0.000/−0.060**. († history plus an empty state block; see the note above.)
+**SKILL.state 0.000/−0.060**. Stateful loses 0.066 between T=50 and T=200 (theirs: 0.060).
 
 **What reproduces.** Their central thesis, with room to spare: SKILL.state does not fail
 **once in 75 episodes** of up to 200 steps. It is the only arm with zero degradation;
@@ -123,10 +125,12 @@ Claude Haiku 4.5 via Microsoft Foundry, **in exactly the conditions of the table
 repetitions = **24 runs per cell**, every episode with a per-step trace and a conditions
 header. Gemini's figures from the table above in parentheses.
 
-| T | ReAct | Memory | Stateful† | SKILL.state |
+| T | ReAct | Memory | Stateful | SKILL.state |
 |---|---|---|---|---|
-| 50 | 0.978 ± 0.045 (0.936) | 0.809 ± 0.184 (0.953) | *re-measuring* | 0.999 ± 0.004 (1.000) |
-| 200 | 0.974 ± 0.070 (0.913) | 0.653 ± 0.157 (0.810) | *re-measuring* | **0.958 ± 0.058** (1.000) |
+| 50 | 0.978 ± 0.045 (0.936) | 0.809 ± 0.184 (0.953) | 0.997 ± 0.007 (0.996) | 0.999 ± 0.004 (1.000) |
+| 200 | 0.974 ± 0.070 (0.913) | 0.653 ± 0.157 (0.810) | **0.999 ± 0.004** (0.930) | **0.958 ± 0.058** (1.000) |
+
+Stateful cells are 15 runs (3 seeds × 5) with the fixed parser; the rest, 24.
 
 ReAct is flat on Haiku: −0.004 between T=50 and T=200, against −0.023 on Gemini and
 −0.160 in the paper. The full-history arm the paper shows collapsing is, on Haiku, the
@@ -159,6 +163,28 @@ them the error reached a decision. The paper's thesis survives in
 direction — SKILL.state is still the best arm on Gemini and within 0.02 of ReAct on
 Haiku — but "explicit state does not degrade" is a property of the model as much as of
 the runtime.
+
+**Stateful, measured properly, orders the two models in opposite directions.** At T=200
+Stateful is the best arm on Haiku (0.999, above SKILL.state's 0.958) and, on Gemini, is
+indistinguishable from ReAct (0.930 against 0.913) and well below SKILL.state (1.000).
+The same adjudication explains both:
+
+- **On Haiku, Stateful writes its state as badly as SKILL.state and loses almost nothing
+  to it.** The belief departs from reality in 10 of 15 episodes at T=200 — always a
+  correct action with a miswritten patch, the same failure as above — yet only 2 of its
+  3 failures come from that state. With the history in the prompt, a wrong state block
+  stops being the only source of truth.
+- **On Gemini, the history makes it worse at both things.** Its state departs from
+  reality in 11 of 15 episodes at T=200 (5 from a miswritten patch, 6 from a wrong
+  action the state did not reflect), where SKILL.state on the same model never did in
+  75; and 77 of its 211 failures happen **with a correct state in front of it**.
+
+Why fixing the parser changed so little: in Stateful the model's responses go into the
+history, and each response contains its own `StateUpdate: {...}`. The transcript already
+carried a state written by the model, step after step, whether or not the runtime
+applied it. What the defective arm measured was not "no state"; it was "state kept only
+in the transcript". On both models that turned out to be worth about as much as the
+applied block.
 
 **Memory on Haiku is partly an artefact of our summariser cap, and the size of the part
 is measured.** The summariser has its own output cap (1,200 tokens, with an instruction
@@ -452,7 +478,10 @@ artefact of the project:
    without a warning: **40 of 5,773 applied on Gemini, 0 of 6,000 on Haiku**. What both
    Stateful columns measured is full history plus an empty state block. Its unit test
    used a flat value and passed. It surfaced only because Stateful beat SKILL.state on
-   Haiku and we went to the traces to find out why.
+   Haiku and we went to the traces to find out why. Re-measured with the parser fixed,
+   the scores barely moved (§3): the model restates its state in every response, so the
+   history carried it anyway. A defect that changes nothing measurable is still a
+   defect in what the column claims to measure.
 8. **A cap one model respects and the other does not.** The summariser's own cap was
    never reached on Gemini and was exceeded in half the summaries on Haiku (§3). A cap
    is not a neutral constant across models; it has to be checked per model, in the
