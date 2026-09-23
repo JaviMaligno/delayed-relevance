@@ -25,12 +25,15 @@ def finite(value: float) -> float | None:
     return value if math.isfinite(value) else None
 
 
-def build_runtimes(deep_merge: bool, declare_merge: bool = True) -> dict:
+def build_runtimes(deep_merge: bool, declare_merge: bool = True,
+                   summary_max_tokens: int | None = None) -> dict:
     """Los dos brazos con estado comparten profundidad de merge: si uno conserva las
     sub-claves hermanas y el otro no, la comparacion queda sesgada."""
     return {
         "react": lambda client, env: ReActRuntime(client, env.spec()),
-        "memory": lambda client, env: MemoryRuntime(client, env.spec()),
+        "memory": lambda client, env: MemoryRuntime(
+            client, env.spec(),
+            **({"summary_max_tokens": summary_max_tokens} if summary_max_tokens else {})),
         "stateful": lambda client, env: StatefulRuntime(
             client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
         "skillstate": lambda client, env: SkillStateRuntime(

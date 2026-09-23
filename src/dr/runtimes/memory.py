@@ -18,9 +18,11 @@ son cortos."""
 class MemoryRuntime:
     """Resumen acumulado en lenguaje natural mas una ventana de 3 pasos."""
 
-    def __init__(self, client, spec: str) -> None:
+    def __init__(self, client, spec: str,
+                 summary_max_tokens: int = SUMMARY_MAX_TOKENS) -> None:
         self.client = client
         self.spec = spec
+        self.summary_max_tokens = summary_max_tokens
         self.summary = "(empty)"
         self.recent: list[str] = []
 
@@ -55,7 +57,7 @@ class MemoryRuntime:
                 "Stay under 400 words so your summary is never cut off."
             ),
             user=f"Previous summary:\n{self.summary}\n\nNewly dropped turns:\n" + "\n".join(dropped),
-            max_tokens=SUMMARY_MAX_TOKENS,
+            max_tokens=self.summary_max_tokens,
         )
         self.summary = summary_completion.text
         self.recent = self.recent[-WINDOW * 2 :]
