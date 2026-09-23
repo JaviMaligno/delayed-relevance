@@ -9,9 +9,11 @@ from dr.runtimes.skillstate import _merge_into
 from dr.types import Action, Observation
 
 
-PARSER_VERSION = 2
-"""1: regex no codiciosa, tiraba todo parche anidado. 2: raw_decode. Va en la cabecera
-de cada traza para que ningun agregado mezcle las dos."""
+PARSER_VERSION = 3
+"""1: regex no codiciosa, tiraba todo parche anidado. 2: raw_decode, pero exigia la
+llave justo tras `StateUpdate:` y tiraba los parches en Markdown. 3: tolera negritas y
+bloques de codigo entre la etiqueta y el objeto. Va en la cabecera de cada traza para
+que ningun agregado mezcle versiones."""
 
 
 class StatefulRuntime:
@@ -63,7 +65,9 @@ class StatefulRuntime:
         # Se lee UN objeto JSON completo con raw_decode. La regex no codiciosa de antes
         # cortaba en la primera llave de cierre, asi que todo parche anidado -- el caso
         # normal en shelf_contents -- se tiraba en silencio: 0 de 6.000 aplicados en R2.
-        match = re.search(r"StateUpdate:\s*(?=\{)", text)
+        # v3: entre la etiqueta y la llave puede haber dos puntos, negritas y un bloque
+        # de codigo (`**StateUpdate:**` + ```json), que es como lo escribe Haiku.
+        match = re.search(r"StateUpdate[\s*:]*(?:```(?:json)?[ \t]*\n?)?\s*(?=\{)", text)
         if match is None:
             return
         try:

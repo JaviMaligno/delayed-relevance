@@ -73,3 +73,31 @@ def test_las_llaves_dentro_de_una_cadena_no_cierran_el_parche():
     rt = StatefulRuntime(client=None, spec="", schema_fields=["last_event"])
     rt._apply_state_update('StateUpdate: {"last_event": "nota con } dentro"}\nAction: Wait({})')
     assert rt.state == {"last_event": "nota con } dentro"}
+
+
+import pytest
+
+
+@pytest.mark.parametrize("texto", [
+    'StateUpdate: {"last_event": "x"}\nAction: Wait({})',
+    '**StateUpdate:**\n{"last_event": "x"}\n\n**Action:**\nWait({})',
+    '**StateUpdate:**\n```json\n{"last_event": "x"}\n```\n**Action:** Wait({})',
+    'StateUpdate:\n```\n{"last_event": "x"}\n```\nAction: Wait({})',
+])
+def test_el_parche_se_lee_aunque_venga_en_markdown(texto):
+    # Haiku escribe a menudo `**StateUpdate:**` y el JSON en un bloque de codigo. El
+    # parser v2 exigia la llave justo detras de los dos puntos y tiro 731 de 3.000
+    # parches validos en T=200 (revision adversarial 3, hallazgo 1).
+    from dr.runtimes.stateful import StatefulRuntime
+
+    rt = StatefulRuntime(client=None, spec="", schema_fields=["last_event"])
+    rt._apply_state_update(texto)
+    assert rt.state == {"last_event": "x"}
+
+
+def test_sin_objeto_json_no_se_aplica_nada():
+    from dr.runtimes.stateful import StatefulRuntime
+
+    rt = StatefulRuntime(client=None, spec="", schema_fields=["last_event"])
+    rt._apply_state_update("StateUpdate: none this step\nAction: Wait({})")
+    assert rt.state == {}

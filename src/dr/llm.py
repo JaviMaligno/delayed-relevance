@@ -267,6 +267,7 @@ class AnthropicClient:
             cache_read=getattr(response.usage, "cache_read_input_tokens", 0) or 0,
             cache_write=getattr(response.usage, "cache_creation_input_tokens", 0) or 0,
             truncated=response.stop_reason == "max_tokens",
+            model_version=getattr(response, "model", "") or "",
         )
 
 

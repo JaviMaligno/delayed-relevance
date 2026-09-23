@@ -169,3 +169,10 @@ def test_con_clave_de_api_un_401_no_se_reintenta(monkeypatch):
     with pytest.raises(llm.anthropic.AuthenticationError):
         cliente.complete(system="s", user="u")
     assert mensajes.intentos == 1
+
+
+def test_el_cliente_de_anthropic_registra_el_modelo_que_responde(monkeypatch):
+    # Las trazas de Haiku llevaban model_version vacio en 22.200 de 22.200 pasos: el
+    # cliente no copiaba `response.model` (revision adversarial 3, hallazgo 11).
+    cliente, _ = _cliente_foundry(monkeypatch, fallos=0)
+    assert cliente.complete(system="s", user="u").model_version == "claude-haiku-4-5"
