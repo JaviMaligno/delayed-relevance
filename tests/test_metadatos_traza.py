@@ -33,7 +33,8 @@ class RuntimeFalso:
     def act(self, observation):
         return Action(name="Store", args={"shelf": 0}), [
             Completion(text="Action: Store 0", prompt_tokens=1234, output_tokens=56,
-                       cache_read=7, thinking_tokens=8, model_version="modelo-x-09")]
+                       cache_read=7, cache_write=9, thinking_tokens=8,
+                       model_version="modelo-x-09")]
     def state_size(self): return 0
 
 
@@ -44,6 +45,9 @@ def test_cada_paso_guarda_su_uso_de_tokens(tmp_path):
     assert fila["prompt_tokens"] == 1234
     assert fila["output_tokens"] == 56
     assert fila["cache_read"] == 7
+    # Sin las escrituras, un brazo que reescribe la cache en cada paso -- el caso mas
+    # caro, a 1,25x -- parecia el mas barato: su prompt figuraba con ~540 tokens.
+    assert fila["cache_write"] == 9
     assert fila["thinking_tokens"] == 8
 
 

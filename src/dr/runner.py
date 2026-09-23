@@ -33,6 +33,9 @@ def _anotar(destino, resultado, observation) -> None:
         "prompt_tokens": resultado.prompt_tokens,
         "output_tokens": resultado.output_tokens,
         "cache_read": resultado.cache_read,
+        # Sin las escrituras, un brazo que reescribe la cache en cada paso -- el caso
+        # mas caro -- parecia el mas barato: el coste real no estaba en ningun sitio.
+        "cache_write": resultado.cache_write,
         "thinking_tokens": resultado.thinking_tokens,
         "model_version": resultado.model_version,
     }
