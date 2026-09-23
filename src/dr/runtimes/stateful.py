@@ -55,11 +55,14 @@ class StatefulRuntime:
         )
 
     def _apply_state_update(self, text: str) -> None:
-        match = re.search(r"StateUpdate:\s*(\{.*?\})", text, re.DOTALL)
+        # Se lee UN objeto JSON completo con raw_decode. La regex no codiciosa de antes
+        # cortaba en la primera llave de cierre, asi que todo parche anidado -- el caso
+        # normal en shelf_contents -- se tiraba en silencio: 0 de 6.000 aplicados en R2.
+        match = re.search(r"StateUpdate:\s*(?=\{)", text)
         if match is None:
             return
         try:
-            update = json.loads(match.group(1))
+            update, _ = json.JSONDecoder().raw_decode(text, match.end())
         except json.JSONDecodeError:
             return
         if isinstance(update, dict):

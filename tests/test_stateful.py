@@ -50,3 +50,26 @@ def test_state_update_outside_the_schema_is_ignored():
     runtime = StatefulRuntime(client=client, spec="ESPEC", schema_fields=["shelf_contents"])
     runtime.act(Observation(step=0, text="evento", actionable=False))
     assert runtime.state == {"shelf_contents": "0:SKU-A"}
+
+
+def test_un_parche_anidado_se_aplica_entero():
+    # La regex no codiciosa cortaba el JSON en la primera llave de cierre. Con un
+    # parche anidado -- el caso normal en shelf_contents -- el JSON quedaba truncado,
+    # no parseaba y el parche se tiraba en silencio: en R2 se aplicaron 0 de 6.000.
+    from dr.runtimes.stateful import StatefulRuntime
+
+    rt = StatefulRuntime(client=None, spec="", schema_fields=["shelf_contents", "last_event"])
+    rt._apply_state_update(
+        'Razono.\nStateUpdate: {"shelf_contents": {"0": {"sku": "SKU-C", "units": 19, '
+        '"lot": "L-5179"}}, "last_event": "inbound_pallet"}\n'
+        'Action: Store({"shelf": 0, "sku": "SKU-C", "units": 19, "lot": "L-5179"})')
+    assert rt.state == {"shelf_contents": {"0": {"sku": "SKU-C", "units": 19, "lot": "L-5179"}},
+                        "last_event": "inbound_pallet"}
+
+
+def test_las_llaves_dentro_de_una_cadena_no_cierran_el_parche():
+    from dr.runtimes.stateful import StatefulRuntime
+
+    rt = StatefulRuntime(client=None, spec="", schema_fields=["last_event"])
+    rt._apply_state_update('StateUpdate: {"last_event": "nota con } dentro"}\nAction: Wait({})')
+    assert rt.state == {"last_event": "nota con } dentro"}
