@@ -81,6 +81,15 @@ def actualiza(creencia: dict, accion: Action) -> None:
         s = accion.args.get("shelf")
         if isinstance(s, int) and 0 <= s < SHELF_COUNT:
             creencia[s] = None
+    elif accion.name == "Move":
+        # Misma regla que Warehouse.apply: sin ella, un Move desincronizaba el mundo
+        # sordo y fabricaba pasos dependientes (revision adversarial 6, hallazgo 2).
+        origen, destino = accion.args.get("from"), accion.args.get("to")
+        if (isinstance(origen, int) and isinstance(destino, int)
+                and 0 <= origen < SHELF_COUNT and 0 <= destino < SHELF_COUNT
+                and creencia[origen] is not None and creencia[destino] is None):
+            creencia[destino] = creencia[origen]
+            creencia[origen] = None
 
 
 def episodio(cliente, seed: int, k: int, runtime: str, fabrica=None, traza=None,

@@ -84,3 +84,20 @@ def test_la_sonda_l1_deja_traza_con_cabecera_y_cuenta_los_pasos_sin_accion(tmp_p
     assert len(pasos) == 50
     assert sum(1 for p in pasos if p["es_el_paso"]) == 1
     assert all(p["ejecutado"] is None for p in pasos)
+
+
+def test_el_mundo_sordo_aplica_tambien_los_move():
+    # Revision 6, hallazgo 2: `actualiza` solo conocia Store y Ship, asi que un Move
+    # dejaba el mundo sordo desincronizado y fabricaba pasos dependientes. Contraejemplo
+    # de la revision: seed 4, acciones correctas salvo un Move 0->499 en el paso 9.
+    from dr.types import Action
+
+    class _CasiOraculo(_Oraculo):
+        def act(self, obs):
+            if self.env.step_index == 9:
+                return Action(name="Move", args={"from": 0, "to": 499}), [
+                    Completion(text="x", prompt_tokens=1, output_tokens=1)]
+            return super().act(obs)
+
+    d = episodio(None, seed=4, k=10, runtime="react", fabrica=_CasiOraculo)
+    assert d["dependientes"] == 0 and d["primer_dependiente"] is None

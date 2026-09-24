@@ -56,7 +56,7 @@ executed / actionable events) and per-seed determinism.
 0.905 ± 0.071 in the original environment (n=15) and 0.913 ± 0.072 in the corrected one
 (n=19). Difference +0.009, standard error 0.025 — an interval of roughly −0.040 to
 +0.057. This is a failure to detect an effect at this power, **not evidence that there
-is none**; anything below ~5 points would be invisible here.
+is none**; effects of several points in either direction remain compatible with it.
 
 **Differences that remain, declared**:
 
@@ -108,8 +108,9 @@ Drop from T=10 to T=200 (ours / theirs): ReAct −0.080/−0.160 · Memory −0.
 **once in 75 episodes** of up to 200 steps. It is the only arm with zero degradation;
 theirs loses six points. With this model, which does not hold on the second one (below).
 
-**What does not.** The magnitude, and only for ReAct: it loses 0.080 where theirs loses
-0.160, and **Memory loses more than theirs** (0.190 against 0.160). At T=200 our ReAct sits **17 points above** theirs, and the gap
+**What does not.** The magnitude, in both directions: ReAct loses 0.080 where theirs
+loses 0.160, SKILL.state loses nothing where theirs loses 0.060, and **Memory loses more
+than theirs** (0.190 against 0.160). At T=200 our ReAct sits **17 points above** theirs, and the gap
 widens with the horizon (+0.09 at T=10, +0.17 at T=200).
 
 Reasoning effort, the output cap and the three environment gaps were each varied and
@@ -420,7 +421,9 @@ Wilson 95 % intervals in brackets. Three things hold on all three models:
 ### L2: retroactive invalidation
 
 An announced fact stops being true later, and the agent has to act on the correction.
-On a correct trajectory the correction decides **exactly one step per episode**; once an
+In the three scenarios used here (seeds 4, 10 and 6) a correct trajectory has **exactly
+one step the correction decides** — a property of these scenarios, not of the generator,
+which in other seeds yields none or several; once an
 agent misses it, its world diverges and further steps start to disagree with the truth,
 so counting them scores the cascade, not the correction. The measure is therefore per
 episode: does the agent get the decisive step right? All three models at T=50, seeds 4,
@@ -570,7 +573,9 @@ decision, so we make no claim about a general range.
 
 **Repository artefacts**: environment with fidelity flags, per-step traces, completeness
 verifier, a density meter that does not call the API, truncation counters, per-episode
-checkpointing and end-to-end cache accounting.
+checkpointing and end-to-end cache accounting — except in the L1 aggregates, whose cost
+fields ignored cache reads and writes until the last re-measurement; its per-step traces
+record them and are the source to use.
 
 ---
 
@@ -605,9 +610,10 @@ checkpointing and end-to-end cache accounting.
   measure what it was built for, not because the arms scored alike — they did not
   (Haiku: SKILL.state 0.974, ReAct 0.895; Sonnet: 0.876 and 1.000, 9 episodes each). Its
   dependency always sat exactly two steps after the event that created it, so it had no
-  delayed relevance to measure; all four arms applied that rule (Haiku SKILL.state 14/15,
-  ReAct 12/12; Sonnet SKILL.state 12/13, ReAct all); and the score differences came from
-  routine steps, not from the rule (`docs/resultados-bloque1.md`, §4.ter).
+  delayed relevance to measure (`docs/resultados-bloque1.md`, §4.ter). We do not
+  attribute the score differences above to rule or routine steps: a separate diagnostic
+  sample of three episodes per arm shows both kinds of failure, and the nine-episode
+  cohorts themselves were not adjudicated.
 - **SKILL.state's ceiling depends on the model.** At 1.000 with zero variance on Gemini
   the task did not discriminate at the top; on Haiku it does (0.958 at T=200), and the
   failure is in writing the state (§3). Two models are not enough to say which models
