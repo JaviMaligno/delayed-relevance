@@ -16,6 +16,9 @@ class _Mudo:
     def act(self, obs):
         return None, [Completion(text="", prompt_tokens=1, output_tokens=0)]
 
+    def state_size(self):
+        return 0
+
 
 class _Oraculo:
     """Siempre acierta: devuelve la accion esperada del entorno que se le da."""
@@ -52,3 +55,14 @@ def test_un_paso_sin_accion_no_repara_el_mundo():
     oraculo = episodio(None, seed=4, k=10, runtime="react", fabrica=_Oraculo)
     assert oraculo["correcta"] == oraculo["dependientes"] > 0
     assert mudo["pasos_con_mundo_distinto"] > 0 and oraculo["pasos_con_mundo_distinto"] == 0
+
+
+def test_la_sonda_l1_tampoco_repara_el_mundo_en_un_paso_sin_accion():
+    # Mismo defecto en probe_a.py: un paso sin accion aplicaba la accion correcta.
+    from experiments.probe_a import run_episode_probe
+    from dr.envs.warehouse import Warehouse
+
+    env = Warehouse(horizon=50, seed=0, latent_k=40)
+    resultados, acierto = run_episode_probe(env, _Mudo())
+    assert acierto is False
+    assert all(v is None for v in env.shelves.values()), "un mudo no puede llenar el almacen"

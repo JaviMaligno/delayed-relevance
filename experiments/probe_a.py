@@ -26,6 +26,7 @@ from dr.runtimes.memory import MemoryRuntime
 from dr.runtimes.react import ReActRuntime
 from dr.runtimes.skillstate import SkillStateRuntime
 from dr.runtimes.stateful import StatefulRuntime
+from dr.runner import NO_OP
 from dr.types import StepResult
 
 
@@ -62,7 +63,10 @@ def run_episode_probe(env, runtime) -> tuple[list[StepResult], bool | None]:
                 truncated=sum(1 for c in completions if c.truncated),
             )
         )
-        env.apply(accion if accion is not None else esperada)
+        # Un paso sin accion es NoOp, como en el runner principal. Antes aplicaba la
+        # accion CORRECTA y reparaba gratis el mundo del brazo que fallaba (revision
+        # adversarial 5); las medidas hechas antes de este cambio lo llevan dentro.
+        env.apply(accion if accion is not None else NO_OP)
     return resultados, acierto_dependiente
 
 

@@ -385,25 +385,36 @@ number.
 
 ### L2: retroactive invalidation
 
-An announced fact stops being true later. Counted over **dependent steps**, not
-episodes:
+An announced fact stops being true later, and the agent has to act on the correction.
+On a correct trajectory the correction decides **exactly one step per episode**; once an
+agent misses it, its world diverges and further steps start to disagree with the truth,
+so counting them scores the cascade, not the correction. The measure is therefore per
+episode: does the agent get the decisive step right? All three models at T=50, seeds 4,
+10 and 6 × 8 repetitions, output cap 8192 (Gemini with reasoning budget 0), Claude via
+Microsoft Foundry and Gemini via Vertex:
 
-| Model | Runtime | Applies the correction |
+| Model | ReAct applies the correction | SKILL.state |
 |---|---|---|
-| Haiku 4.5 | ReAct | 3/44 — 6.8 % |
-| Haiku 4.5 | SKILL.state | **44/44 — 100 %** |
-| Sonnet 5 | ReAct | 15/38 — 39.5 % |
-| Sonnet 5 | SKILL.state | **49/49 — 100 %** |
+| Haiku 4.5 | 1/24 | **24/24** |
+| Sonnet 5 | 9/24 | **22/24** |
+| Gemini 3 Flash | 0/24 | **24/24** |
 
-**Explicit state does not fail once: 93 of 93 dependent steps.** Full history gets 18 of
-82. Two conditions of that count, from the source measurement: episodes with more than
-three truncated responses are excluded (six Sonnet/ReAct episodes), and the SKILL.state
-column counts only the dependent steps — the same runs recorded 21 other failures, 10
-steps with no action and 66 invalid patches in Sonnet. The 100 % characterises
-retroactive invalidation, **not** the runtime's overall reliability. And ReAct's
-failure is all-or-nothing per scenario: in Haiku it misses all 11 dependent steps of one
-episode, all 7 of another, all 4 of a third. This is not an agent that slips; it is a
-flawless agent that **never updated a fact**.
+**Explicit state applies the correction in 70 of 72 episodes (97 %, Wilson 95 % interval
+90–99 %); full history in 10 of 72 (14 %, 8–24 %).** Every episode had its decisive step,
+and no response was truncated at it — seven Sonnet/ReAct episodes truncated elsewhere,
+and none was excluded. The misses are not other errors: every failed decisive step is
+exactly the action of an agent that never heard the correction. The successes
+concentrate by scenario rather than by trial — Sonnet with ReAct scores 2/8, 0/8 and
+7/8 across the three seeds, and its two SKILL.state misses are both in seed 4 — so the
+binomial intervals understate the uncertainty of generalising to new scenarios.
+
+> **This replaces an earlier measurement that did not measure what it published.** The
+> previous version of this section reported "93 of 93" and "132 of 132" dependent steps
+> with explicit state. Its scorer took the dependent steps from the trajectory of a
+> *simulated* deaf agent, counted successes as dependent steps minus deaf actions without
+> deducting steps with no action or with another error, and its runner applied the
+> *correct* action whenever the runtime returned none. A runtime that never answers
+> scored 100 % (§6, item 11). The direction survives; the perfection does not.
 
 ### Both probes on the third model
 
@@ -439,26 +450,18 @@ entirely from one seed.
   schema field (33 % against 67 %), but that gap rests on a single seed and we do not
   claim it.
 
-L2 on the same model, counted over dependent steps:
-
-| Model | ReAct applies the correction | SKILL.state |
-|---|---|---|
-| Haiku 4.5 | 3/44 | 44/44 |
-| Sonnet 5 | 8/44 | 44/44 |
-| **Gemini 3 Flash** | **0/44** | **44/44** |
-
-**132 of 132 dependent steps with explicit state, across three models and three
-services, against 11 of 132 with full history.**
-
-Gemini is the model that never updates a fact — 0 of 44 — while scoring 0.913 on the
-long procedure. Haiku, measured now under the same conditions as Gemini's Table 1 (§3),
-scores **0.974** on that procedure at T=200 and still misses 41 of 44 corrections. The two
-L2 measurements do not share every setting (§7), so we do not rank the models on it;
-what holds on both is that **the long-procedure score does not predict this failure, and
-within each model the runtime decides it.**
+Gemini with ReAct never applies the correction — 0 of 24 — while scoring 0.913 on the
+long procedure; Haiku scores 0.974 at T=200 and applies it once in 24. What holds on all
+three models is that **the long-procedure score does not predict this failure, and within
+each model the runtime decides it.**
 
 **Declared scope**: L1 in Gemini is measured with reasoning budget 0, matching Table 1;
-the Claude measurements predate that control and use each provider's default.
+the Claude L1 measurements predate that control and use each provider's default. **L1 was
+measured with the same world-repairing runner as the old L2**: a step with no action
+applied the correct one. Its metric is not inflated the same way — it reads a single,
+environment-fixed step, and no action there counts as a miss — but a missing action
+*before* that step silently kept the world correct. The traces did not record such steps,
+so the size of that bias cannot be bounded from the existing data (§7).
 
 ---
 
@@ -541,6 +544,14 @@ artefact of the project:
     The §4 table does not depend on it: it was computed by the grid runner, which counted
     writes.
 
+11. **A probe that could not fail.** The first L2 scorer counted dependent steps on a
+    simulated trajectory and subtracted only deaf actions, and its runner repaired the
+    world whenever the runtime returned no action; a runtime that never answers scored
+    100 %. It was the section of this draft we had checked least, because its result was
+    the cleanest. The fifth adversarial review found it. Re-measured with the decisive
+    step read from the real trajectory, explicit state goes from "132 of 132" to 70 of
+    72 episodes.
+
 Items 5 and 6 were found by an **independent adversarial review of this draft against
 the raw traces**, not by us. That review also corrected the failure classification
 above, the maintenance-event range in §2, the compression factor in §3 and the sample
@@ -590,11 +601,11 @@ checkpointing and end-to-end cache accounting.
   aggregates, without traces.
 - **Cost figures price input only**, and the caching results depend on the length of the
   static prefix (§4).
-- **The probes now cover all three models**, across three services (Vertex, the
-  Anthropic API and Microsoft Foundry), but not under identical settings: L1 on Gemini
-  fixes the reasoning budget at 0 to match Table 1; L2 uses the provider default because
-  its runner does not expose the flag; and the Claude runs predate that control. Their
-  counts carry the exclusions listed in §5.
+- **The probes are not under identical settings.** L2 was re-measured on all three
+  models with the same cap and design (§5). L1 was not: its Gemini cells fix the
+  reasoning budget at 0, its Claude cells predate that control and ran through the
+  Anthropic API, and all of L1 was measured with a runner that repaired the world on
+  steps with no action — a bias the traces do not let us bound.
 - **One environment.** The second (Software Repository) was retired because it could not
   measure what it was built for, not because the arms scored alike — they did not
   (Haiku: SKILL.state 0.974, ReAct 0.895; Sonnet: 0.876 and 1.000, 9 episodes each). Its
