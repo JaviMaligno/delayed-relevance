@@ -11,7 +11,7 @@ traces and raw data on the `runs/table1-gemini-3-flash-preview-vertex` branch.
 **explicit state** executes long procedures far better than one carrying the whole
 conversation, and that the gap widens with the horizon. Its Table 1 shows this with
 Gemini-3-Flash in a simulated warehouse: ReAct falls from 0.90 to 0.74 between 10 and
-200 steps while SKILL.state holds at 0.94.
+200 steps while SKILL.state falls only from 1.00 to 0.94.
 
 We reimplemented their environment from the paper's description — SkillExecBench is not
 public — and measured three things:
@@ -21,13 +21,16 @@ public — and measured three things:
 3. **What explicit state protects against**, through two probes aimed at the
    limitations the paper itself declares but does not measure (§5).
 
-The short version: **their thesis holds, their magnitude does not, and their cost
-accounting inverts once you bill it**. Explicit state protects against losing track of
+The short version: **their thesis holds and their magnitude does not; and once input is
+billed with caching, SKILL.state's cost advantage over full history shrinks from 7.5x to
+1.4x on Anthropic with a short static prefix** — it stays the cheapest arm, and on Vertex
+the advantage barely moves. Explicit state protects against losing track of
 the procedure; on a second model it does not protect against **writing the state
 wrong**, and that failure — not the one the paper studies — is what ends up limiting it.
 And the largest effects in the whole experiment come not from any of the compared
 methods, but from runtime implementation decisions the paper treats as neutral: one of
-them silently disabled one of our four arms for the whole project (§6).
+them silently disabled one of our four arms in every measurement made before we fixed it
+(§6).
 
 ---
 
@@ -114,12 +117,14 @@ none accounts for it (§2, §6). The model is nominally theirs, but §7 records 
 `gemini-3-flash-preview` may not be the checkpoint behind their `Gemini-3-Flash`, so we
 cannot rule the model out either — only note that we did not change it.
 
-**Where their ordering breaks.** Memory comes last in our environment; they place it
-above ReAct. **This is a difference of ours, not a finding**: our summariser compresses to a
+**Where their ordering breaks.** At T=100 and T=200 Memory comes last in our environment;
+they place it above ReAct. (At T=10–50 our Memory is above ReAct, as theirs is.) **This is a difference of ours, not a finding**: our summariser compresses to a
 5,770-token mean prompt at T=200 (measured in the Appendix-B environment at the same
 output cap; the faithful-environment cells were measured with an instrument that did
-not record tokens, §6) where theirs occupies 84,364 — a factor of **14**. Their
-"Memory (Summary)" barely summarises; it retains almost as much context as ReAct.
+not record tokens, §6) where theirs occupies 84,364 — a factor of **14**. Their Memory's
+reported mean prompt at T=200 is about 76 % *larger* than their ReAct's (84,364 against
+48,007); prompt size alone does not say what their summariser keeps, so we draw no
+conclusion about its mechanism.
 
 ### The same protocol on a second model
 
@@ -294,9 +299,11 @@ Three consequences:
    constant and cached like the other arm (160k effective); excluding it, the ratio is
    6.0x. We report 5.2x because it is what the arm as specified cost, and 6.0x as the
    effect among runs whose state actually changed. Their Appendix A.3 template puts the state block first.
-3. **It reconciles an anomaly in their table.** Their totals column sits ~3.5x below
-   horizon × mean prompt at every horizon. With caching it fits: their totals would be
-   billed, their mean prompt raw.
+3. **It suggests one reading of an anomaly in their table, which we cannot verify.**
+   Their totals column sits 2.7x to 3.7x below horizon × mean prompt across all twenty
+   cells. Caching is one hypothesis — totals billed, mean prompt raw — but their table
+   labels the totals as tokens consumed and gives no cache breakdown; the discrepancy is
+   unexplained until the authors say otherwise.
 
 ### The magnitude does not transfer across providers
 
@@ -323,29 +330,31 @@ Paired within that grid, the cost ratio barely moves:
 | T=50, ReAct / SKILL.state | 7.90x | **7.57x** |
 | T=200, ReAct / SKILL.state | 29.16x | **27.32x** |
 
-A direct probe adds nuance and a warning. Repeating an identical 13,346-token request,
-one run read 12,262 cached tokens on the second call and a later run read none; issuing
-eight calls whose prefix grows by ~3,300 tokens each, none read any. Implicit caching is
-**opportunistic and not reproducible on demand**: our probes of the growing-prefix
-pattern registered nothing while the grids of that same pattern registered 7 %. We report
-the grid figures, which are the ones the experiment actually incurred. Probe outputs are
-persisted in `results/probe_cache_vertex_*.json`.
+A direct probe adds a warning. The archived run (`results/probe_cache_vertex_*.json`)
+repeats an identical 13,346-token request twice and issues six calls whose prefix grows
+by ~3,300 tokens each: **none of the eight reads a single cached token**, while the grids
+of that same growing pattern registered 7 %. Implicit caching is **opportunistic and not
+reproducible on demand**. We report the grid figures, which are the ones the experiment
+actually incurred. (An earlier probe run, whose output was not archived, read cached
+tokens on the repeated request; we do not cite its figures.)
 
 > An earlier version of this section stated that Vertex has no implicit cache. It was
 > wrong: it generalised from the identical-request probe, and the project's own grids
 > contradicted it — 503,600 cached tokens in a single ReAct episode at T=200. A clean
 > measurement of the wrong thing.
 
-Explicit caching works (20,013 of 20,016 tokens discounted, and 13,343 of 13,346 in a
-second run) but does not fit ReAct's pattern: its prefix grows every step, so an object
+Explicit caching works (13,343 of 13,346 tokens discounted in the archived run) but does
+not fit ReAct's pattern: its prefix grows every step, so an object
 cached at step *k* covers a shrinking fraction of the prompt at step *k+n*. We did not
 measure whether repeatedly rebuilding it pays off; the claim here is only that the
 naive use — one fixed cached block — does not apply.
 
-Resulting statement: **prefix caching helps only the append-only arms, in both providers,
-and by an order of magnitude more on Anthropic. The inversion of the accounting we
-measured there does not reproduce on Vertex, where 7.9x in tokens remains 7.6x in
-effective input.**
+Resulting statement: **with a short static prefix, prefix caching helps only the
+append-only arms, in both providers, and by an order of magnitude more on Anthropic;
+with a long enough immutable prefix it helps the compressing arms too (SKILL.state
+saves 79 % and Memory 48 %, above). The shrinking of SKILL.state's advantage measured on
+Anthropic does not reproduce on Vertex, where 7.9x in tokens remains 7.6x in effective
+input.**
 
 ---
 
@@ -490,7 +499,7 @@ This second block added six more, and they are worth enumerating because they tr
    from the same cell could come from different caps and nothing would say so — which is
    how a −5.8-point "environment effect" survived long enough to be written down. The
    runners now write a conditions header and per-step token usage — but **only runs made
-   after that change carry it**. The 366 historical Gemini traces — Table 1 except the
+   after that change carry it**. The historical Gemini traces — Table 1 except the
    Stateful re-measurement, the noise table and the environment comparison — do not, so
    their conditions are certified by the filename and the run log, not by the artefact
    itself. Every trace behind the Haiku table, both Stateful re-measurements, the Memory
@@ -548,7 +557,7 @@ merge operator, a patch format, a schema, a prompt order. In this project, indiv
 runtime decisions moved results by amounts comparable to or larger than the difference
 between the methods being compared: the schema field decides 0 % versus 67 % on the
 dependent step (§5), and a parser that silently dropped state patches decided what one
-of four arms measured for the whole project (§6, item 7). We have not measured every such
+of four arms measured until it was fixed (§6, item 7). We have not measured every such
 decision, so we make no claim about a general range.
 
 **Repository artefacts**: environment with fidelity flags, per-step traces, completeness
@@ -572,9 +581,10 @@ checkpointing and end-to-end cache accounting.
 - **Our Memory is not comparable to theirs.** Our summariser compresses fourteen times
   more (5,770-token mean prompt against their 84,364 at T=200).
   What we measured is our summarisation policy, not "summarisation" as a category.
-- **We have not proven the environment gaps have no effect**; we measured that, at the
-  power available, none above ~5 points is detectable. The same caveat applies to the
-  three lowest noise levels in §3.
+- **We have not proven the environment gaps have no effect.** The measured difference is
+  +0.009, with an interval of roughly −0.040 to +0.057 (§2): no change was detected, and
+  effects of several points in either direction remain compatible. The same caveat
+  applies to the three lowest noise levels in §3.
 - **Cell sizes are not uniform.** Nineteen cells carry 15 runs; ReAct at T=200 carries
   19, unbalanced across seeds (3/3/7/3/3). Five of its episodes exist only as
   aggregates, without traces.
@@ -585,8 +595,13 @@ checkpointing and end-to-end cache accounting.
   fixes the reasoning budget at 0 to match Table 1; L2 uses the provider default because
   its runner does not expose the flag; and the Claude runs predate that control. Their
   counts carry the exclusions listed in §5.
-- **One environment.** The second (Software Repository) was retired: it did not
-  discriminate between runtimes and would have added noise without information.
+- **One environment.** The second (Software Repository) was retired because it could not
+  measure what it was built for, not because the arms scored alike — they did not
+  (Haiku: SKILL.state 0.974, ReAct 0.895; Sonnet: 0.876 and 1.000, 9 episodes each). Its
+  dependency always sat exactly two steps after the event that created it, so it had no
+  delayed relevance to measure; all four arms applied that rule (Haiku SKILL.state 14/15,
+  ReAct 12/12; Sonnet SKILL.state 12/13, ReAct all); and the score differences came from
+  routine steps, not from the rule (`docs/resultados-bloque1.md`, §4.ter).
 - **SKILL.state's ceiling depends on the model.** At 1.000 with zero variance on Gemini
   the task did not discriminate at the top; on Haiku it does (0.958 at T=200), and the
   failure is in writing the state (§3). Two models are not enough to say which models
