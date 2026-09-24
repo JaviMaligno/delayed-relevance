@@ -67,6 +67,16 @@ def _aplicar_stateful(version: int, estado: dict, texto: str, campos: set) -> di
     return estado
 
 
+def _unidades(valor):
+    """Unidades tal como las escribio el modelo: un numero en texto cuenta como numero, y
+    un decimal no se redondea -- 14.9 no son 14 unidades."""
+    try:
+        numero = float(valor)
+    except (TypeError, ValueError):
+        return None
+    return int(numero) if numero.is_integer() else numero
+
+
 def _creencia(estado: dict) -> dict[int, tuple | None]:
     """Inventario creido. Un valor que es solo el SKU significa `ocupada por ese SKU`
     con unidades y lote sin especificar, no `vacia`."""
@@ -77,9 +87,7 @@ def _creencia(estado: dict) -> dict[int, tuple | None]:
         except (TypeError, ValueError):
             continue
         if isinstance(valor, dict):
-            unidades = valor.get("units")
-            salida[indice] = (str(valor.get("sku")),
-                              int(unidades) if isinstance(unidades, (int, float)) else None,
+            salida[indice] = (str(valor.get("sku")), _unidades(valor.get("units")),
                               str(valor.get("lot")) if valor.get("lot") is not None else None)
         elif isinstance(valor, str) and valor:
             salida[indice] = (valor, None, None)

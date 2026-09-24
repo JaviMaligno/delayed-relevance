@@ -33,6 +33,9 @@ class StatefulRuntime:
         Los valores por defecto reproducen exactamente el runtime ya medido."""
         if orden not in ("estado_primero", "historia_primero"):
             raise ValueError(f"orden desconocido: {orden}")
+        if orden != "estado_primero" and not cachear:
+            # El camino sin cache es el runtime ya medido y solo existe en su orden.
+            raise ValueError("el orden solo se puede cambiar con cachear=True")
         self.orden = orden
         self.cachear = cachear
         self.client = client

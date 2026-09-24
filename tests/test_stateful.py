@@ -142,3 +142,10 @@ def test_con_estado_primero_y_cache_el_estado_encabeza_el_prefijo():
     prefijo = cliente.prefijos[1]
     assert prefijo[0].startswith("Current State:") and '"last_event": "a"' in prefijo[0]
     assert "evento uno" in "".join(prefijo[1:])
+
+
+def test_pedir_otro_orden_sin_cache_es_un_error_no_un_silencio():
+    # Revision 4: `orden` se ignoraba sin `cachear`, y el brazo corria en el orden de
+    # siempre sin avisar.
+    with pytest.raises(ValueError):
+        StatefulRuntime(client=None, spec="", schema_fields=["x"], orden="historia_primero")

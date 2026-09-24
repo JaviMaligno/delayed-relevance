@@ -24,3 +24,10 @@ def test_stateful_se_reconstruye_con_el_parser_de_su_version():
     markdown = '**StateUpdate:**\n{"last_event": "x"}'
     assert _aplicar_stateful(2, {}, markdown, campos) == {}
     assert _aplicar_stateful(3, {}, markdown, campos) == {"last_event": "x"}
+
+
+def test_las_unidades_se_leen_aunque_vengan_como_texto_o_decimal():
+    # Revision 4: "999" se leia como `sin especificar` y 14.9 se truncaba a 14.
+    assert _creencia({"shelf_contents": {"0": {"sku": "A", "units": "999", "lot": "L"}}}) == {0: ("A", 999, "L")}
+    assert not _coincide(_creencia({"shelf_contents": {"0": {"sku": "A", "units": 14.9, "lot": "L"}}}),
+                         {0: ("A", 14, "L")})

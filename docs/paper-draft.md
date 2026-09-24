@@ -284,7 +284,11 @@ Three consequences:
    episode); only the position of the state block changes. State first: 74 % of the
    input is cache *writes* and 22 % reads, an effective 869k per episode, a 1 % saving.
    History first: 91 % reads and 4 % writes, an effective 168k, an 81 % saving. Scores do
-   not differ (0.997 and 1.000). Their Appendix A.3 template puts the state block first.
+   not differ (0.997 and 1.000). One of the six state-first runs never applied a patch —
+   it wrote shelf numbers as unquoted keys, which is not JSON — so its state block stayed
+   constant and cached like the other arm (160k effective); excluding it, the ratio is
+   6.0x. We report 5.2x because it is what the arm as specified cost, and 6.0x as the
+   effect among runs whose state actually changed. Their Appendix A.3 template puts the state block first.
 3. **It reconciles an anomaly in their table.** Their totals column sits ~3.5x below
    horizon × mean prompt at every horizon. With caching it fits: their totals would be
    billed, their mean prompt raw.
