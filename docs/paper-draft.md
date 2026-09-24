@@ -139,8 +139,9 @@ Stateful cells are 15 runs (3 seeds × 5); the rest, 24. Haiku's Stateful needed
 parser version: the second still dropped the patches Haiku writes in Markdown
 (`**StateUpdate:**` followed by a code block) — 731 of 3,000 at T=200, in 7 of 15
 episodes — which an adversarial review found (§6, item 7). The cells above use the third,
-which applies 2,995 of 3,000 at T=200 and 747 of 750 at T=50; the remainder carry no
-JSON object or keys outside the schema.
+which applies 2,995 of 3,000 at T=200 and 747 of 750 at T=50. Of the eight it does not
+apply, five are valid empty patches (`{}`, nothing to change) and three contain no
+object at all.
 
 ReAct is flat on Haiku: −0.005 between T=50 and T=200, against −0.023 on Gemini and
 −0.140 in the paper over the same interval. The full-history arm the paper shows
@@ -151,8 +152,10 @@ environment with the actions the model executed and compare, step by step, the i
 the model believes (SKU, units and lot per shelf) against the real one
 (`experiments/adjudicar_estado.py`). A failure is attributed to the state only when the
 believed inventory prescribes a **different** action than the real one and the model
-executed exactly the action the believed inventory prescribes. Of the 201 failures at
-T=200:
+executed exactly the action the believed inventory prescribes. "The belief matches
+reality" means agreement on every field the model wrote; a field it left unspecified —
+a shelf recorded only by its SKU, say — is not counted as a discrepancy. Of the 201
+failures at T=200:
 
 - **167 are caused by the state** in that sense; **17** occur while the belief differed
   from reality but the discrepancy does not explain them (both inventories prescribe the
@@ -185,11 +188,12 @@ adjudication describes both — it describes, it does not separate causes, becau
 Stateful and SKILL.state also differ in response format, parsing, retries and prompt
 construction, not only in carrying the history:
 
-- **On Haiku, Stateful writes its state as badly as SKILL.state and loses nothing to
-  it.** Its belief departs from reality in 8 of 15 episodes at T=200 — always a correct
-  action with a miswritten patch, the same failure as above — yet **none** of its 2
-  failures is caused by the state; both happen with a correct one. With the history in
-  the prompt, the model does not follow its own wrong state block into a decision.
+- **On Haiku, Stateful makes the same kind of write error as SKILL.state, far less
+  consequentially, and loses nothing to it.** Its belief departs from reality in 8 of 15
+  episodes at T=200 — always a correct action with a miswritten patch, the same failure
+  as above — but the wrong state prescribes a different action on only 4 steps (against
+  168 for SKILL.state), and on all 4 the model does what reality requires. **None** of
+  its 2 failures is caused by the state; both happen with a correct one.
 - **On Gemini it is the other way round.** Its belief departs from reality in 11 of 15
   episodes at T=200 (5 from a miswritten patch, 6 from a wrong action the state did not
   reflect), where SKILL.state on the same model never did in 75. Of its 211 failures, 86
