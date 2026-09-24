@@ -1,0 +1,76 @@
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_g1.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_g2.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_g3.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_g5.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_g1.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_g5.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_g1.jsonl
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_g5.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_g3.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_g4.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_g2.jsonl
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_g3.jsonl
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_g2.jsonl
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_g4.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_g4.jsonl
+Python(72923) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72935) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72941) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72943) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72945) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72947) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72949) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72951) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72953) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72955) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72957) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72959) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72961) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72964) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(72967) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=0.995  pasos=200  fallos=1
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=0.995  pasos=200  fallos=1
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_g1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_g3.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_g2.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_g5.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_g4.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_g1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_g1.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_g3.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_g5.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_g2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_g2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_g4.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_g3.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_g4.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_g5.jsonl
+score=1.000  pasos=50  fallos=0
+score=0.900  pasos=50  fallos=5
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+stateful v3 haiku terminada: Wed 23 Sep 2026 22:53:20 BST
