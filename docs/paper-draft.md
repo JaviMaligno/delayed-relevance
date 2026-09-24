@@ -364,24 +364,58 @@ The paper declares two limitations without measuring them. We measured them.
 
 ### L1: explicit state only protects what was anticipated
 
-A fact arrives at step `t` and changes the correct action at `t+40`. Claude Sonnet 5
-via the Anthropic API, **same seed × 8 repetitions**, each seed its own control:
+A fact arrives at step `t` and changes the correct action at `t+40`; the measure is
+whether the agent gets that one step right. All three models, T=50, seeds 0–2 × 8
+repetitions per cell, output cap 8192 (Gemini with reasoning budget 0), Claude via
+Microsoft Foundry and Gemini via Vertex, with a runner that applies no action when the
+runtime returns none (§6, item 11). SKILL.state under four schema conditions:
 
-| Condition | Accuracy on the dependent step | 95 % CI |
-|---|---|---|
-| No field to store it | 12 % (3/24) | 4–31 % |
-| Free-form `notes` field | 21 % (5/24) | 9–40 % |
-| Schema field naming the fact | **75 %** (18/24) | 55–88 % |
-| Reminder attached to the observation | **83 %** (20/24) | 64–93 % |
+| Condition | Haiku 4.5 | Sonnet 5 | Gemini 3 Flash |
+|---|---|---|---|
+| No field to store it | 0/24 [0–14 %] | 3/24 [4–31 %] | 0/24 [0–14 %] |
+| Free-form `notes` field | 10/24 [24–61 %] | 8/24 [18–53 %] | 0/24 [0–14 %] |
+| Schema field naming the fact | **24/24 [86–100 %]** | **18/24 [55–88 %]** | **16/24 [47–82 %]** |
+| Reminder attached to the observation | **24/24 [86–100 %]** | **20/24 [64–93 %]** | 8/24 [18–53 %] |
 
-The conditions split into two groups that do not overlap. **Giving it somewhere to go is
-not enough: the somewhere has to say what to store.** An explicit-state runtime protects
-against what its designer already anticipated — precisely limitation L1, now with a
-number.
+ReAct has no schema, so the first three conditions send it the identical prompt; pooled,
+they are 72 replicates of the same cell. Its reminder condition is the only one that
+changes what it sees:
 
-> This measurement **withdrew** an earlier recommendation of the project itself. With
-> one run per seed, the free-form field scored 60 % and had become the practical advice
-> ("leave a hatch in your schema"). With repetitions it is false.
+| ReAct | Haiku 4.5 | Sonnet 5 | Gemini 3 Flash |
+|---|---|---|---|
+| No reminder (72 runs) | 10/72 = 14 % [8–24 %] | 20/72 = 28 % [19–39 %] | 0/72 = 0 % [0–5 %] |
+| Reminder on the observation | **18/24 = 75 % [55–88 %]** | **23/24 = 96 % [80–99 %]** | **17/24 = 71 % [51–85 %]** |
+
+Wilson 95 % intervals in brackets. Three things hold on all three models:
+
+- **Naming the field works; giving it somewhere to go is not enough.** The named field
+  takes SKILL.state from 0–13 % to 67–100 %. The free-form `notes` field helps on the two
+  Claude models (Haiku 42 %, Sonnet 33 %) and not at all on Gemini (0 %), and on every
+  model it stays far below the named field. An explicit-state runtime protects best
+  against what its designer already anticipated — limitation L1, with a number.
+- **The reminder works for the runtime that has nowhere to store anything.** ReAct with
+  the fact attached to the observation goes from 0–28 % to 71–96 %.
+- **The successes concentrate by scenario, not by trial.** On Gemini, SKILL.state with
+  the named field scores 0/8, 8/8, 8/8 across the three seeds and with the reminder 0/8,
+  8/8, 0/8; binomial intervals over 24 runs understate the uncertainty of generalising
+  to new scenarios, and we do not claim the difference between those two Gemini cells.
+
+> **What changed with the re-measurement.** The earlier L1 figures came from a runner
+> that applied the correct action whenever the runtime returned none. With the new traces
+> the size of that bias is visible: at cap 8192 Haiku and Gemini leave no step without an
+> action before the dependent step, and Sonnet leaves 57, in 39 of its 192 episodes. On
+> Gemini, the one model whose earlier cells are archived with the same design, nothing
+> moved: SKILL.state scores 0, 0, 16 and 8 of 24 in both versions, and ReAct with the
+> reminder 16 then and 17 now. The earlier Sonnet cells (3, 5, 18 and 20 of 24) cannot be
+> reproduced from the archived artefacts, which hold smaller cohorts, so they are
+> replaced rather than compared. And the free-form field, measured on Haiku for the first
+> time, reaches 42 %: the earlier reading that "the hatch finds no support in either
+> model" does not generalise.
+>
+> This probe also **withdrew** an earlier recommendation of the project itself: with one
+> run per seed, the free-form field had scored 60 % on Sonnet and become the practical
+> advice ("leave a hatch in your schema"). With repetitions it stays well below a named
+> field on every model.
 
 ### L2: retroactive invalidation
 
@@ -416,52 +450,14 @@ binomial intervals understate the uncertainty of generalising to new scenarios.
 > *correct* action whenever the runtime returned none. A runtime that never answers
 > scored 100 % (§6, item 11). The direction survives; the perfection does not.
 
-### Both probes on the third model
+### Across the three models
 
-Repeated on `gemini-3-flash-preview` via Vertex. **L1** uses the same output cap and
-reasoning budget as Table 1 (8192 / 0), 3 seeds × 8 repetitions per cell. **L2** uses cap
-8192 with the provider's default reasoning — its runner does not expose the budget flag —
-and 3 seeds × 2 repetitions:
-
-| L1 condition | ReAct | SKILL.state |
-|---|---|---|
-| No field to store it | 0/24 = 0 % [0–14] | 0/24 = 0 % [0–14] |
-| Free-form `notes` field | 0/24 = 0 % [0–14] | **0/24 = 0 % [0–14]** |
-| Schema field naming the fact | 0/24 = 0 % [0–14] | **16/24 = 67 % [47–82]** |
-| Reminder on the observation | **16/24 = 67 % [47–82]** | 8/24 = 33 % [18–53] |
-
-The floor is **zero in every run**, where in Claude it was a noisy 12 %; its Wilson
-interval still admits up to 14 %, so "zero" describes the sample, not the population. The
-intervals of the working conditions do not overlap it. Three things follow, with one
-caveat stated first: **the successes concentrate by scenario, not by trial.** Per seed,
-SKILL.state with the schema field scores 0/8, 8/8, 8/8, and with the reminder 0/8, 8/8,
-0/8. Binomial intervals over 24 runs do not capture the uncertainty of generalising to
-new scenarios, and the 67 %-vs-33 % difference between those two conditions comes
-entirely from one seed.
-
-- **The free-form field fails in both models.** 0/24 in Gemini, indistinguishable from
-  having no field at all. The recommendation this project once made and then withdrew
-  ("leave a hatch in your schema") finds no support in either model.
-- **Naming the field works** (67 %), reproducing L1: explicit state protects what its
-  designer anticipated.
-- **The reminder works for the runtime that has nowhere to store anything.** ReAct with
-  the fact attached to the observation reaches the same 67 % that SKILL.state reaches
-  with a dedicated schema field. For SKILL.state the reminder scores lower than its own
-  schema field (33 % against 67 %), but that gap rests on a single seed and we do not
-  claim it.
-
-Gemini with ReAct never applies the correction — 0 of 24 — while scoring 0.913 on the
-long procedure; Haiku scores 0.974 at T=200 and applies it once in 24. What holds on all
-three models is that **the long-procedure score does not predict this failure, and within
-each model the runtime decides it.**
-
-**Declared scope**: L1 in Gemini is measured with reasoning budget 0, matching Table 1;
-the Claude L1 measurements predate that control and use each provider's default. **L1 was
-measured with the same world-repairing runner as the old L2**: a step with no action
-applied the correct one. Its metric is not inflated the same way — it reads a single,
-environment-fixed step, and no action there counts as a miss — but a missing action
-*before* that step silently kept the world correct. The traces did not record such steps,
-so the size of that bias cannot be bounded from the existing data (§7).
+Gemini with ReAct never applies either correction — 0 of 72 in L1 without a reminder, 0
+of 24 in L2 — while scoring 0.913 on the long procedure; Haiku scores 0.974 at T=200 and
+applies the L2 correction once in 24. What holds on all three models is that **the
+long-procedure score does not predict this failure, and within each model the runtime
+decides it.** Both probes are measured with the same cap and design on the three models;
+their decoding still differs between providers (§3).
 
 ---
 
@@ -550,7 +546,8 @@ artefact of the project:
     100 %. It was the section of this draft we had checked least, because its result was
     the cleanest. The fifth adversarial review found it. Re-measured with the decisive
     step read from the real trajectory, explicit state goes from "132 of 132" to 70 of
-    72 episodes.
+    72 episodes. L1 had the same world-repairing runner; re-measured, its cells barely
+    moved, but only the new traces could show that.
 
 Items 5 and 6 were found by an **independent adversarial review of this draft against
 the raw traces**, not by us. That review also corrected the failure classification
@@ -601,11 +598,9 @@ checkpointing and end-to-end cache accounting.
   aggregates, without traces.
 - **Cost figures price input only**, and the caching results depend on the length of the
   static prefix (§4).
-- **The probes are not under identical settings.** L2 was re-measured on all three
-  models with the same cap and design (§5). L1 was not: its Gemini cells fix the
-  reasoning budget at 0, its Claude cells predate that control and ran through the
-  Anthropic API, and all of L1 was measured with a runner that repaired the world on
-  steps with no action — a bias the traces do not let us bound.
+- **The probes share cap and design across models, not decoding.** Both were re-measured
+  on all three models with the corrected runner (§5); Gemini runs with temperature 0 and
+  reasoning budget 0, Claude without either setting.
 - **One environment.** The second (Software Repository) was retired because it could not
   measure what it was built for, not because the arms scored alike — they did not
   (Haiku: SKILL.state 0.974, ReAct 0.895; Sonnet: 0.876 and 1.000, 9 episodes each). Its
