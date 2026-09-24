@@ -1,0 +1,145 @@
+claude-sonnet-5:react:s10:r0:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=4
+claude-sonnet-5:skillstate:s4:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=6
+claude-sonnet-5:skillstate:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=1
+claude-sonnet-5:react:s4:r0:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r1:k10:mt8192
+  dependientes=4 correcta=1 sorda=3 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=9
+claude-sonnet-5:skillstate:s4:r1:k10:mt8192
+  dependientes=11 correcta=0 sorda=5 otra=0 sin_accion=6
+  truncadas=0/50 parches_invalidos=22
+claude-sonnet-5:skillstate:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=9
+claude-sonnet-5:react:s4:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r2:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=2
+claude-sonnet-5:skillstate:s4:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=1
+claude-sonnet-5:skillstate:s6:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r2:k10:mt8192
+  dependientes=3 correcta=1 sorda=2 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=3/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=1
+claude-sonnet-5:skillstate:s4:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=8
+claude-sonnet-5:skillstate:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=2
+claude-sonnet-5:react:s4:r3:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r3:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=1/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s4:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=4
+claude-sonnet-5:skillstate:s6:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+claude-sonnet-5:skillstate:s10:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+claude-sonnet-5:react:s10:r4:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s4:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=15
+claude-sonnet-5:skillstate:s6:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=1
+claude-sonnet-5:react:s4:r4:k10:mt8192
+  dependientes=3 correcta=1 sorda=2 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r5:k10:mt8192
+  dependientes=6 correcta=1 sorda=5 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s6:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=4
+claude-sonnet-5:skillstate:s4:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=8
+claude-sonnet-5:skillstate:s10:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=7
+claude-sonnet-5:react:s4:r5:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s4:r7:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+claude-sonnet-5:skillstate:s6:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=8
+claude-sonnet-5:react:s4:r6:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r6:k10:mt8192
+  dependientes=6 correcta=1 sorda=5 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r7:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=11/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r2:k10:mt8192
+  dependientes=3 correcta=1 sorda=2 otra=0 sin_accion=0
+  truncadas=18/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=2/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=1/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=10/50 parches_invalidos=0
+l2 v2 sonnet terminada: Thu 24 Sep 2026 15:04:27 BST

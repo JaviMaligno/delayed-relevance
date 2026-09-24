@@ -1,0 +1,315 @@
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+claude-haiku-4-5:react:s6:r0:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r0:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r0:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+claude-haiku-4-5:skillstate:s10:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r1:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+claude-haiku-4-5:react:s6:r1:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r1:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+claude-haiku-4-5:react:s10:r2:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r2:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r2:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+claude-haiku-4-5:react:s10:r3:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r3:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+claude-haiku-4-5:react:s4:r3:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+claude-haiku-4-5:react:s6:r4:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r4:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r4:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+claude-haiku-4-5:react:s10:r5:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (9 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (9 min de 180)
+claude-haiku-4-5:react:s4:r5:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (10 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (10 min de 180)
+claude-haiku-4-5:react:s10:r6:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r6:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r6:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [sesion caducada] esperando a `gcloud auth login` (11 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (11 min de 180)
+claude-haiku-4-5:skillstate:s4:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r7:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r7:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r7:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r0:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r1:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r2:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r3:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r4:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r5:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r6:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s4:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s4:r7:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r0:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r1:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r2:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r3:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r4:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r5:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r6:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s10:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s10:r7:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r0:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r1:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r2:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r3:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r4:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r4:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [401] token caducado, pidiendo otro a gcloud
+  [401] token caducado, pidiendo otro a gcloud
+gemini-3-flash-preview:skillstate:s6:r5:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r5:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r6:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r6:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:skillstate:s6:r7:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+gemini-3-flash-preview:react:s6:r7:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+l2 v2 terminada: Thu 24 Sep 2026 14:29:10 BST
