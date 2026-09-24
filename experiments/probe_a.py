@@ -39,9 +39,17 @@ def build_runtimes() -> dict:
     }
 
 
-def run_episode_probe(env, runtime) -> tuple[list[StepResult], bool | None]:
+VERSION_SONDA = 2
+"""1: un paso sin accion aplicaba la accion correcta. 2: aplica NoOp y deja traza."""
+
+
+def run_episode_probe(env, runtime, traza=None,
+                      condiciones: dict | None = None) -> tuple[list[StepResult], bool | None]:
     """Como run_episode, pero registra aparte el acierto en el paso dependiente."""
     env.reset()
+    if traza is not None and condiciones:
+        with open(traza, "w", encoding="utf-8") as fh:
+            fh.write(json.dumps({"kind": "run_header", "condiciones": condiciones}) + "\n")
     resultados: list[StepResult] = []
     acierto_dependiente: bool | None = None
     while not env.done:
@@ -52,6 +60,23 @@ def run_episode_probe(env, runtime) -> tuple[list[StepResult], bool | None]:
         correcta = accion is not None and accion.render() == esperada.render()
         if es_el_paso:
             acierto_dependiente = correcta
+        if traza is not None:
+            with open(traza, "a", encoding="utf-8") as fh:
+                fh.write(json.dumps({
+                    "http": 200, "step": obs.step, "actionable": obs.actionable,
+                    "es_el_paso": es_el_paso, "esperado": esperada.render(),
+                    "ejecutado": accion.render() if accion is not None else None,
+                    "correct": correcta,
+                    "raw": {"respuestas": [c.text for c in completions]},
+                    "observation": obs.text,
+                    "prompt_tokens": sum(c.prompt_tokens for c in completions),
+                    "output_tokens": sum(c.output_tokens for c in completions),
+                    "cache_read": sum(c.cache_read for c in completions),
+                    "cache_write": sum(c.cache_write for c in completions),
+                    "truncated": sum(1 for c in completions if c.truncated),
+                    "model_version": next((c.model_version for c in completions
+                                           if getattr(c, "model_version", "")), ""),
+                }, ensure_ascii=False) + "\n")
         resultados.append(
             StepResult(
                 step=obs.step,
@@ -114,6 +139,9 @@ def main() -> None:
         sufijo += f"_mt{args.max_tokens}"
     if args.thinking_budget is not None:
         sufijo += f"_tb{args.thinking_budget}"
+    # La version del runner va en el nombre: sin ella, una re-medida leeria como "ya
+    # hecho" lo medido con el runner que reparaba el mundo.
+    sufijo += f"_v{VERSION_SONDA}"
     print(f"proveedor: {client.provider}  modelo: {args.model}{sufijo}", flush=True)
 
     Path(args.out).mkdir(exist_ok=True)
@@ -150,8 +178,19 @@ def main() -> None:
                                 oracle_schema=args.oracle_schema,
                                 hatch_schema=args.hatch_schema,
                                 reminder=args.reminder)
+                traza = Path(args.out) / (f"l1v{VERSION_SONDA}_T{args.horizon}_{args.model}"
+                                          f"{sufijo}_{name}_k{k}_s{seed}_r{rep}.jsonl")
                 try:
-                    resultados, acierto = run_episode_probe(env, build(client, env))
+                    resultados, acierto = run_episode_probe(
+                        env, build(client, env), traza=traza, condiciones={
+                            "sonda": "L1", "version_sonda": VERSION_SONDA,
+                            "model": args.model, "provider": client.provider,
+                            "runtime": name, "seed": seed, "rep": rep, "latent_k": k,
+                            "horizon": args.horizon, "max_tokens": args.max_tokens,
+                            "thinking_budget": args.thinking_budget,
+                            "oracle_schema": args.oracle_schema,
+                            "hatch_schema": args.hatch_schema, "reminder": args.reminder,
+                            "control": args.control})
                 except (anthropic.BadRequestError, RuntimeError) as error:
                     if not es_desbordamiento_de_contexto(error):
                         raise
@@ -166,6 +205,7 @@ def main() -> None:
                 tam = [r.state_size for r in resultados]
                 coste = coste_efectivo(resultados)
                 done[clave] = {"score": s, "dependiente": bool(acierto),
+                               "truncadas": truncs,
                                "entrada_bruta": coste["tokens_brutos"],
                                "entrada_efectiva": coste["entrada_efectiva"],
                                "salida": sum(r.output_tokens for r in resultados),
