@@ -31,3 +31,11 @@ def test_las_unidades_se_leen_aunque_vengan_como_texto_o_decimal():
     assert _creencia({"shelf_contents": {"0": {"sku": "A", "units": "999", "lot": "L"}}}) == {0: ("A", 999, "L")}
     assert not _coincide(_creencia({"shelf_contents": {"0": {"sku": "A", "units": 14.9, "lot": "L"}}}),
                          {0: ("A", 14, "L")})
+
+
+def test_unas_unidades_mal_formadas_son_discrepancia_no_comodin():
+    # Revision 4, hallazgo nuevo 2: "WRONG" se leia como `sin especificar` y no contaba.
+    creida = _creencia({"shelf_contents": {"0": {"sku": "A", "units": "WRONG", "lot": "L"}}})
+    assert not _coincide(creida, {0: ("A", 14, "L")})
+    # Ausente sigue siendo comodin: el modelo no lo escribio.
+    assert _coincide(_creencia({"shelf_contents": {"0": {"sku": "A", "lot": "L"}}}), {0: ("A", 14, "L")})

@@ -81,13 +81,14 @@ noise (§6); its mean over the balanced 15 is 0.905 ± 0.079 and over all 19, 0.
 Table 1 in parentheses.
 
 > **Stateful was re-measured.** Its runner discarded every nested state patch — 40 of
-> 5,773 applied, 0.7 % — so its original cells measured full history plus an empty state
-> block (§6, item 7). T=50 and T=200 below come from a re-measurement with the parser
+> 5,775 responses produced an applied patch, 0.7 % — so its original cells measured full
+> history plus a state block holding no inventory (§6, item 7). T=50 and T=200 below come from a re-measurement with the parser
 > fixed (15 runs each, every trace recording the parser version; on Gemini the fixed
 > parser applied 3,748 of 3,750 patches); T=10, 25 and 100, marked †, keep the defective
 > measurement. No change was detected: 0.996 → 0.996 and 0.912 → 0.930 (+0.017, Welch
-> 95 % interval −0.066 to +0.100). That rules out a large effect of the fix, not a
-> moderate one.
+> 95 % interval −0.066 to +0.100). No change was detected, but substantial effects in
+> either direction remain compatible with that interval — including one large enough to
+> remove every failure of the old cells.
 
 | T | ReAct | Memory | Stateful | SKILL.state |
 |---|---|---|---|---|
@@ -139,9 +140,9 @@ Stateful cells are 15 runs (3 seeds × 5); the rest, 24. Haiku's Stateful needed
 parser version: the second still dropped the patches Haiku writes in Markdown
 (`**StateUpdate:**` followed by a code block) — 731 of 3,000 at T=200, in 7 of 15
 episodes — which an adversarial review found (§6, item 7). The cells above use the third,
-which applies 2,995 of 3,000 at T=200 and 747 of 750 at T=50. Of the eight it does not
-apply, five are valid empty patches (`{}`, nothing to change) and three contain no
-object at all.
+which accepts 2,998 of 3,000 responses at T=200 and 749 of 750 at T=50; of those, five are
+empty patches (`{}`, nothing to change), so 2,995 and 747 change the state. The three it
+does not accept contain no object at all.
 
 ReAct is flat on Haiku: −0.005 between T=50 and T=200, against −0.023 on Gemini and
 −0.140 in the paper over the same interval. The full-history arm the paper shows
@@ -489,9 +490,11 @@ This second block added six more, and they are worth enumerating because they tr
    from the same cell could come from different caps and nothing would say so — which is
    how a −5.8-point "environment effect" survived long enough to be written down. The
    runners now write a conditions header and per-step token usage — but **only runs made
-   after that change carry it**: the 367 traces behind the tables in this draft do not,
-   so their conditions are certified by the filename and the run log, not by the
-   artefact itself.
+   after that change carry it**. The 366 historical Gemini traces — Table 1 except the
+   Stateful re-measurement, the noise table and the environment comparison — do not, so
+   their conditions are certified by the filename and the run log, not by the artefact
+   itself. Every trace behind the Haiku table, both Stateful re-measurements, the Memory
+   control and the prompt-order experiment does.
 6. **A probe that measured the wrong pattern.** The cache probe repeated an identical
    request and concluded that Vertex has no implicit cache, while the project's own
    grids recorded 503,600 cached tokens in one episode. The probe was correct; the
@@ -503,7 +506,8 @@ artefact of the project:
 7. **One of the four arms never ran.** Stateful read its state patch with a non-greedy
    regex that stopped at the first closing brace. Every nested patch — the normal case,
    `{"shelf_contents": {"3": {...}}}` — was truncated, failed to parse, and was dropped
-   without a warning: **40 of 5,773 applied on Gemini, 0 of 6,000 on Haiku**. What both
+   without a warning: **40 of 5,775 responses on Gemini produced an applied patch, 0 of
+   6,000 on Haiku**. What both
    Stateful columns measured is full history plus a state block with no inventory — empty
    on Haiku, and on Gemini holding only the occasional `last_event` (the 40 patches, in
    11 episodes). Its unit test
@@ -558,8 +562,10 @@ checkpointing and end-to-end cache accounting.
 - **`gemini-3-flash-preview` may not be their `Gemini-3-Flash`.** Declared as a risk
   from the outset. Vertex returns the responding model ID on every call and it is
   recorded per step, but not in the traces measured before that change. The Anthropic
-  client did not copy it at all until the last Stateful re-measurement: every other Haiku
-  trace records the requested alias in its header, not the model that answered.
+  client did not copy it until the last Stateful re-measurement: from then on — its 30
+  episodes and the prompt-order experiment — every step records
+  `claude-haiku-4-5-20251001`; the earlier Haiku traces record only the requested alias
+  in their header.
 - **A reimplemented environment is not their environment.** We matched what their
   appendix allows us to compare, and the remaining differences are in §2. The shelf
   choice in `Store` still awaits an answer from the authors.

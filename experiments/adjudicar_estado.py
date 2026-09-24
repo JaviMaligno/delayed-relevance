@@ -69,11 +69,14 @@ def _aplicar_stateful(version: int, estado: dict, texto: str, campos: set) -> di
 
 def _unidades(valor):
     """Unidades tal como las escribio el modelo: un numero en texto cuenta como numero, y
-    un decimal no se redondea -- 14.9 no son 14 unidades."""
+    un decimal no se redondea -- 14.9 no son 14 unidades. Ausente es comodin (el modelo
+    no lo escribio); presente pero mal formado es una discrepancia, nunca un comodin."""
+    if valor is None:
+        return None
     try:
         numero = float(valor)
     except (TypeError, ValueError):
-        return None
+        return f"invalido:{valor!r}"
     return int(numero) if numero.is_integer() else numero
 
 
