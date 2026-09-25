@@ -2,7 +2,6 @@
   "react:k40": {
     "score_mean": 0.964520402755697,
     "score_sd": 0.01533679279802895,
-    "acierto_dependiente": 0.041666666666666664,
     "n": 24,
     "celda": {
       "episodios": 24,
@@ -17,12 +16,12 @@
         "3": "0/8 (de 8)",
         "6": "1/8 (de 8)"
       }
-    }
+    },
+    "acierto_dependiente_sin_filtrar": 0.041666666666666664
   },
   "skillstate:k40": {
     "score_mean": 0.9787181088651676,
     "score_sd": 0.019264834518008863,
-    "acierto_dependiente": 0.4166666666666667,
     "n": 24,
     "celda": {
       "episodios": 24,
@@ -37,7 +36,8 @@
         "3": "3/8 (de 8)",
         "6": "4/8 (de 8)"
       }
-    }
+    },
+    "acierto_dependiente_sin_filtrar": 0.4166666666666667
   },
   "_meta": {
     "provider": "foundry",
