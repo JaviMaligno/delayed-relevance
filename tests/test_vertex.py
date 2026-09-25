@@ -251,3 +251,24 @@ def test_un_timeout_de_lectura_se_reintenta(vertex, monkeypatch):
     monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
     assert _cliente().complete(system="s", user="u").text == "ok"
     assert intentos["n"] == 2
+
+
+def test_una_conexion_cortada_por_el_servidor_se_reintenta(vertex, monkeypatch):
+    # `http.client.RemoteDisconnected` tampoco es un `URLError`: es un
+    # `ConnectionResetError`. Paso de verdad: mato un proceso de Gemini de la sonda L1
+    # v3 a mitad de condicion.
+    import http.client
+    import dr.llm as llm
+
+    intentos = {"n": 0}
+
+    def _post(url, headers, payload):
+        intentos["n"] += 1
+        if intentos["n"] == 1:
+            raise http.client.RemoteDisconnected("Remote end closed connection without response")
+        return vertex["respuesta"]
+
+    monkeypatch.setattr(llm, "post_json", _post)
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+    assert _cliente().complete(system="s", user="u").text == "ok"
+    assert intentos["n"] == 2

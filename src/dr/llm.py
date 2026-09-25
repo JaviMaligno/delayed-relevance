@@ -458,10 +458,12 @@ class GeminiClient:
                         f"HTTP {error.code} de Gemini: {detalle}") from error
                 print(f"  [reintento {intento + 1}/{RETRY_ATTEMPTS - 1}] "
                       f"HTTP {error.code}, esperando {espera:.0f}s", flush=True)
-            except (urllib.error.URLError, TimeoutError) as error:
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
                 # `TimeoutError` no es `URLError`: un timeout de lectura del socket se
                 # escapaba del manejo y mataba el proceso a mitad de rejilla. Es la
                 # misma clase de fallo transitorio que un URLError y se trata igual.
+                # `ConnectionError` cubre `http.client.RemoteDisconnected` (el servidor
+                # cierra sin responder), que mato un proceso de la sonda L1 v3.
                 if intento == RETRY_ATTEMPTS - 1:
                     raise
                 print(f"  [reintento {intento + 1}/{RETRY_ATTEMPTS - 1}] "
