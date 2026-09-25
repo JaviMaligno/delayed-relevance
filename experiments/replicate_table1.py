@@ -25,14 +25,20 @@ def finite(value: float) -> float | None:
     return value if math.isfinite(value) else None
 
 
-def build_runtimes(deep_merge: bool, declare_merge: bool = True) -> dict:
+def build_runtimes(deep_merge: bool, declare_merge: bool = True,
+                   summary_max_tokens: int | None = None,
+                   stateful_orden: str = "estado_primero",
+                   stateful_cache: bool = False) -> dict:
     """Los dos brazos con estado comparten profundidad de merge: si uno conserva las
     sub-claves hermanas y el otro no, la comparacion queda sesgada."""
     return {
         "react": lambda client, env: ReActRuntime(client, env.spec()),
-        "memory": lambda client, env: MemoryRuntime(client, env.spec()),
+        "memory": lambda client, env: MemoryRuntime(
+            client, env.spec(),
+            **({"summary_max_tokens": summary_max_tokens} if summary_max_tokens else {})),
         "stateful": lambda client, env: StatefulRuntime(
-            client, env.spec(), env.schema_fields(), deep_merge=deep_merge),
+            client, env.spec(), env.schema_fields(), deep_merge=deep_merge,
+            orden=stateful_orden, cachear=stateful_cache),
         "skillstate": lambda client, env: SkillStateRuntime(
             client, env.spec(), env.schema_fields(), deep_merge=deep_merge,
             declare_merge=declare_merge),
@@ -162,7 +168,17 @@ def main() -> None:
                 try:
                     traza = Path(args.out) / f"traza_{stem}_{name}_s{seed}r{rep}.jsonl"
                     traza.unlink(missing_ok=True)
-                    results = run_episode(env, build(client, env), traza=traza)
+                    results = run_episode(env, build(client, env), traza=traza,
+                                          condiciones={
+                                              "model": args.model, "provider": client.provider,
+                                              "max_tokens": args.max_tokens,
+                                              "thinking_budget": args.thinking_budget,
+                                              "horizon": args.horizon, "seed": seed,
+                                              "runtime": name, "merge": args.merge,
+                                              "apendice_b": args.apendice_b,
+                                              "sin_telemetria": args.sin_telemetria,
+                                              "ruido": args.ruido, "long_spec": args.long_spec,
+                                          })
                 except anthropic.BadRequestError as error:
                     if "prompt is too long" not in str(error).lower():
                         raise

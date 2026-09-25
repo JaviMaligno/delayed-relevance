@@ -82,18 +82,93 @@ def resolve_provider(requested: str = "auto") -> str:
     return "api"
 
 
+AZURE_TOKEN_TTL = 45 * 60
+"""Tope de reutilizacion del token de Foundry antes de volver a invocar `az`."""
+AZURE_MARGEN_CADUCIDAD = 5 * 60
+"""Se renueva este tiempo ANTES de la caducidad real. `az` entrega el token que ya
+tiene en cache con la vida que le quede -- a veces minutos --, asi que contar el TTL
+desde que se pide dejo morir ocho episodios de R2 con un 401 a mitad."""
+AZURE_REINTENTOS = 6
+
+_token_azure: tuple[str, float] | None = None
+
+
+def _az(*args: str) -> str:
+    salida = subprocess.run(("az", *args), capture_output=True, text=True)
+    if salida.returncode != 0:
+        raise RuntimeError(f"az {' '.join(args)} fallo: {salida.stderr.strip()[:200]}")
+    return salida.stdout.strip()
+
+
+def olvidar_token_azure() -> None:
+    """Tira la cache. Existe para que los tests no se contaminen entre si."""
+    global _token_azure
+    _token_azure = None
+
+
+def _es_caducidad_de_azure(error: Exception) -> bool:
+    """La sesion de `az` caducada, que no se arregla sola y si se arregla si alguien
+    corre `az login`. Se distingue de un CLI que no responde a tiempo, que si mejora
+    reintentando, y de cualquier otro fallo, que no mejora esperando."""
+    mensaje = str(error).lower()
+    return "az login" in mensaje or "refresh token has expired" in mensaje
+
+
+def azure_access_token() -> str:
+    """Token de Entra ID para Foundry, pedido al CLI y guardado mientras dure.
+
+    Sustituye a `DefaultAzureCredential`, que recorria toda su cadena --con una sonda
+    de red a IMDS-- en cada proceso: con ocho episodios en paralelo, `az` dejaba de
+    responder a tiempo y la tanda perdia episodios con la sesion viva.
+
+    Ante una caducidad **espera** en vez de morir, igual que la tanda de Vertex: la
+    sesion se renueva con `az login` en otra terminal y el episodio sigue por donde
+    iba."""
+    global _token_azure
+    if _token_azure and time.time() < _token_azure[1]:
+        return _token_azure[0]
+    espera = 2.0
+    esperado = 0.0
+    intento = 0
+    while True:
+        try:
+            salida = json.loads(_az("account", "get-access-token", "--scope",
+                                    AZURE_SCOPE, "-o", "json"))
+        except RuntimeError as error:
+            if _es_caducidad_de_azure(error):
+                if esperado >= ESPERA_MAXIMA_SESION:
+                    raise
+                print(f"  [sesion de az caducada] esperando a `az login` "
+                      f"({esperado / 60:.0f} min de {ESPERA_MAXIMA_SESION // 60})",
+                      flush=True)
+                time.sleep(ESPERA_ENTRE_AVISOS)
+                esperado += ESPERA_ENTRE_AVISOS
+                continue
+            intento += 1
+            if intento >= AZURE_REINTENTOS:
+                raise
+            print(f"  [token de azure] reintento {intento}/{AZURE_REINTENTOS - 1}, "
+                  f"esperando {espera:.0f}s", flush=True)
+            time.sleep(espera)
+            espera = min(espera * 2, 30.0)
+        else:
+            token = salida["accessToken"]
+            caduca = float(salida.get("expires_on") or time.time() + AZURE_TOKEN_TTL)
+            _token_azure = (token, min(caduca - AZURE_MARGEN_CADUCIDAD,
+                                       time.time() + AZURE_TOKEN_TTL))
+            return token
+
+
 def build_foundry_client():
     """Cliente de Foundry, con clave de API si la hay y con Entra ID si no.
 
-    Con `az login` hecho no hace falta ninguna clave: DefaultAzureCredential toma el
-    token del CLI. Es la via preferible aqui, porque no deja secretos en disco.
+    Con `az login` hecho no hace falta ninguna clave: el token sale del CLI. Es la via
+    preferible aqui, porque no deja secretos en disco.
     """
     if os.environ.get("ANTHROPIC_FOUNDRY_API_KEY"):
         return anthropic.AnthropicFoundry(max_retries=4)
-    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
-
-    provider = get_bearer_token_provider(DefaultAzureCredential(), AZURE_SCOPE)
-    return anthropic.AnthropicFoundry(azure_ad_token_provider=provider, max_retries=4)
+    return anthropic.AnthropicFoundry(azure_ad_token_provider=azure_access_token,
+                                      max_retries=4)
 
 
 class AnthropicClient:
@@ -131,9 +206,19 @@ class AnthropicClient:
         por un parpadeo de red. Los errores de autenticacion o de peticion invalida
         NO se reintentan, porque no se arreglan esperando."""
         delay = 2.0
+        token_renovado = False
         for attempt in range(RETRY_ATTEMPTS):
             try:
                 return self._create(system, user, max_tokens, cache_prefix)
+            except anthropic.AuthenticationError:
+                # Con Entra ID un 401 es un token caducado y se arregla pidiendo otro;
+                # con clave de API es una clave mala y reintentar no la arregla.
+                if (self.provider != "foundry" or token_renovado
+                        or os.environ.get("ANTHROPIC_FOUNDRY_API_KEY")):
+                    raise
+                print("  [401] token de Foundry caducado, pidiendo otro", flush=True)
+                olvidar_token_azure()
+                token_renovado = True
             except (anthropic.APIConnectionError, anthropic.RateLimitError) as error:
                 if attempt == RETRY_ATTEMPTS - 1:
                     raise
@@ -182,6 +267,7 @@ class AnthropicClient:
             cache_read=getattr(response.usage, "cache_read_input_tokens", 0) or 0,
             cache_write=getattr(response.usage, "cache_creation_input_tokens", 0) or 0,
             truncated=response.stop_reason == "max_tokens",
+            model_version=getattr(response, "model", "") or "",
         )
 
 
@@ -372,10 +458,12 @@ class GeminiClient:
                         f"HTTP {error.code} de Gemini: {detalle}") from error
                 print(f"  [reintento {intento + 1}/{RETRY_ATTEMPTS - 1}] "
                       f"HTTP {error.code}, esperando {espera:.0f}s", flush=True)
-            except (urllib.error.URLError, TimeoutError) as error:
+            except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
                 # `TimeoutError` no es `URLError`: un timeout de lectura del socket se
                 # escapaba del manejo y mataba el proceso a mitad de rejilla. Es la
                 # misma clase de fallo transitorio que un URLError y se trata igual.
+                # `ConnectionError` cubre `http.client.RemoteDisconnected` (el servidor
+                # cierra sin responder), que mato un proceso de la sonda L1 v3.
                 if intento == RETRY_ATTEMPTS - 1:
                     raise
                 print(f"  [reintento {intento + 1}/{RETRY_ATTEMPTS - 1}] "
@@ -429,11 +517,17 @@ class GeminiClient:
         texto = "".join(
             parte.get("text", "") for parte in partes if not parte.get("thought"))
         pensamiento = uso.get("thoughtsTokenCount", 0) or 0
+        # `promptTokenCount` YA incluye los tokens servidos de cache. Se normaliza a la
+        # semantica de Anthropic -- `prompt_tokens` es la entrada NO cacheada -- porque
+        # `coste_efectivo` suma las dos cosas; sin esto la cache contaba dos veces
+        # (revision adversarial 8). Las trazas de Gemini anteriores a este cambio
+        # guardan el `promptTokenCount` bruto.
+        cacheados = uso.get("cachedContentTokenCount", 0) or 0
         return Completion(
             text=texto,
-            prompt_tokens=uso.get("promptTokenCount", 0),
+            prompt_tokens=(uso.get("promptTokenCount", 0) or 0) - cacheados,
             output_tokens=(uso.get("candidatesTokenCount", 0) or 0) + pensamiento,
-            cache_read=uso.get("cachedContentTokenCount", 0) or 0,
+            cache_read=cacheados,
             truncated=candidato.get("finishReason") != "STOP",
             thinking_tokens=pensamiento,
             model_version=datos.get("modelVersion", ""),
