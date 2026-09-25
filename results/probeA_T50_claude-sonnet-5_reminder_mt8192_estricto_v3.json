@@ -1,0 +1,27 @@
+{
+  "react:k40": {
+    "score_mean": 0.959396055719585,
+    "score_sd": 0.08054328384302432,
+    "acierto_dependiente": 0.8333333333333334,
+    "n": 24
+  },
+  "skillstate:k40": {
+    "score_mean": 0.9001173442349911,
+    "score_sd": 0.19823319947616988,
+    "acierto_dependiente": 0.8333333333333334,
+    "n": 24
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-sonnet-5",
+    "horizon": 50,
+    "seeds": 5,
+    "ks": [
+      40
+    ],
+    "control": false,
+    "oracle_schema": false,
+    "hatch_schema": false,
+    "max_tokens": 8192
+  }
+}

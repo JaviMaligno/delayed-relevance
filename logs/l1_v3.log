@@ -1,0 +1,710 @@
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+proveedor: vertex  modelo: gemini-3-flash-preview_oracle_mt8192_tb0_estricto_v3
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+proveedor: vertex  modelo: gemini-3-flash-preview_mt8192_tb0_estricto_v3
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+suspension del sistema inhibida: False
+proveedor: foundry  modelo: claude-haiku-4-5_hatch_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-sonnet-5_hatch_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-sonnet-5_oracle_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-haiku-4-5_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-haiku-4-5_reminder_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-sonnet-5_reminder_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-haiku-4-5_oracle_mt8192_estricto_v3
+proveedor: foundry  modelo: claude-sonnet-5_mt8192_estricto_v3
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=1.00 paso_dependiente=OK
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=1.00 paso_dependiente=OK
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=1.00 paso_dependiente=OK
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=1.00 paso_dependiente=OK
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=1.00 paso_dependiente=OK
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=1.00 paso_dependiente=OK
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=0.95 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+react:k40:0:3 score=1.00 paso_dependiente=OK
+react:k40:0:3 score=1.00 paso_dependiente=OK
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.95 paso_dependiente=OK
+react:k40:0:4 score=1.00 paso_dependiente=OK
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=OK
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=1.00 paso_dependiente=OK
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=1.00 paso_dependiente=OK
+react:k40:0:6 score=0.97 paso_dependiente=OK
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=1.00 paso_dependiente=OK
+react:k40:0:7 score=1.00 paso_dependiente=OK
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=0.94 paso_dependiente=OK
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=1.00 paso_dependiente=OK
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=1.00 paso_dependiente=OK
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=0.94 paso_dependiente=OK
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=0.91 paso_dependiente=OK
+react:k40:3:1 score=0.97 paso_dependiente=OK
+react:k40:3:1 score=1.00 paso_dependiente=OK
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=0.94 paso_dependiente=OK
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=1.00 paso_dependiente=OK
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:3 score=0.91 paso_dependiente=OK
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:3 score=1.00 paso_dependiente=OK
+react:k40:3:3 score=0.94 paso_dependiente=FALLO
+  AVISO react:k40:3:2: 1 respuestas truncadas
+react:k40:3:2 score=0.88 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+react:k40:3:3 score=0.94 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=1.00 paso_dependiente=OK
+react:k40:3:4 score=1.00 paso_dependiente=OK
+react:k40:3:3 score=1.00 paso_dependiente=OK
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=1.00 paso_dependiente=OK
+react:k40:3:5 score=0.94 paso_dependiente=OK
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=1.00 paso_dependiente=OK
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=OK
+react:k40:3:6 score=0.94 paso_dependiente=FALLO
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:6 score=1.00 paso_dependiente=OK
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=1.00 paso_dependiente=OK
+react:k40:3:6 score=0.94 paso_dependiente=OK
+react:k40:3:7 score=0.88 paso_dependiente=FALLO
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+react:k40:3:7 score=1.00 paso_dependiente=OK
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:7 score=0.97 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:3:7 score=0.91 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:6 score=0.79 paso_dependiente=FALLO
+react:k40:6:0 score=1.00 paso_dependiente=OK
+react:k40:6:0 score=0.97 paso_dependiente=OK
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+react:k40:6:0 score=1.00 paso_dependiente=OK
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+react:k40:6:1 score=1.00 paso_dependiente=OK
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:7 score=1.00 paso_dependiente=OK
+react:k40:6:1 score=1.00 paso_dependiente=OK
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+react:k40:6:1 score=0.91 paso_dependiente=FALLO
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+react:k40:6:2 score=0.97 paso_dependiente=OK
+react:k40:6:2 score=1.00 paso_dependiente=OK
+react:k40:6:0 score=0.97 paso_dependiente=FALLO
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:6:2 score=1.00 paso_dependiente=OK
+react:k40:6:3 score=0.97 paso_dependiente=OK
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:6:3 score=1.00 paso_dependiente=OK
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+react:k40:6:2 score=0.91 paso_dependiente=OK
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+react:k40:6:3 score=0.97 paso_dependiente=OK
+react:k40:6:4 score=0.97 paso_dependiente=OK
+react:k40:6:4 score=1.00 paso_dependiente=OK
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:6:3 score=0.94 paso_dependiente=OK
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:4 score=1.00 paso_dependiente=OK
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+react:k40:6:4 score=1.00 paso_dependiente=OK
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+react:k40:6:5 score=1.00 paso_dependiente=OK
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+react:k40:6:7 score=1.00 paso_dependiente=OK
+react:k40:6:5 score=1.00 paso_dependiente=OK
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=1.00 paso_dependiente=OK
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:6:7 score=1.00 paso_dependiente=OK
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=1.00 paso_dependiente=OK
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=1.00 paso_dependiente=OK
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=1.00 paso_dependiente=OK
+skillstate:k40:0:1 score=1.00 paso_dependiente=OK
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=1.00 paso_dependiente=OK
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=1.00 paso_dependiente=OK
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.51 paso_dependiente=FALLO
+skillstate:k40:0:2 score=1.00 paso_dependiente=OK
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:2 score=0.78 paso_dependiente=FALLO
+skillstate:k40:0:3 score=0.92 paso_dependiente=OK
+skillstate:k40:0:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:4 score=0.92 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:4 score=1.00 paso_dependiente=OK
+  AVISO react:k40:6:1: 10 respuestas truncadas
+react:k40:6:1 score=0.66 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=0.95 paso_dependiente=OK
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:4 score=0.89 paso_dependiente=FALLO
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:6:2 score=0.94 paso_dependiente=OK
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=1.00 paso_dependiente=OK
+skillstate:k40:0:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=1.00 paso_dependiente=OK
+react:k40:6:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=1.00 paso_dependiente=OK
+skillstate:k40:0:6 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:6 score=1.00 paso_dependiente=OK
+react:k40:6:4 score=0.94 paso_dependiente=OK
+skillstate:k40:0:6 score=0.97 paso_dependiente=OK
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:6 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.47 paso_dependiente=FALLO
+skillstate:k40:0:6 score=0.97 paso_dependiente=OK
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:7 score=1.00 paso_dependiente=OK
+skillstate:k40:3:1 score=0.97 paso_dependiente=OK
+skillstate:k40:0:7 score=1.00 paso_dependiente=OK
+react:k40:6:6 score=0.94 paso_dependiente=OK
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=1.00 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.74 paso_dependiente=FALLO
+skillstate:k40:3:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:2 score=0.47 paso_dependiente=FALLO
+react:k40:6:7 score=1.00 paso_dependiente=OK
+skillstate:k40:3:0 score=1.00 paso_dependiente=OK
+skillstate:k40:3:0 score=0.91 paso_dependiente=OK
+skillstate:k40:3:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:1 score=1.00 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=1.00 paso_dependiente=OK
+skillstate:k40:3:1 score=0.65 paso_dependiente=FALLO
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:1 score=1.00 paso_dependiente=OK
+skillstate:k40:3:1 score=1.00 paso_dependiente=OK
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:2 score=1.00 paso_dependiente=OK
+skillstate:k40:0:1 score=1.00 paso_dependiente=OK
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:2 score=1.00 paso_dependiente=OK
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:2 score=1.00 paso_dependiente=OK
+skillstate:k40:3:3 score=1.00 paso_dependiente=OK
+skillstate:k40:3:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:2 score=0.97 paso_dependiente=OK
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:4 score=0.97 paso_dependiente=FALLO
+Traceback (most recent call last):
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/experiments/probe_a.py", line 267, in <module>
+    main()
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/experiments/probe_a.py", line 213, in main
+    resultados, acierto, info = run_episode_probe(
+                                ^^^^^^^^^^^^^^^^^^
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/experiments/probe_a.py", line 77, in run_episode_probe
+    accion, completions = runtime.act(obs)
+                          ^^^^^^^^^^^^^^^^
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/src/dr/runtimes/react.py", line 27, in act
+    completion = self.client.complete(
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/src/dr/llm.py", line 443, in complete
+    return self._generate(system, user, max_tokens, cache_prefix)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/src/dr/llm.py", line 495, in _generate
+    datos = post_json(url, cabeceras, payload)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/javieraguilarmartin1/Documents/repos/delayed-relevance/src/dr/llm.py", line 350, in post_json
+    with urllib.request.urlopen(peticion, timeout=GEMINI_TIMEOUT) as respuesta:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/client.py", line 300, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+skillstate:k40:3:3 score=0.65 paso_dependiente=FALLO
+suspension del sistema inhibida: False
+proveedor: vertex  modelo: gemini-3-flash-preview_hatch_mt8192_tb0_estricto_v3
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:3 score=1.00 paso_dependiente=OK
+skillstate:k40:3:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:3 score=1.00 paso_dependiente=OK
+skillstate:k40:3:4 score=1.00 paso_dependiente=OK
+skillstate:k40:3:4 score=0.91 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:4 score=0.97 paso_dependiente=OK
+skillstate:k40:3:4 score=1.00 paso_dependiente=OK
+skillstate:k40:3:5 score=1.00 paso_dependiente=OK
+skillstate:k40:0:4 score=1.00 paso_dependiente=OK
+react:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:5 score=1.00 paso_dependiente=OK
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.91 paso_dependiente=FALLO
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:5 score=1.00 paso_dependiente=OK
+  [401] token caducado, pidiendo otro a gcloud
+skillstate:k40:0:5 score=0.95 paso_dependiente=OK
+skillstate:k40:3:5 score=1.00 paso_dependiente=OK
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=1.00 paso_dependiente=OK
+skillstate:k40:6:0 score=0.69 paso_dependiente=FALLO
+react:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.47 paso_dependiente=FALLO
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+skillstate:k40:0:6 score=0.97 paso_dependiente=OK
+skillstate:k40:3:7 score=1.00 paso_dependiente=OK
+skillstate:k40:3:6 score=1.00 paso_dependiente=OK
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.97 paso_dependiente=OK
+skillstate:k40:3:7 score=1.00 paso_dependiente=OK
+skillstate:k40:3:7 score=1.00 paso_dependiente=OK
+skillstate:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:7 score=1.00 paso_dependiente=OK
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:0 score=0.94 paso_dependiente=OK
+skillstate:k40:3:7 score=1.00 paso_dependiente=OK
+skillstate:k40:6:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:0 score=1.00 paso_dependiente=OK
+skillstate:k40:6:0 score=1.00 paso_dependiente=OK
+skillstate:k40:6:2 score=0.91 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.68 paso_dependiente=FALLO
+react:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.97 paso_dependiente=OK
+skillstate:k40:6:0 score=1.00 paso_dependiente=OK
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.97 paso_dependiente=OK
+skillstate:k40:6:1 score=0.97 paso_dependiente=OK
+skillstate:k40:6:1 score=1.00 paso_dependiente=OK
+skillstate:k40:6:3 score=0.97 paso_dependiente=OK
+skillstate:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:1 score=1.00 paso_dependiente=OK
+skillstate:k40:6:2 score=0.66 paso_dependiente=FALLO
+react:k40:0:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:1 score=1.00 paso_dependiente=OK
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+skillstate:k40:6:2 score=1.00 paso_dependiente=OK
+skillstate:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:2 score=0.54 paso_dependiente=FALLO
+skillstate:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:2 score=0.97 paso_dependiente=OK
+skillstate:k40:6:3 score=0.94 paso_dependiente=OK
+skillstate:k40:6:3 score=1.00 paso_dependiente=OK
+skillstate:k40:6:3 score=0.97 paso_dependiente=OK
+skillstate:k40:6:2 score=1.00 paso_dependiente=OK
+skillstate:k40:6:3 score=1.00 paso_dependiente=OK
+skillstate:k40:6:4 score=0.94 paso_dependiente=FALLO
+react:k40:0:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=0.71 paso_dependiente=OK
+skillstate:k40:3:3 score=0.35 paso_dependiente=FALLO
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+skillstate:k40:6:5 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:4 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:4 score=0.97 paso_dependiente=OK
+skillstate:k40:6:6 score=0.94 paso_dependiente=OK
+skillstate:k40:3:4 score=1.00 paso_dependiente=OK
+skillstate:k40:6:3 score=1.00 paso_dependiente=OK
+react:k40:0:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-sonnet-5_mt8192_estricto_v3.json
+skillstate:k40:6:6 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:6:5 score=0.97 paso_dependiente=OK
+skillstate:k40:6:5 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.44 paso_dependiente=FALLO
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+react:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:6 score=0.97 paso_dependiente=OK
+skillstate:k40:6:7 score=0.94 paso_dependiente=FALLO
+escrito results/probeA_T50_claude-haiku-4-5_mt8192_estricto_v3.json
+skillstate:k40:6:6 score=1.00 paso_dependiente=OK
+skillstate:k40:6:6 score=1.00 paso_dependiente=OK
+skillstate:k40:3:6 score=0.47 paso_dependiente=FALLO
+skillstate:k40:6:6 score=1.00 paso_dependiente=OK
+skillstate:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-sonnet-5_hatch_mt8192_estricto_v3.json
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-haiku-4-5_oracle_mt8192_estricto_v3.json
+skillstate:k40:3:7 score=0.97 paso_dependiente=OK
+skillstate:k40:6:7 score=0.94 paso_dependiente=OK
+escrito results/probeA_T50_claude-sonnet-5_oracle_mt8192_estricto_v3.json
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-haiku-4-5_hatch_mt8192_estricto_v3.json
+skillstate:k40:6:6 score=0.97 paso_dependiente=OK
+skillstate:k40:6:0 score=1.00 paso_dependiente=OK
+react:k40:3:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-haiku-4-5_reminder_mt8192_estricto_v3.json
+skillstate:k40:6:1 score=1.00 paso_dependiente=OK
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:2 score=1.00 paso_dependiente=OK
+skillstate:k40:6:3 score=0.97 paso_dependiente=OK
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:3:0 score=1.00 paso_dependiente=OK
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:6 score=0.86 paso_dependiente=OK
+skillstate:k40:3:1 score=1.00 paso_dependiente=OK
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_claude-sonnet-5_reminder_mt8192_estricto_v3.json
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:2 score=1.00 paso_dependiente=OK
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:3 score=1.00 paso_dependiente=OK
+react:k40:6:0 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:4 score=1.00 paso_dependiente=OK
+react:k40:6:1 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:5 score=1.00 paso_dependiente=OK
+react:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:6 score=1.00 paso_dependiente=OK
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+skillstate:k40:3:7 score=1.00 paso_dependiente=OK
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:0 score=1.00 paso_dependiente=OK
+  [401] token caducado, pidiendo otro a gcloud
+  [401] token caducado, pidiendo otro a gcloud
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:1 score=1.00 paso_dependiente=OK
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:2 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:3 score=1.00 paso_dependiente=OK
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:4 score=1.00 paso_dependiente=OK
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=1.00 paso_dependiente=OK
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:6 score=1.00 paso_dependiente=OK
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:7 score=1.00 paso_dependiente=OK
+escrito results/probeA_T50_gemini-3-flash-preview_oracle_mt8192_tb0_estricto_v3.json
+suspension del sistema inhibida: False
+proveedor: vertex  modelo: gemini-3-flash-preview_reminder_mt8192_tb0_estricto_v3
+skillstate:k40:0:4 score=0.97 paso_dependiente=FALLO
+react:k40:0:0 score=1.00 paso_dependiente=OK
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+react:k40:0:1 score=1.00 paso_dependiente=OK
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+react:k40:0:2 score=1.00 paso_dependiente=OK
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+react:k40:0:3 score=1.00 paso_dependiente=OK
+skillstate:k40:3:0 score=0.97 paso_dependiente=FALLO
+react:k40:0:4 score=1.00 paso_dependiente=OK
+skillstate:k40:3:1 score=0.97 paso_dependiente=FALLO
+react:k40:0:5 score=1.00 paso_dependiente=OK
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+react:k40:0:6 score=1.00 paso_dependiente=OK
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+react:k40:0:7 score=1.00 paso_dependiente=OK
+skillstate:k40:3:4 score=0.97 paso_dependiente=FALLO
+react:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.97 paso_dependiente=FALLO
+react:k40:3:1 score=1.00 paso_dependiente=OK
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+react:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:0 score=0.94 paso_dependiente=FALLO
+react:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.94 paso_dependiente=FALLO
+react:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:2 score=0.94 paso_dependiente=FALLO
+react:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:4 score=0.94 paso_dependiente=FALLO
+  [401] token caducado, pidiendo otro a gcloud
+  [401] token caducado, pidiendo otro a gcloud
+react:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:0 score=1.00 paso_dependiente=OK
+skillstate:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:6:1 score=1.00 paso_dependiente=OK
+skillstate:k40:6:7 score=0.94 paso_dependiente=FALLO
+escrito results/probeA_T50_gemini-3-flash-preview_hatch_mt8192_tb0_estricto_v3.json
+=== reanudo gemini sin campo Fri 25 Sep 2026 11:07:43 BST ===
+suspension del sistema inhibida: False
+proveedor: vertex  modelo: gemini-3-flash-preview_mt8192_tb0_estricto_v3
+reanudando: 19 episodios ya completados
+react:k40:0:0 (cacheado)
+react:k40:0:1 (cacheado)
+react:k40:0:2 (cacheado)
+react:k40:0:3 (cacheado)
+react:k40:0:4 (cacheado)
+react:k40:0:5 (cacheado)
+react:k40:0:6 (cacheado)
+react:k40:0:7 (cacheado)
+react:k40:3:0 (cacheado)
+react:k40:3:1 (cacheado)
+react:k40:3:2 (cacheado)
+react:k40:3:3 (cacheado)
+react:k40:3:4 (cacheado)
+react:k40:3:5 (cacheado)
+react:k40:3:6 (cacheado)
+react:k40:3:7 (cacheado)
+react:k40:6:0 (cacheado)
+react:k40:6:1 (cacheado)
+react:k40:6:2 (cacheado)
+react:k40:6:2 score=1.00 paso_dependiente=OK
+react:k40:6:3 score=0.94 paso_dependiente=FALLO
+react:k40:6:3 score=1.00 paso_dependiente=OK
+react:k40:6:4 score=0.94 paso_dependiente=FALLO
+react:k40:6:4 score=1.00 paso_dependiente=OK
+react:k40:6:5 score=1.00 paso_dependiente=OK
+react:k40:6:5 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=0.94 paso_dependiente=FALLO
+react:k40:6:6 score=1.00 paso_dependiente=OK
+react:k40:6:7 score=0.94 paso_dependiente=FALLO
+react:k40:6:7 score=1.00 paso_dependiente=OK
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:0:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:1 score=0.97 paso_dependiente=FALLO
+  [401] token caducado, pidiendo otro a gcloud
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:3:7 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:0 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:0 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:1 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:2 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:2 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:3 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:3 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:4 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:4 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:5 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:5 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:6 score=0.94 paso_dependiente=FALLO
+skillstate:k40:6:6 score=0.97 paso_dependiente=FALLO
+skillstate:k40:6:7 score=0.94 paso_dependiente=FALLO
+escrito results/probeA_T50_gemini-3-flash-preview_mt8192_tb0_estricto_v3.json
+gemini sin campo reanudada terminada: Fri 25 Sep 2026 12:36:22 BST
+skillstate:k40:6:7 score=0.97 paso_dependiente=FALLO
+escrito results/probeA_T50_gemini-3-flash-preview_reminder_mt8192_tb0_estricto_v3.json
+l1 v3 terminada: Fri 25 Sep 2026 12:36:23 BST
