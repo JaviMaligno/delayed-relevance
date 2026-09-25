@@ -3,13 +3,41 @@
     "score_mean": 0.9607682262094027,
     "score_sd": 0.02583199117825261,
     "acierto_dependiente": 0.3333333333333333,
-    "n": 24
+    "n": 24,
+    "celda": {
+      "episodios": 24,
+      "materializados": 22,
+      "aciertos": 6,
+      "excluidos": 2,
+      "aciertos_excluidos": 2,
+      "acierto_condicionado": 0.2727272727272727,
+      "acierto_conjunto": 0.25,
+      "por_seed": {
+        "0": "0/8 (de 8)",
+        "3": "0/6 (de 8)",
+        "6": "6/8 (de 8)"
+      }
+    }
   },
   "skillstate:k40": {
     "score_mean": 0.9027093269740329,
     "score_sd": 0.15400566381749242,
     "acierto_dependiente": 0.2916666666666667,
-    "n": 24
+    "n": 24,
+    "celda": {
+      "episodios": 24,
+      "materializados": 16,
+      "aciertos": 4,
+      "excluidos": 8,
+      "aciertos_excluidos": 3,
+      "acierto_condicionado": 0.25,
+      "acierto_conjunto": 0.16666666666666666,
+      "por_seed": {
+        "0": "0/7 (de 8)",
+        "3": "0/5 (de 8)",
+        "6": "4/4 (de 8)"
+      }
+    }
   },
   "_meta": {
     "provider": "foundry",

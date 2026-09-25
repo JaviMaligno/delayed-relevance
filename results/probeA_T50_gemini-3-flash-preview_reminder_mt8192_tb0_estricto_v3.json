@@ -3,13 +3,41 @@
     "score_mean": 0.9914215686274511,
     "score_sd": 0.0136560476908099,
     "acierto_dependiente": 0.7083333333333334,
-    "n": 24
+    "n": 24,
+    "celda": {
+      "episodios": 24,
+      "materializados": 24,
+      "aciertos": 17,
+      "excluidos": 0,
+      "aciertos_excluidos": 0,
+      "acierto_condicionado": 0.7083333333333334,
+      "acierto_conjunto": 0.7083333333333334,
+      "por_seed": {
+        "0": "8/8 (de 8)",
+        "3": "1/8 (de 8)",
+        "6": "8/8 (de 8)"
+      }
+    }
   },
   "skillstate:k40": {
     "score_mean": 0.9716632598985541,
     "score_sd": 0.0010088486619629856,
     "acierto_dependiente": 0.0,
-    "n": 24
+    "n": 24,
+    "celda": {
+      "episodios": 24,
+      "materializados": 24,
+      "aciertos": 0,
+      "excluidos": 0,
+      "aciertos_excluidos": 0,
+      "acierto_condicionado": 0.0,
+      "acierto_conjunto": 0.0,
+      "por_seed": {
+        "0": "0/8 (de 8)",
+        "3": "0/8 (de 8)",
+        "6": "0/8 (de 8)"
+      }
+    }
   },
   "_meta": {
     "provider": "vertex",
