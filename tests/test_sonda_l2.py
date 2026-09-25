@@ -63,7 +63,7 @@ def test_la_sonda_l1_tampoco_repara_el_mundo_en_un_paso_sin_accion():
     from dr.envs.warehouse import Warehouse
 
     env = Warehouse(horizon=50, seed=0, latent_k=40)
-    resultados, acierto = run_episode_probe(env, _Mudo())
+    resultados, acierto, _ = run_episode_probe(env, _Mudo())
     assert acierto is False
     assert all(v is None for v in env.shelves.values()), "un mudo no puede llenar el almacen"
 
@@ -76,10 +76,10 @@ def test_la_sonda_l1_deja_traza_con_cabecera_y_cuenta_los_pasos_sin_accion(tmp_p
 
     traza = tmp_path / "l1.jsonl"
     env = Warehouse(horizon=50, seed=0, latent_k=40)
-    resultados, acierto = run_episode_probe(env, _Mudo(), traza=traza,
-                                            condiciones={"sonda": "L1", "version_sonda": 2})
+    resultados, acierto, _ = run_episode_probe(env, _Mudo(), traza=traza,
+                                            condiciones={"sonda": "L1", "version_sonda": 3})
     filas = [json.loads(l) for l in traza.read_text().splitlines()]
-    assert filas[0] == {"kind": "run_header", "condiciones": {"sonda": "L1", "version_sonda": 2}}
+    assert filas[0] == {"kind": "run_header", "condiciones": {"sonda": "L1", "version_sonda": 3}}
     pasos = filas[1:]
     assert len(pasos) == 50
     assert sum(1 for p in pasos if p["es_el_paso"]) == 1

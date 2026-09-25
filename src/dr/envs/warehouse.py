@@ -102,6 +102,7 @@ class Warehouse:
         apendice_b: bool = False,
         sin_telemetria: bool = False,
         ruido: int = 0,
+        latent_estricto: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -118,6 +119,12 @@ class Warehouse:
         self.horizon = horizon
         self.seed = seed
         self.latent_k = latent_k
+        # Revision adversarial 6: el generador no comprobaba que el hecho no importara
+        # antes de t+k, y en la mayoria de las seeds importaba a los 5-8 pasos. En modo
+        # estricto solo se acepta un escenario si, con la politica correcta y el aviso
+        # ya colocado, el hecho cambia la accion por PRIMERA vez justo en t+k. Por
+        # defecto desactivado: lo ya medido no se mueve.
+        self.latent_estricto = latent_estricto
         self.latent_control = latent_control
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
@@ -194,7 +201,33 @@ class Warehouse:
         if not candidatos:
             raise ValueError(f"horizonte {self.horizon} demasiado corto para k={k}")
         # El mas tardio deja el maximo de historia antes del aviso.
-        paso_dependiente, estanteria = candidatos[-1]
+        if self.latent_estricto:
+            elegido = next((c for c in reversed(candidatos) if self._escenario_limpio(c, k)), None)
+            if elegido is None:
+                raise ValueError(f"seed {self.seed}: ningun escenario donde el hecho importe "
+                                 f"por primera vez justo en t+{k}")
+            paso_dependiente, estanteria = elegido
+        else:
+            paso_dependiente, estanteria = candidatos[-1]
+        self._plantar_aviso(paso_dependiente, estanteria, k)
+
+    def _escenario_limpio(self, candidato: tuple[int, int], k: int) -> bool:
+        """Con el aviso ya colocado (sustituye al evento de su paso), la politica
+        correcta ve cambiar su accion por la cuarentena por primera vez en t+k."""
+        import copy
+        prueba = copy.deepcopy(self)
+        prueba._plantar_aviso(candidato[0], candidato[1], k)
+        prueba.reset()
+        while not prueba.done:
+            prueba.observe()
+            sin = copy.deepcopy(prueba)
+            sin.quarantined_shelf = None
+            if prueba.expected_action().render() != sin.expected_action().render():
+                return prueba.step_index == candidato[0]
+            prueba.apply(prueba.expected_action())
+        return False
+
+    def _plantar_aviso(self, paso_dependiente: int, estanteria: int, k: int) -> None:
         paso_aviso = paso_dependiente - k
         self.dependent_step = paso_dependiente
         self.quarantine_from = paso_aviso
