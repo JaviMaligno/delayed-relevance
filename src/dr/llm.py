@@ -517,11 +517,17 @@ class GeminiClient:
         texto = "".join(
             parte.get("text", "") for parte in partes if not parte.get("thought"))
         pensamiento = uso.get("thoughtsTokenCount", 0) or 0
+        # `promptTokenCount` YA incluye los tokens servidos de cache. Se normaliza a la
+        # semantica de Anthropic -- `prompt_tokens` es la entrada NO cacheada -- porque
+        # `coste_efectivo` suma las dos cosas; sin esto la cache contaba dos veces
+        # (revision adversarial 8). Las trazas de Gemini anteriores a este cambio
+        # guardan el `promptTokenCount` bruto.
+        cacheados = uso.get("cachedContentTokenCount", 0) or 0
         return Completion(
             text=texto,
-            prompt_tokens=uso.get("promptTokenCount", 0),
+            prompt_tokens=(uso.get("promptTokenCount", 0) or 0) - cacheados,
             output_tokens=(uso.get("candidatesTokenCount", 0) or 0) + pensamiento,
-            cache_read=uso.get("cachedContentTokenCount", 0) or 0,
+            cache_read=cacheados,
             truncated=candidato.get("finishReason") != "STOP",
             thinking_tokens=pensamiento,
             model_version=datos.get("modelVersion", ""),

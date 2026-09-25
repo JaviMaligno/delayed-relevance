@@ -18,15 +18,18 @@ public — and measured three things:
 
 1. **Whether the ladder reproduces** under their own model and decoding settings (§3).
 2. **What each runtime actually costs** when you count money rather than tokens (§4).
-3. **What explicit state protects against**, through two probes aimed at the
-   limitations the paper itself declares but does not measure (§5).
+3. **What explicit state protects against**, through two probes: one on a limitation the
+   paper declares (a state schema only protects what it anticipates) and one revisiting
+   its recovery experiment with a retroactive correction (§5).
 
 The short version: **their thesis holds and their magnitude does not; and once input is
 billed with caching, SKILL.state's cost advantage over full history shrinks from 7.5x to
 1.4x on Anthropic with a short static prefix** — it stays the cheapest arm, and on Vertex
 the advantage barely moves. Explicit state protects against losing track of
 the procedure; on a second model it does not protect against **writing the state
-wrong**, and that failure — not the one the paper studies — is what ends up limiting it.
+wrong** — here a semantic copying error in schema-valid patches, a more specific
+mechanism than the structural and formatting errors of the paper's own error taxonomy —
+and that is what ends up limiting it.
 And the largest effects in the whole experiment come not from any of the compared
 methods, but from runtime implementation decisions the paper treats as neutral: one of
 them silently disabled one of our four arms in every measurement made before we fixed it
@@ -316,21 +319,27 @@ tokens:
 
 | Runtime | T=25 | T=50 | T=100 | T=200 |
 |---|---|---|---|---|
-| ReAct | 1.1 % | 4.6 % | 6.8 % | **7.0 %** |
-| Stateful | 0 % | 2.6 % | 4.3 % | 4.3 % |
+| ReAct | 1.1 % | 4.9 % | 7.3 % | **7.5 %** |
+| Stateful | 0 % | 2.8 % | 4.7 % | 4.8 % |
 | Memory, SKILL.state | 0 % | 0 % | 0 % | 0 % |
 
 Implicit caching therefore **exists on Vertex and favours exactly the arms whose prefix
 is append-only**, growing with the horizon — the same qualitative pattern as Anthropic,
-an order of magnitude smaller: **7 % against 82 %**. Other grids in other conditions give
-between 1 % and 16 % for ReAct; the spread across conditions is not characterised here.
+an order of magnitude smaller: an input-cost saving of **6.8 % against 82 %** for ReAct.
+Other grids in other conditions give other figures for ReAct; the spread across
+conditions is not characterised here.
+
+> These Vertex figures were first computed counting cached tokens twice: Gemini's
+> `promptTokenCount` already includes them, and the client stored them again as cache
+> reads (§6, item 12). The corrected figures above move the ratios by about 0.4x at T=50
+> and 2x at T=200; the qualitative conclusion does not change.
 
 Paired within that grid, the cost ratio barely moves:
 
 | | Raw input | Effective input |
 |---|---|---|
-| T=50, ReAct / SKILL.state | 7.90x | **7.57x** |
-| T=200, ReAct / SKILL.state | 29.16x | **27.32x** |
+| T=50, ReAct / SKILL.state | 7.53x | **7.20x** |
+| T=200, ReAct / SKILL.state | 27.12x | **25.28x** |
 
 A direct probe adds a warning. The archived run (`results/probe_cache_vertex_*.json`)
 repeats an identical 13,346-token request twice and issues six calls whose prefix grows
@@ -355,14 +364,17 @@ Resulting statement: **with a short static prefix, prefix caching helps only the
 append-only arms, in both providers, and by an order of magnitude more on Anthropic;
 with a long enough immutable prefix it helps the compressing arms too (SKILL.state
 saves 79 % and Memory 48 %, above). The shrinking of SKILL.state's advantage measured on
-Anthropic does not reproduce on Vertex, where 7.9x in tokens remains 7.6x in effective
+Anthropic does not reproduce on Vertex, where 7.5x in tokens remains 7.2x in effective
 input.**
 
 ---
 
-## 5. Two probes on their declared limitations
+## 5. Two probes on what explicit state protects against
 
-The paper declares two limitations without measuring them. We measured them.
+L1 measures a limitation the paper declares without measuring it: that an explicit
+state helps only with what its schema anticipated. L2 revisits the paper's recovery
+experiment (its Experiment 3, an external change followed by a corrective observation)
+with a correction that retroactively invalidates an announced fact.
 
 ### L1: explicit state protects best what was anticipated
 
@@ -396,14 +408,15 @@ what it sees:
 On Haiku and Gemini every episode materialised. On Sonnet 2–9 of the 24 episodes per
 cell did not — its trajectory had already diverged by step `t+40` — so its cells show
 two rates: successes over the episodes where the test materialised, and, after the dot,
-successes over all 24. The excluded episodes are not counted as successes, although 28
+the episodes that both materialised the test and answered it correctly, over all
+attempted episodes (24, or 72 for pooled ReAct). The excluded episodes are not counted as successes, although 28
 of them happened to take the right action. **The two rates answer different questions,
 and the conditional one flatters.** Whether an episode materialises depends on what the
 runtime did before, so conditioning on it changes the population and its mix of
 scenarios between arms: Sonnet's SKILL.state with the named field looks perfect at 16/16
-but reaches the right action in 16 of 24 episodes, exactly Gemini's 16/24; and with the
-reminder Sonnet's SKILL.state looks better than its ReAct (15/15 against 18/19) but the
-order reverses over all episodes (15/24 against 18/24). We read Sonnet's conditional
+but materialises the test and answers it correctly in 16 of 24 attempts, exactly Gemini's
+16/24; and with the reminder Sonnet's SKILL.state looks better than its ReAct (15/15
+against 18/19) but the order reverses on that joint measure (15/24 against 18/24). We read Sonnet's conditional
 cells as retention given that the test happened, not as an overall advantage. Only 1 of
 the 576 episodes saw the fact change the correct action before `t+40`.
 
@@ -484,9 +497,10 @@ binomial intervals understate the uncertainty of generalising to new scenarios.
 
 Gemini with ReAct never applies either correction — 0 of 72 in L1 without a reminder, 0
 of 24 in L2 — while scoring 0.913 on the long procedure; Haiku scores 0.974 at T=200 and
-applies the L2 correction once in 24. What holds on all three models is that **the
-long-procedure score does not predict this failure, and within each model the runtime
-decides it.** Both probes are measured with the same cap and design on the three models;
+applies the L2 correction once in 24. **High long-procedure scores coexist with poor
+probe performance on Haiku and Gemini, and probe performance differs sharply between
+runtimes on all three models.** We did not measure Sonnet's long procedure, and we make
+no predictive claim across models. Both probes are measured with the same cap and design on the three models;
 their decoding still differs between providers (§3).
 
 ---
@@ -580,6 +594,12 @@ artefact of the project:
     found by the sixth review: its fact was not delayed in two of its three scenarios.
     It was redesigned and re-measured (§5).
 
+12. **Two providers, two meanings of "prompt tokens".** Anthropic's `input_tokens`
+    excludes cached tokens; Gemini's `promptTokenCount` includes them. The client stored
+    both the same way and the cost function added cached tokens on top, so every Vertex
+    cost figure counted the cache twice. The eighth adversarial review found it; the §4
+    Vertex figures are recomputed.
+
 Items 5 and 6 were found by an **independent adversarial review of this draft against
 the raw traces**, not by us. That review also corrected the failure classification
 above, the maintenance-event range in §2, the compression factor in §3 and the sample
@@ -602,8 +622,9 @@ decision, so we make no claim about a general range.
 **Repository artefacts**: environment with fidelity flags, per-step traces, completeness
 verifier, a density meter that does not call the API, truncation counters, per-episode
 checkpointing and end-to-end cache accounting — except in the L1 aggregates, whose cost
-fields ignored cache reads and writes until the last re-measurement; its per-step traces
-record them and are the source to use.
+fields ignored cache reads and writes until the last re-measurement, and in every Gemini
+figure computed before item 12 below, which counted cached tokens twice. The per-step
+traces record the raw provider fields and are the source to use.
 
 ---
 

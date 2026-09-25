@@ -272,3 +272,23 @@ def test_una_conexion_cortada_por_el_servidor_se_reintenta(vertex, monkeypatch):
     monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
     assert _cliente().complete(system="s", user="u").text == "ok"
     assert intentos["n"] == 2
+
+
+def test_los_tokens_cacheados_no_se_cuentan_dos_veces(vertex, monkeypatch):
+    # Revision 8: `promptTokenCount` de Gemini YA incluye los cacheados, y el cliente
+    # los guardaba ademas en `cache_read`; `coste_efectivo` los sumaba dos veces. Se
+    # normaliza a la semantica de Anthropic: `prompt_tokens` = entrada NO cacheada.
+    import dr.llm as llm
+    from dr.metrics import coste_efectivo
+    from dr.types import StepResult
+
+    respuesta = {"candidates": [{"content": {"parts": [{"text": "ok"}]}, "finishReason": "STOP"}],
+                 "usageMetadata": {"promptTokenCount": 1000, "cachedContentTokenCount": 800,
+                                   "candidatesTokenCount": 5}}
+    monkeypatch.setattr(llm, "post_json", lambda url, headers, payload: respuesta)
+    c = _cliente().complete(system="s", user="u")
+    assert (c.prompt_tokens, c.cache_read) == (200, 800)
+    coste = coste_efectivo([StepResult(step=0, actionable=True, correct=True,
+                                       prompt_tokens=c.prompt_tokens, output_tokens=5,
+                                       cache_read=c.cache_read)])
+    assert coste["tokens_brutos"] == 1000

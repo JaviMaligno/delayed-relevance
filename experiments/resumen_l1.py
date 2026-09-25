@@ -30,7 +30,12 @@ for parcial in sorted(glob.glob("results/partial_probeA_T50_*_estricto_v3.json")
             por_seed[seed] = resumen_celda([v for k, v in eps.items() if k.split(":")[2] == seed])
         celda["por_seed"] = {s: f"{c['aciertos']}/{c['materializados']} (de {c['episodios']})"
                              for s, c in por_seed.items()}
-        tabla.setdefault(f"{rt}:k40", {})["celda"] = celda
+        entrada = tabla.setdefault(f"{rt}:k40", {})
+        # El campo viejo promediaba el acierto de TODOS los episodios (revision 8): se
+        # renombra para que nadie lo lea como la metrica publicada.
+        if "acierto_dependiente" in entrada:
+            entrada["acierto_dependiente_sin_filtrar"] = entrada.pop("acierto_dependiente")
+        entrada["celda"] = celda
         print(f"{modelo:24s} {CONDICIONES[cond]:18s} {rt:10s} condicionado "
               f"{celda['aciertos']}/{celda['materializados']}  conjunto "
               f"{celda['aciertos']}/{celda['episodios']}  excluidos {celda['excluidos']} "

@@ -96,7 +96,10 @@ def test_el_uso_se_lee_de_usage_metadata(capturado):
         "cachedContentTokenCount": 900,
     })
     salida = GeminiClient(model="gemini-3-flash-preview").complete(system="s", user="u")
-    assert salida.prompt_tokens == 1500
+    # `promptTokenCount` incluye los cacheados: la entrada no cacheada es 1500 - 900.
+    # Este test esperaba antes 1500, que es justo la doble cuenta que encontro la
+    # revision adversarial 8.
+    assert salida.prompt_tokens == 600
     assert salida.output_tokens == 120
     assert salida.cache_read == 900
 
