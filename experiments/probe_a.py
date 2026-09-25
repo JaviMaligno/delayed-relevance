@@ -45,6 +45,24 @@ VERSION_SONDA = 3
 paso puntuado depende del hecho en la trayectoria REAL."""
 
 
+def resumen_celda(episodios: list[dict]) -> dict:
+    """Cuentas de una celda con la metrica que publica el paper.
+
+    Un episodio cuyo paso puntuado no depende del hecho en su trayectoria real
+    (`materializa` falso) no prueba nada: se cuenta aparte y su acierto no suma. Se
+    dan la tasa condicionada (sobre los que materializan) y la conjunta (sobre todos),
+    porque la exclusion depende de lo que hizo el propio runtime antes y cambia la
+    poblacion comparada (revision adversarial 7)."""
+    n = len(episodios)
+    mat = [e for e in episodios if e.get("materializa")]
+    aciertos = sum(1 for e in mat if e["dependiente"])
+    excl = [e for e in episodios if not e.get("materializa")]
+    return {"episodios": n, "materializados": len(mat), "aciertos": aciertos,
+            "excluidos": len(excl), "aciertos_excluidos": sum(1 for e in excl if e["dependiente"]),
+            "acierto_condicionado": aciertos / len(mat) if mat else None,
+            "acierto_conjunto": aciertos / n if n else None}
+
+
 def run_episode_probe(env, runtime, traza=None,
                       condiciones: dict | None = None):
     """Como run_episode, pero registra aparte el acierto en el paso dependiente.
@@ -190,7 +208,7 @@ def main() -> None:
     tabla: dict[str, dict] = json.loads(path.read_text()) if path.exists() else {}
     for name, build in runtimes.items():
         for k in args.ks:
-            scores, aciertos = [], []
+            scores, aciertos, episodios_celda = [], [], []
             seeds = args.seed_list if args.seed_list is not None else range(args.seeds)
             for seed, rep in [(s, r) for s in seeds for r in range(args.repeats)]:
                 clave = f"{name}:k{k}:{seed}:{rep}"
@@ -200,6 +218,7 @@ def main() -> None:
                 if clave in done:
                     scores.append(done[clave]["score"])
                     aciertos.append(done[clave]["dependiente"])
+                    episodios_celda.append(done[clave])
                     print(f"{clave} (cacheado)", flush=True)
                     continue
                 env = Warehouse(horizon=args.horizon, seed=seed, latent_k=k,
@@ -231,6 +250,8 @@ def main() -> None:
                     print(f"  AVISO {clave}: {truncs} respuestas truncadas", flush=True)
                 scores.append(s)
                 aciertos.append(bool(acierto))
+                episodios_celda.append({"dependiente": bool(acierto),
+                                        "materializa": info["materializa"]})
                 tam = [r.state_size for r in resultados]
                 coste = coste_efectivo(resultados)
                 done[clave] = {"score": s, "dependiente": bool(acierto),
@@ -250,7 +271,10 @@ def main() -> None:
                 tabla[f"{name}:k{k}"] = {
                     "score_mean": aggregate(scores).mean,
                     "score_sd": aggregate(scores).sd if len(scores) > 1 else 0.0,
-                    "acierto_dependiente": sum(aciertos) / len(aciertos),
+                    # Sin filtrar, incluidos episodios que no prueban nada: solo como
+                    # referencia historica. La metrica publicada es `celda`.
+                    "acierto_dependiente_sin_filtrar": sum(aciertos) / len(aciertos),
+                    "celda": resumen_celda(episodios_celda),
                     "n": len(scores),
                 }
 

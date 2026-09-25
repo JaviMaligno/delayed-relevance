@@ -74,3 +74,18 @@ def test_un_agente_que_no_sabe_nada_nunca_suma_un_acierto_que_materialice():
             continue
         _, acierto, info = run_episode_probe(env, _MudoHastaElPasoYLuegoEstanteriaCero(env))
         assert not (acierto and info["materializa"]), seed
+
+
+def test_el_resumen_de_celda_no_cuenta_aciertos_que_no_materializan():
+    # Revision 7, hallazgo 2: el resumen promediaba el acierto de TODOS los episodios,
+    # asi que el control "mudo y luego estanteria 0" sacaba 3/3 en el agregado.
+    from experiments.probe_a import resumen_celda
+
+    episodios = [{"dependiente": True, "materializa": False},
+                 {"dependiente": True, "materializa": True},
+                 {"dependiente": False, "materializa": True},
+                 {"dependiente": True, "materializa": False}]
+    r = resumen_celda(episodios)
+    assert r == {"episodios": 4, "materializados": 2, "aciertos": 1,
+                 "excluidos": 2, "aciertos_excluidos": 2,
+                 "acierto_condicionado": 0.5, "acierto_conjunto": 0.25}

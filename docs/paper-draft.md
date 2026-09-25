@@ -241,8 +241,9 @@ level:
 From 0 to 50 events: **−0.103, 3.1 standard errors**. Theirs: −0.350. **The effect is real, and what we can
 resolve is the extreme**: 0, 5 and 20 are not distinguishable at this sample size — their
 means span 0.009 with standard deviations near 0.06 — so the measured effect is carried
-by the jump to 50. A gradual decline of a few points across the lower levels would be
-invisible here.
+by the jump to 50. Among the lower levels no difference was detected (−0.009 and −0.003
+against zero noise, intervals roughly ±0.04), and declines of several points remain
+compatible with the data.
 And what changes most is not the mean but the dispersion, which triples: under 50
 distractors the model is not stably worse — it is **erratic**.
 
@@ -363,7 +364,7 @@ input.**
 
 The paper declares two limitations without measuring them. We measured them.
 
-### L1: explicit state only protects what was anticipated
+### L1: explicit state protects best what was anticipated
 
 A fact is announced at step `t` and first changes the correct action at step `t+40`.
 Both halves of that sentence are now checked rather than assumed. The generator accepts a
@@ -378,10 +379,10 @@ Successes over the episodes where the test materialised, Wilson 95 % intervals:
 
 | SKILL.state | Haiku 4.5 | Sonnet 5 | Gemini 3 Flash |
 |---|---|---|---|
-| No field to store it | 0/24 [0–14 %] | 4/16 [10–49 %] | 0/24 [0–14 %] |
-| Free-form `notes` field | 10/24 [24–61 %] | 6/15 [20–64 %] | 1/24 [1–20 %] |
-| Schema field naming the fact | **24/24 [86–100 %]** | **16/16 [81–100 %]** | **16/24 [47–82 %]** |
-| Reminder attached to the observation | **24/24 [86–100 %]** | **15/15 [80–100 %]** | 0/24 [0–14 %] |
+| No dedicated field | 0/24 [0–14 %] | 4/16 [10–49 %] · 4/24 | 0/24 [0–14 %] |
+| Free-form `notes` field | 10/24 [24–61 %] | 6/15 [20–64 %] · 6/24 | 1/24 [1–20 %] |
+| Schema field naming the fact | **24/24 [86–100 %]** | **16/16 [81–100 %]** · 16/24 | **16/24 [47–82 %]** |
+| Reminder attached to the observation | **24/24 [86–100 %]** | **15/15 [80–100 %]** · 15/24 | 0/24 [0–14 %] |
 
 ReAct has no schema, so the first three conditions send it the identical prompt; pooled
 they are 72 replicates of one cell. Its reminder condition is the only one that changes
@@ -389,22 +390,35 @@ what it sees:
 
 | ReAct | Haiku 4.5 | Sonnet 5 | Gemini 3 Flash |
 |---|---|---|---|
-| No reminder (pooled) | 1/72 [0–7 %] | 21/62 [23–46 %] | 0/72 [0–5 %] |
-| Reminder on the observation | **23/24 [80–99 %]** | **18/19 [75–99 %]** | **17/24 [51–85 %]** |
+| No reminder (pooled) | 1/72 [0–7 %] | 21/62 [23–46 %] · 21/72 | 0/72 [0–5 %] |
+| Reminder on the observation | **23/24 [80–99 %]** | **18/19 [75–99 %]** · 18/24 | **17/24 [51–85 %]** |
 
 On Haiku and Gemini every episode materialised. On Sonnet 2–9 of the 24 episodes per
-cell did not — its trajectory had already diverged by step `t+40` — and they are
-excluded from the denominators above; 28 of those excluded episodes happened to take the
-right action and are **not** counted. Only 1 of the 576 episodes saw the fact change the
-correct action before `t+40`.
+cell did not — its trajectory had already diverged by step `t+40` — so its cells show
+two rates: successes over the episodes where the test materialised, and, after the dot,
+successes over all 24. The excluded episodes are not counted as successes, although 28
+of them happened to take the right action. **The two rates answer different questions,
+and the conditional one flatters.** Whether an episode materialises depends on what the
+runtime did before, so conditioning on it changes the population and its mix of
+scenarios between arms: Sonnet's SKILL.state with the named field looks perfect at 16/16
+but reaches the right action in 16 of 24 episodes, exactly Gemini's 16/24; and with the
+reminder Sonnet's SKILL.state looks better than its ReAct (15/15 against 18/19) but the
+order reverses over all episodes (15/24 against 18/24). We read Sonnet's conditional
+cells as retention given that the test happened, not as an overall advantage. Only 1 of
+the 576 episodes saw the fact change the correct action before `t+40`.
 
 What holds across the three models:
 
-- **Naming the field is what works.** The named field takes SKILL.state from 0–25 % to
-  67–100 %. A free-form `notes` field helps on the two Claude models (Haiku 42 %, Sonnet
-  40 %) and not on Gemini (4 %), and on every model it stays far below the named field.
-  An explicit-state runtime protects best against what its designer already anticipated
-  — limitation L1, with a number.
+- **Naming the field is what works best.** The named field takes SKILL.state from 0–25 %
+  to 67–100 % (conditional rates). A free-form `notes` field helps on the two Claude
+  models (Haiku 42 %, Sonnet 40 %) and not on Gemini (4 %), and on every model it stays
+  far below the named field. "No dedicated field" does not mean nowhere to store the
+  fact: the schema checks only top-level keys, and all four of Sonnet's successes in that
+  arm wrote the quarantine into `shelf_contents` itself (`{"9": {"blocked": true}}`) and
+  used it forty steps later. What the named field adds is a dedicated place **and** the
+  cue that the fact belongs there; these experiments do not separate the two. An
+  explicit-state runtime protects best against what its designer already anticipated —
+  limitation L1, with a number.
 - **A reminder works for the runtime that has nowhere to store anything.** ReAct goes
   from 0–34 % to 71–96 % when the fact travels with the observation.
 - **But the reminder does not transfer to the explicit-state runtime on every model.**
@@ -416,15 +430,18 @@ What holds across the three models:
   message of the history). Binomial intervals over 24 runs understate the uncertainty of
   generalising to new scenarios.
 
-> **What changed with the redesign.** The earlier L1 took the latest step at which the
-> quarantined shelf would be the lowest free one and put the notice 40 steps before it,
-> without checking that the shelf was not already the lowest free one in between. In two
-> of its three seeds it was, 5 and 8 steps after the notice: those cells measured
-> continuous, not delayed, relevance, and in 59 of 576 episodes the scored step did not
-> depend on the fact at all (45 of them were counted as successes). The earlier runner
-> also applied the correct action whenever the runtime returned none. With the fact made
-> genuinely delayed, two readings change: ReAct without a reminder on Haiku falls from
-> 10/72 to 1/72, and SKILL.state with the reminder on Gemini falls from 8/24 to 0/24. This probe also **withdrew** an older
+> **Three versions of this probe.** Version 1 applied the correct action whenever the
+> runtime returned none. Version 2 fixed the runner but kept the scenarios, which took the
+> latest step at which the quarantined shelf would be the lowest free one and put the
+> notice 40 steps before it without checking the steps in between: in two of its three
+> seeds (1 and 2) the fact mattered 5 and 8 steps after the notice, so those cells
+> measured continuous rather than delayed relevance, and in 59 of 576 episodes the scored
+> step did not depend on the fact at all (45 were counted as successes). Version 3, above,
+> uses strict scenarios on seeds 0, 3 and 6. Between versions 2 and 3 some cells moved —
+> ReAct without a reminder on Haiku from 10/72 to 1/72, SKILL.state with the reminder on
+> Gemini from 8/24 to 0/24 — but the scenario sets differ (seeds 0/1/2 against 0/3/6), and
+> nine of those ten Haiku successes and all eight Gemini ones were on the removed seed 1.
+> The changes are results on different scenarios, not an isolated effect of delay. This probe also **withdrew** an older
 > recommendation of the project: with one run per seed, the free-form field had scored
 > 60 % on Sonnet and become the practical advice ("leave a hatch in your schema").
 
