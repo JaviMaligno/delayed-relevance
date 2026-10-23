@@ -1,0 +1,35 @@
+{
+  "react:0:0": {
+    "truncadas": 1,
+    "pasos": 50,
+    "thinking": 32523,
+    "entrada_bruta": 799571,
+    "entrada_efectiva": 781163.3,
+    "score": 0.8421052631578947,
+    "avg_prompt": 15582.36,
+    "total": 815249,
+    "overflowed": false
+  },
+  "react:1:0": {
+    "truncadas": 0,
+    "pasos": 50,
+    "thinking": 20189,
+    "entrada_bruta": 782593,
+    "entrada_efectiva": 775235.5,
+    "score": 1.0,
+    "avg_prompt": 15488.36,
+    "total": 797818,
+    "overflowed": false
+  },
+  "react:2:0": {
+    "truncadas": 0,
+    "pasos": 50,
+    "thinking": 28564,
+    "entrada_bruta": 811031,
+    "entrada_efectiva": 792619.7,
+    "score": 1.0,
+    "avg_prompt": 15811.48,
+    "total": 822819,
+    "overflowed": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "react:0:0": {
+    "truncadas": 13,
+    "pasos": 100,
+    "thinking": 78575,
+    "entrada_bruta": 3134412,
+    "entrada_efectiva": 2998135.8,
+    "score": 0.6712328767123288,
+    "avg_prompt": 29829.94,
+    "total": 3068699,
+    "overflowed": false
+  }
+}

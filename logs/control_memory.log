@@ -1,0 +1,18 @@
+adjudicando memory T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_memory_s2_c2.jsonl
+adjudicando memory T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_memory_s2_c1.jsonl
+adjudicando memory T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_memory_s0_c2.jsonl
+adjudicando memory T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_memory_s1_c3.jsonl
+adjudicando memory T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_memory_s1_c2.jsonl
+adjudicando memory T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_memory_s0_c3.jsonl
+adjudicando memory T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_memory_s1_c1.jsonl
+adjudicando memory T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_memory_s2_c3.jsonl
+adjudicando memory T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_memory_s0_c1.jsonl
+score=0.980  pasos=50  fallos=1
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+score=0.820  pasos=50  fallos=9
+score=1.000  pasos=50  fallos=0
+score=0.620  pasos=50  fallos=19
+score=0.920  pasos=50  fallos=4
+score=0.880  pasos=50  fallos=6
+score=0.800  pasos=50  fallos=10

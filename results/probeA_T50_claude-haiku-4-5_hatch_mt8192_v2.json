@@ -1,0 +1,27 @@
+{
+  "react:k40": {
+    "score_mean": 0.9213729103434987,
+    "score_sd": 0.0775308034760526,
+    "acierto_dependiente": 0.16666666666666666,
+    "n": 24
+  },
+  "skillstate:k40": {
+    "score_mean": 0.9397301713478182,
+    "score_sd": 0.06635625031156685,
+    "acierto_dependiente": 0.4166666666666667,
+    "n": 24
+  },
+  "_meta": {
+    "provider": "foundry",
+    "model": "claude-haiku-4-5",
+    "horizon": 50,
+    "seeds": 3,
+    "ks": [
+      40
+    ],
+    "control": false,
+    "oracle_schema": false,
+    "hatch_schema": true,
+    "max_tokens": 8192
+  }
+}

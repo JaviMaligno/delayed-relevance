@@ -1,0 +1,55 @@
+{
+  "react": {
+    "score_mean": 0.9948709518329771,
+    "score_sd": 0.007024200365185483,
+    "avg_prompt_tokens": 29592.456,
+    "total_tokens": 2968016.6,
+    "overflowed_seeds": [],
+    "score_por_seed": {
+      "0": 1.0,
+      "1": 1.0,
+      "2": 0.9873417721518988,
+      "3": 0.987012987012987,
+      "4": 1.0
+    },
+    "sd_entre_seeds": 0.007024200365185483,
+    "episodios": 5,
+    "entrada_bruta": 3207213.6,
+    "entrada_efectiva": 2984042.4000000004
+  },
+  "memory": {
+    "score_mean": 0.8602069572218826,
+    "score_sd": 0.10596819350017231,
+    "avg_prompt_tokens": 5551.5,
+    "total_tokens": 631675.2,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 555150.0,
+    "entrada_efectiva": 555150.0
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 2224.052,
+    "total_tokens": 236688.4,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 222405.2,
+    "entrada_efectiva": 222405.2
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 100,
+    "seeds": 5,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 8192,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

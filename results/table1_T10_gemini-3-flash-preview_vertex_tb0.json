@@ -1,0 +1,63 @@
+{
+  "react": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 4402.16,
+    "total_tokens": 44785.8,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 44021.6,
+    "entrada_efectiva": 44021.6
+  },
+  "memory": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 4088.8199999999997,
+    "total_tokens": 44387.4,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 40888.2,
+    "entrada_efectiva": 40888.2
+  },
+  "stateful": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 4607.24,
+    "total_tokens": 47113.8,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 46072.4,
+    "entrada_efectiva": 46072.4
+  },
+  "skillstate": {
+    "score_mean": 1.0,
+    "score_sd": 0.0,
+    "avg_prompt_tokens": 2061.28,
+    "total_tokens": 22066.2,
+    "overflowed_seeds": [],
+    "score_por_seed": {
+      "0": 1.0
+    },
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 20612.8,
+    "entrada_efectiva": 20612.8
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 10,
+    "seeds": 5,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

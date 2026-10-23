@@ -1,0 +1,420 @@
+adjudicando stateful T=200 seed=0 -> results/adj_T200_gemini-3-flash-preview_stateful_s0_f2.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_gemini-3-flash-preview_stateful_s0_f1.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_f5.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_f3.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_f4.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_f1.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_f3.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_f5.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_f3.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_f1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_f2.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_f4.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_f2.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_f4.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_f1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_f2.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_f5.jsonl
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (0 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (1 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (2 min de 180)
+score=1.000  pasos=50  fallos=0
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (3 min de 180)
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_f1.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_f2.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_f3.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_f4.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=0 -> results/adj_T200_claude-haiku-4-5_stateful_s0_f5.jsonl
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_f1.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_f2.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_f3.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_f4.jsonl
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_f1.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_claude-haiku-4-5_stateful_s1_f5.jsonl
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_f2.jsonl
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_f3.jsonl
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_f4.jsonl
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=200 seed=2 -> results/adj_T200_claude-haiku-4-5_stateful_s2_f5.jsonl
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (4 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (5 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (6 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (7 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (8 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (9 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (9 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (10 min de 180)
+  [sesion caducada] esperando a `gcloud auth login` (10 min de 180)
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+Python(64236) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+Python(64711) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+score=0.930  pasos=200  fallos=14
+Python(65648) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+adjudicando stateful T=200 seed=0 -> results/adj_T200_gemini-3-flash-preview_stateful_s0_f3.jsonl
+Python(65822) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65823) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65824) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65825) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65828) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65831) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65832) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65833) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65838) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65843) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65845) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65848) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65850) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+Python(65851) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+score=0.800  pasos=200  fallos=40
+  [reintento 1/5] HTTP 503, esperando 2s
+score=1.000  pasos=200  fallos=0
+adjudicando stateful T=200 seed=1 -> results/adj_T200_gemini-3-flash-preview_stateful_s1_f1.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+  [reintento 2/5] HTTP 503, esperando 4s
+score=1.000  pasos=200  fallos=0
+  [reintento 1/5] HTTP 503, esperando 2s
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=1.000  pasos=200  fallos=0
+score=0.985  pasos=200  fallos=3
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [401] token caducado, pidiendo otro a gcloud
+Python(75937) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [reintento 1/5] HTTP 503, esperando 2s
+  [401] token caducado, pidiendo otro a gcloud
+Python(76225) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+=== relanzo tras reinicio Wed 23 Sep 2026 15:59:29 BST ===
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f5.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f4.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f5.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f4.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f4.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f5.jsonl
+adjudicando stateful T=200 seed=1 -> results/adj_T200_gemini-3-flash-preview_stateful_s1_f1.jsonl
+adjudicando stateful T=200 seed=0 -> results/adj_T200_gemini-3-flash-preview_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f4.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f4.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f4.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [401] token caducado, pidiendo otro a gcloud
+Python(18419) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [401] token caducado, pidiendo otro a gcloud
+Python(18442) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+  [reintento 2/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+score=0.980  pasos=200  fallos=4
+adjudicando stateful T=200 seed=1 -> results/adj_T200_gemini-3-flash-preview_stateful_s1_f2.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+score=0.800  pasos=200  fallos=40
+adjudicando stateful T=200 seed=1 -> results/adj_T200_gemini-3-flash-preview_stateful_s1_f3.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+score=0.990  pasos=200  fallos=2
+adjudicando stateful T=200 seed=2 -> results/adj_T200_gemini-3-flash-preview_stateful_s2_f1.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+score=1.000  pasos=200  fallos=0
+adjudicando stateful T=200 seed=2 -> results/adj_T200_gemini-3-flash-preview_stateful_s2_f2.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+score=0.735  pasos=200  fallos=53
+adjudicando stateful T=200 seed=2 -> results/adj_T200_gemini-3-flash-preview_stateful_s2_f3.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+score=0.900  pasos=200  fallos=20
+adjudicando stateful T=200 seed=3 -> results/adj_T200_gemini-3-flash-preview_stateful_s3_f1.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+  [401] token caducado, pidiendo otro a gcloud
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 2/5] HTTP 503, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+score=0.995  pasos=200  fallos=1
+adjudicando stateful T=200 seed=3 -> results/adj_T200_gemini-3-flash-preview_stateful_s3_f2.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 3/5] HTTP 429, esperando 8s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+score=0.840  pasos=200  fallos=32
+adjudicando stateful T=200 seed=3 -> results/adj_T200_gemini-3-flash-preview_stateful_s3_f3.jsonl
+  [reintento 1/5] HTTP 503, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 2/5] HTTP 429, esperando 4s
+  [reintento 1/5] HTTP 503, esperando 2s
+score=0.995  pasos=200  fallos=1
+adjudicando stateful T=200 seed=4 -> results/adj_T200_gemini-3-flash-preview_stateful_s4_f1.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+score=0.990  pasos=200  fallos=2
+adjudicando stateful T=200 seed=4 -> results/adj_T200_gemini-3-flash-preview_stateful_s4_f2.jsonl
+  [reintento 1/5] HTTP 429, esperando 2s
+  [reintento 1/5] HTTP 429, esperando 2s
+score=1.000  pasos=200  fallos=0
+adjudicando stateful T=200 seed=4 -> results/adj_T200_gemini-3-flash-preview_stateful_s4_f3.jsonl
+  [401] token caducado, pidiendo otro a gcloud
+Python(63400) MallocStackLogging: can't turn off malloc stack logging because it was not enabled.
+score=0.995  pasos=200  fallos=1
+score=0.995  pasos=200  fallos=1
+adjudicando stateful T=50 seed=0 -> results/adj_T50_gemini-3-flash-preview_stateful_s0_f1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_gemini-3-flash-preview_stateful_s0_f2.jsonl
+=== relanzo tras segundo reinicio Wed 23 Sep 2026 19:16:01 BST ===
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f3.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f2.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f4.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f5.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f5.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f4.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s0_f5.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s1_f1.jsonl
+ya hecho, se salta: results/adj_T50_claude-haiku-4-5_stateful_s2_f4.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s1_f1.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f4.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f1.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f4.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f4.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s1_f2.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f3.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s2_f5.jsonl
+ya hecho, se salta: results/adj_T200_claude-haiku-4-5_stateful_s0_f3.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s1_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s1_f3.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s2_f1.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s2_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s2_f3.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s3_f1.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s3_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s3_f3.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s4_f2.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s4_f1.jsonl
+ya hecho, se salta: results/adj_T200_gemini-3-flash-preview_stateful_s4_f3.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_gemini-3-flash-preview_stateful_s0_f1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_gemini-3-flash-preview_stateful_s0_f2.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=50 seed=1 -> results/adj_T50_gemini-3-flash-preview_stateful_s1_f1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_gemini-3-flash-preview_stateful_s0_f3.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=50 seed=1 -> results/adj_T50_gemini-3-flash-preview_stateful_s1_f2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_gemini-3-flash-preview_stateful_s1_f3.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=50 seed=2 -> results/adj_T50_gemini-3-flash-preview_stateful_s2_f1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_gemini-3-flash-preview_stateful_s2_f2.jsonl
+score=0.980  pasos=50  fallos=1
+score=0.980  pasos=50  fallos=1
+adjudicando stateful T=50 seed=3 -> results/adj_T50_gemini-3-flash-preview_stateful_s3_f1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_gemini-3-flash-preview_stateful_s2_f3.jsonl
+score=1.000  pasos=50  fallos=0
+score=0.980  pasos=50  fallos=1
+adjudicando stateful T=50 seed=3 -> results/adj_T50_gemini-3-flash-preview_stateful_s3_f3.jsonl
+adjudicando stateful T=50 seed=3 -> results/adj_T50_gemini-3-flash-preview_stateful_s3_f2.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=50 seed=4 -> results/adj_T50_gemini-3-flash-preview_stateful_s4_f1.jsonl
+adjudicando stateful T=50 seed=4 -> results/adj_T50_gemini-3-flash-preview_stateful_s4_f2.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+adjudicando stateful T=50 seed=4 -> results/adj_T50_gemini-3-flash-preview_stateful_s4_f3.jsonl
+score=1.000  pasos=50  fallos=0
+stateful v2 terminada: Wed 23 Sep 2026 20:19:25 BST

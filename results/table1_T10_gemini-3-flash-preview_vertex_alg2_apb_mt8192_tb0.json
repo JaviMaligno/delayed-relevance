@@ -1,0 +1,25 @@
+{
+  "react": {
+    "score_mean": 1.0,
+    "score_sd": null,
+    "avg_prompt_tokens": 4394.7,
+    "total_tokens": 44745.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 1,
+    "entrada_bruta": 43947.0,
+    "entrada_efectiva": 43947.0
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 10,
+    "seeds": 1,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 8192,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

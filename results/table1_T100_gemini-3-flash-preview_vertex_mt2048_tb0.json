@@ -1,0 +1,25 @@
+{
+  "react": {
+    "score_mean": 0.996875,
+    "score_sd": 0.006987712429686843,
+    "avg_prompt_tokens": 29897.697999999997,
+    "total_tokens": 2998733.8,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 5,
+    "entrada_bruta": 3168156.4,
+    "entrada_efectiva": 3007608.46
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 100,
+    "seeds": 5,
+    "repeats": 1,
+    "thinking_budget": 0,
+    "max_tokens": 2048,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

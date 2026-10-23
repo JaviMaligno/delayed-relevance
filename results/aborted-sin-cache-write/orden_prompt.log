@@ -1,0 +1,25 @@
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_ep2.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_hp2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_hp1.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_ep1.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_ep1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_hp1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_ep1.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_hp2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_hp2.jsonl
+adjudicando stateful T=50 seed=1 -> results/adj_T50_claude-haiku-4-5_stateful_s1_ep2.jsonl
+adjudicando stateful T=50 seed=2 -> results/adj_T50_claude-haiku-4-5_stateful_s2_ep2.jsonl
+adjudicando stateful T=50 seed=0 -> results/adj_T50_claude-haiku-4-5_stateful_s0_hp1.jsonl
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=0.940  pasos=50  fallos=3
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=0.880  pasos=50  fallos=6
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+score=1.000  pasos=50  fallos=0
+orden prompt terminada: Wed 23 Sep 2026 21:34:26 BST

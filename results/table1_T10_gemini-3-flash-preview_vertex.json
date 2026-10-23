@@ -1,0 +1,25 @@
+{
+  "skillstate": {
+    "score_mean": 0.875,
+    "score_sd": null,
+    "avg_prompt_tokens": 2477.5,
+    "total_tokens": 30215.0,
+    "overflowed_seeds": [],
+    "score_por_seed": {},
+    "sd_entre_seeds": null,
+    "episodios": 1,
+    "entrada_bruta": 24775.0,
+    "entrada_efectiva": 24775.0
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 10,
+    "seeds": 1,
+    "repeats": 1,
+    "thinking_budget": null,
+    "max_tokens": 600,
+    "merge": "deep",
+    "declare_merge": true
+  }
+}

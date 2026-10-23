@@ -1,0 +1,27 @@
+{
+  "react:k40": {
+    "score_mean": 0.9037955067366831,
+    "score_sd": 0.052504810264629116,
+    "acierto_dependiente": 0.0,
+    "n": 24
+  },
+  "skillstate:k40": {
+    "score_mean": 0.9214722744134508,
+    "score_sd": 0.03883495687616874,
+    "acierto_dependiente": 0.0,
+    "n": 24
+  },
+  "_meta": {
+    "provider": "vertex",
+    "model": "gemini-3-flash-preview",
+    "horizon": 50,
+    "seeds": 3,
+    "ks": [
+      40
+    ],
+    "control": false,
+    "oracle_schema": false,
+    "hatch_schema": true,
+    "max_tokens": 8192
+  }
+}

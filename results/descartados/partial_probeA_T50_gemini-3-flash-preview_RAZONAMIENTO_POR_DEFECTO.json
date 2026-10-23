@@ -1,0 +1,352 @@
+{
+  "react:k40:0:0": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 771794,
+    "entrada_efectiva": 771794.0,
+    "salida": 30888,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:1": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 771847,
+    "entrada_efectiva": 771847.0,
+    "salida": 31287,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:2": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 772939,
+    "entrada_efectiva": 772939.0,
+    "salida": 27435,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:3": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 771565,
+    "entrada_efectiva": 771565.0,
+    "salida": 30455,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:4": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 772327,
+    "entrada_efectiva": 772327.0,
+    "salida": 32425,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:5": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 772948,
+    "entrada_efectiva": 772948.0,
+    "salida": 47215,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:6": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 772881,
+    "entrada_efectiva": 772881.0,
+    "salida": 29106,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:0:7": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 773418,
+    "entrada_efectiva": 773418.0,
+    "salida": 30772,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:0": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 770618,
+    "entrada_efectiva": 770618.0,
+    "salida": 35103,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:1": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 769641,
+    "entrada_efectiva": 769641.0,
+    "salida": 28013,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:2": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 769196,
+    "entrada_efectiva": 769196.0,
+    "salida": 29711,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:3": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 769104,
+    "entrada_efectiva": 769104.0,
+    "salida": 26194,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:4": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 776382,
+    "entrada_efectiva": 776382.0,
+    "salida": 27195,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:5": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 775303,
+    "entrada_efectiva": 775303.0,
+    "salida": 28951,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:6": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 783477,
+    "entrada_efectiva": 783477.0,
+    "salida": 39203,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:1:7": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 771672,
+    "entrada_efectiva": 771672.0,
+    "salida": 32651,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:0": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 788785,
+    "entrada_efectiva": 788785.0,
+    "salida": 30880,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:1": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 789090,
+    "entrada_efectiva": 789090.0,
+    "salida": 32321,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:2": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 780868,
+    "entrada_efectiva": 780868.0,
+    "salida": 29582,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:3": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 780976,
+    "entrada_efectiva": 780976.0,
+    "salida": 34624,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:4": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 780509,
+    "entrada_efectiva": 780509.0,
+    "salida": 29319,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:5": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 778726,
+    "entrada_efectiva": 778726.0,
+    "salida": 22159,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:6": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 786762,
+    "entrada_efectiva": 786762.0,
+    "salida": 22403,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "react:k40:2:7": {
+    "score": 0.9090909090909091,
+    "dependiente": false,
+    "entrada_bruta": 783688,
+    "entrada_efectiva": 783688.0,
+    "salida": 24177,
+    "sigma_inicial": 0,
+    "sigma_final": 0,
+    "sigma_max": 0
+  },
+  "skillstate:k40:0:0": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102843,
+    "entrada_efectiva": 102843.0,
+    "salida": 21339,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:1": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 21445,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:2": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 21282,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:3": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 20898,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:4": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 21148,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:5": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 21016,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:6": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 20905,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:0:7": {
+    "score": 0.972972972972973,
+    "dependiente": false,
+    "entrada_bruta": 102845,
+    "entrada_efectiva": 102845.0,
+    "salida": 21042,
+    "sigma_inicial": 105,
+    "sigma_final": 368,
+    "sigma_max": 368
+  },
+  "skillstate:k40:1:0": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 103966,
+    "entrada_efectiva": 103966.0,
+    "salida": 42223,
+    "sigma_inicial": 105,
+    "sigma_final": 204,
+    "sigma_max": 316
+  },
+  "skillstate:k40:1:1": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 103968,
+    "entrada_efectiva": 103968.0,
+    "salida": 35387,
+    "sigma_inicial": 105,
+    "sigma_final": 204,
+    "sigma_max": 316
+  },
+  "skillstate:k40:1:2": {
+    "score": 0.8823529411764706,
+    "dependiente": false,
+    "entrada_bruta": 103968,
+    "entrada_efectiva": 103968.0,
+    "salida": 35065,
+    "sigma_inicial": 105,
+    "sigma_final": 204,
+    "sigma_max": 316
+  }
+}

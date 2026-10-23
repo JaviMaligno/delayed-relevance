@@ -1,0 +1,73 @@
+{
+ "modelo": "gemini-3-flash-preview",
+ "proyecto": "data-science-364702",
+ "tokens": 8000,
+ "pasos": 6,
+ "mediciones": [
+  {
+   "sonda": "identica",
+   "llamada": 1,
+   "prompt": 13346,
+   "cacheado": 0
+  },
+  {
+   "sonda": "identica",
+   "llamada": 2,
+   "prompt": 13346,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 1,
+   "prompt": 3351,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 2,
+   "prompt": 6688,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 3,
+   "prompt": 10025,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 4,
+   "prompt": 13362,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 5,
+   "prompt": 16699,
+   "cacheado": 0
+  },
+  {
+   "sonda": "creciente",
+   "llamada": 6,
+   "prompt": 20036,
+   "cacheado": 0
+  },
+  {
+   "sonda": "explicita",
+   "llamada": 0,
+   "creado_con": 13343
+  },
+  {
+   "sonda": "explicita",
+   "llamada": 1,
+   "prompt": 13346,
+   "cacheado": 13343
+  },
+  {
+   "sonda": "explicita",
+   "llamada": 2,
+   "prompt": 13346,
+   "cacheado": 13343
+  }
+ ]
+}
