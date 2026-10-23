@@ -85,7 +85,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.15'
 
       # La sesion SSO de gcloud en un portatil caduca cada pocas horas y se llevo por
       # delante tres tandas. WIF no caduca a media rejilla: la credencial se emite
@@ -130,8 +130,19 @@ jobs:
           fi
           echo "clave presente (${#GEMINI_API_KEY} caracteres para Gemini)"
 
+      - name: Preparar pip verificado sin ejecutar el pip incluido
+        shell: bash
+        run: |
+          set -euo pipefail
+          PIP_WHEEL="$RUNNER_TEMP/pip-26.2.2-py3-none-any.whl"
+          curl --fail --silent --show-error --location \
+            https://files.pythonhosted.org/packages/3f/06/3e4420302363fbb71be3c7f35ce042f54bfca330e3e66b3a2e3c4cca579f/pip-26.2.2-py3-none-any.whl \
+            --output "$PIP_WHEEL"
+          printf '%s  %s\n' fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70 "$PIP_WHEEL" | sha256sum --check
+          PYTHONPATH="$PIP_WHEEL" python -m pip install --no-index --no-deps "$PIP_WHEEL"
+
       - name: Instalar
-        run: pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev]"
 
       - name: Restaurar checkpoints de la rama de resultados
         run: |

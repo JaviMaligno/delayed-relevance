@@ -1,0 +1,73 @@
+name: Seguridad de dependencias
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-security-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      # No ampliar experimento.yml: sigue siendo manual y separado de esta CI.
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12.15'
+      - name: Compilar sin importar ni cargar credenciales
+        run: python -m compileall -q src tests
+      - name: Preparar pip verificado antes de ejecutar pip
+        shell: bash
+        run: |
+          set -euo pipefail
+          PIP_WHEEL="$RUNNER_TEMP/pip-26.2.2-py3-none-any.whl"
+          curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' --tlsv1.2 \
+            https://files.pythonhosted.org/packages/3f/06/3e4420302363fbb71be3c7f35ce042f54bfca330e3e66b3a2e3c4cca579f/pip-26.2.2-py3-none-any.whl \
+            --output "$PIP_WHEEL"
+          printf '%s  %s\n' fd7f4dfa8190e014013b9f08f3e973f4e4c26ffd179a204895533a7254813a70 "$PIP_WHEEL" | sha256sum --check --status
+          PYTHONPATH="$PIP_WHEEL" python -m pip install --no-index --no-deps "$PIP_WHEEL"
+          rm "$PIP_WHEEL"
+      - name: Instalar rangos declarados y registrar la resolucion (no es un lock)
+        run: |
+          python -m pip install -e '.[dev]'
+          python -m pip check
+          python -m pip list --format=freeze
+      - name: Contratos focales sin proveedor (solo Ready)
+        if: github.event.pull_request.draft == false
+        env:
+          PYTEST_DISABLE_PLUGIN_AUTOLOAD: '1'
+          OPENBLAS_NUM_THREADS: '2'
+          OMP_NUM_THREADS: '2'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import socket
+          import subprocess
+          import urllib.request
+
+          def denegar(*args, **kwargs):
+              raise RuntimeError("Contrato offline: red y procesos externos prohibidos")
+
+          socket.socket.connect = denegar
+          socket.socket.connect_ex = denegar
+          socket.create_connection = denegar
+          socket.getaddrinfo = denegar
+          socket.socket.sendto = denegar
+          urllib.request.urlopen = denegar
+          subprocess.Popen.__init__ = denegar
+          import pytest
+
+          raise SystemExit(pytest.main([
+              "-q", "tests/test_types.py", "tests/test_metrics.py",
+              "tests/test_warehouse_generation.py", "tests/test_warehouse_transitions.py",
+          ]))
+          PY
