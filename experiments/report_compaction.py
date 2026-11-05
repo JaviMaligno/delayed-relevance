@@ -77,6 +77,11 @@ def main() -> None:
                   f"{sum(e['coste_lista_usd'] for e in eps) / n:12.4f} "
                   f"{sum(e['segundos'] for e in eps) / n:6.0f} "
                   f"{sum(e['segundos_llamadas'] for e in eps) / llamadas if llamadas else 0:9.1f}")
+        print("\nconsultas que solo traian el id del aviso (en una linea del agente) y "
+              "resumenes truncados:")
+        for brazo, eps in por_brazo.items():
+            print(f"  {brazo:15} con_id={sum(e.get('consultas_con_id_del_aviso', 0) for e in eps)} "
+                  f"resumenes_truncados={sum(e.get('resumenes_truncados', 0) for e in eps)}")
         modelos = sorted({m for eps in por_brazo.values() for e in eps for m in e["modelos"]})
         print(f"\nmodelos que contestaron: {modelos}")
         print("consulta = pasos con al menos un Lookup; portantes = consultas cuya respuesta "

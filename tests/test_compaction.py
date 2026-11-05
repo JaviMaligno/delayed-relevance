@@ -189,6 +189,22 @@ def test_las_consultas_no_entran_en_el_transcript():
     assert rt.consultas[1].coincidencias == 1
 
 
+def test_resumen_truncado_se_cuenta_y_usa_el_tope_pedido():
+    topes = []
+
+    class Truncador(GuionCliente):
+        def complete(self, system, user, max_tokens=None, cache_prefix=None):
+            if system.startswith("Summarise"):
+                topes.append(max_tokens)
+                return Completion(text="", prompt_tokens=1, output_tokens=1, truncated=True)
+            return super().complete(system, user, max_tokens, cache_prefix)
+
+    rt = SummaryRuntime(Truncador([WAIT] * 16), "ESPEC", summary_max_tokens=8192)
+    for paso in range(16):
+        rt.act(_obs(paso))
+    assert rt.resumenes_truncados == 1 and topes == [8192]
+
+
 def test_state_size_es_cero():
     for clase in BRAZOS.values():
         assert clase(GuionCliente([]), "ESPEC").state_size() == 0

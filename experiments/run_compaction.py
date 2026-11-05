@@ -40,17 +40,22 @@ try:  # como script (experiments/ en sys.path) o importado desde los tests
 except ImportError:
     from experiments.diagnose_probeC import accion_sorda, actualiza
 
-VERSION = 1
+VERSION = 2
+"""1: el resumen heredaba el tope de 1.200 de MemoryRuntime. Con Haiku 5.5 por `claude -p`
+el thinking adaptativo se lo comia, el CLI devolvia error y el resumen quedaba vacio
+(piloto, seed 4, paso 30): el brazo perdia la ocupacion por el tope. 2: el resumen usa el
+mismo tope que la decision."""
 HORIZONTE = 50
 K_POR_SONDA = {"A": 40, "C": 10}
 SEEDS_POR_SONDA = {"A": [0, 3, 6], "C": [4, 10, 6]}
 MODELO_POR_CLIENTE = {"claude-cli": "claude-haiku-5-5", "codex-cli": CODEX_MODELO}
 
 FABRICAS = {
-    **{nombre: (lambda clase: lambda c, e: clase(c, e.spec()))(clase)
+    **{nombre: (lambda clase: lambda c, e, mt=None: clase(c, e.spec(),
+                                                         summary_max_tokens=mt or 8192))(clase)
        for nombre, clase in BRAZOS.items()},
-    "react": lambda c, e: ReActRuntime(c, e.spec()),
-    "skillstate": lambda c, e: SkillStateRuntime(c, e.spec(), e.schema_fields()),
+    "react": lambda c, e, mt=None: ReActRuntime(c, e.spec()),
+    "skillstate": lambda c, e, mt=None: SkillStateRuntime(c, e.spec(), e.schema_fields()),
 }
 
 
@@ -68,6 +73,11 @@ def aviso(env: Warehouse, sonda: str) -> tuple[int, str]:
         texto = env.script[env.invalidation_from].text
         return env.invalidation_from, event_field(texto, "notice_id") or ""
     return env.quarantine_from, event_field(env.quarantine_notice_text, "notice_id") or ""
+
+
+def es_portante(lineas: list[str], notice_id: str) -> bool:
+    """Alguna linea devuelta es la observacion del aviso (`step N: Observation: ...`)."""
+    return bool(notice_id) and any("Observation:" in l and notice_id in l for l in lineas)
 
 
 def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
@@ -89,7 +99,8 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
     tot = {"truncadas": 0, "sin_accion": 0, "llamadas": 0, "prompt": 0, "cache_read": 0,
            "cache_write": 0, "salida": 0, "thinking": 0, "coste_lista_usd": 0.0,
            "segundos_llamadas": 0.0, "consultas": 0, "pasos_con_consulta": 0,
-           "consultas_portantes": 0, "consultas_tras_aviso": 0}
+           "consultas_portantes": 0, "consultas_con_id_del_aviso": 0,
+           "consultas_tras_aviso": 0}
     modelos: set[str] = set()
     inicio = time.monotonic()
     if traza is not None:
@@ -128,7 +139,12 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
         elif es_el_paso:
             acierto_a = correcta
             dependiente = True
-        portantes = [bool(notice_id) and any(notice_id in l for l in c.lineas) for c in consultas]
+        # Portante = la linea del AVISO tal como llego (la observacion), no una linea
+        # de razonamiento del agente que cite su id: en el piloto, la unica consulta
+        # "portante" era el agente citandose a si mismo. Las que solo traen el id se
+        # cuentan aparte.
+        portantes = [es_portante(c.lineas, notice_id) for c in consultas]
+        con_id = [bool(notice_id) and any(notice_id in l for l in c.lineas) for c in consultas]
         tot["truncadas"] += sum(1 for c in completions if c.truncated)
         tot["sin_accion"] += accion is None
         tot["llamadas"] += len(completions)
@@ -142,6 +158,7 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
         tot["consultas"] += len(consultas)
         tot["pasos_con_consulta"] += bool(consultas)
         tot["consultas_portantes"] += sum(portantes)
+        tot["consultas_con_id_del_aviso"] += sum(con_id)
         tot["consultas_tras_aviso"] += len(consultas) if obs.step > paso_aviso else 0
         modelos.update(c.model_version for c in completions if getattr(c, "model_version", ""))
         resultados.append(StepResult(step=obs.step, actionable=obs.actionable, correct=correcta,
@@ -188,6 +205,7 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
             "paso_aviso": paso_aviso, "pasos_dependientes": pasos_dependientes,
             "compactaciones": list(getattr(rt, "compactaciones", [])),
             "sin_accion_tras_consultas": getattr(rt, "sin_accion_tras_consultas", 0),
+            "resumenes_truncados": getattr(rt, "resumenes_truncados", 0),
             "parches_invalidos": getattr(rt, "invalid_patches", 0),
             "modelos": sorted(modelos), "segundos": time.monotonic() - inicio,
             "pasos": len(resultados)}
@@ -235,7 +253,8 @@ def main() -> None:
                         continue
                     env = construir_env(args.probe, seed, k)
                     traza = out / "trazas" / f"{nombre}_{brazo}_s{seed}_r{rep}.jsonl"
-                    d = episodio(env, FABRICAS[brazo](cliente, env), args.probe, traza, {
+                    rt = FABRICAS[brazo](cliente, env, args.max_tokens)
+                    d = episodio(env, rt, args.probe, traza, {
                         "experimento": "compaction", "version": VERSION, "sonda": args.probe,
                         "k": k, "brazo": brazo, "seed": seed, "rep": rep,
                         "cliente": args.client, "modelo": modelo,

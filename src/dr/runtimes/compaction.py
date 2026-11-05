@@ -112,6 +112,9 @@ class CompactingRuntime:
         self.compactaciones: list[int] = []
         self.consultas: list[Consulta] = []
         self.sin_accion_tras_consultas = 0
+        # Un resumen truncado llega vacio (el CLI no da el texto parcial) y el brazo
+        # pierde todo lo anterior por el tope, no por el metodo: se cuenta aparte.
+        self.resumenes_truncados = 0
 
     # --- lo que cada brazo define -------------------------------------------------
 
@@ -244,6 +247,7 @@ class SummaryRuntime(CompactingRuntime):
 
     def _compactar(self) -> list[Completion]:
         completion = self._resumir(self.summary)
+        self.resumenes_truncados += completion.truncated
         self.summary = completion.text
         self.history = []
         return [completion]
