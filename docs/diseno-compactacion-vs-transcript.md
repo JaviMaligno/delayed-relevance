@@ -23,8 +23,8 @@ compactaciones, todos acumulan historia como ReAct.
 | `hybrid_lookup` | sus propias líneas de razonamiento y acción, literales; observaciones reducidas a una línea (Woolford) | sí |
 | `summary_lookup` | resumen (Cursor) | sí |
 
-Referencias **sin volver a pagar**, del bloque 1 con el mismo entorno, seeds y protocolo:
-ReAct (transcript entero en contexto, sin compactar) y SKILL.state (estado explícito).
+Referencias, corridas de nuevo con el modelo de este experimento (el bloque 1 usó Haiku 4.5):
+`react` (transcript entero en contexto, sin compactar) y `skillstate` (estado explícito).
 
 **Consulta.** En vez de una acción, el modelo puede responder `Lookup: <palabras>`. El runtime
 devuelve hasta 8 líneas del transcript crudo que contengan todas las palabras, **en orden
@@ -57,14 +57,17 @@ devuelven la línea portante, truncamientos, pasos sin acción y coste efectivo 
 
 ## Modelos y presupuesto
 
-- **Claude Haiku 4.5 por API**, el mismo del bloque 1, para que las referencias valgan.
-  Sonda C: 3 seeds × 2 repeticiones × 4 brazos = 24 episodios. Sonda A: 12 × 4 = 48.
-  Unos 72 episodios, **≈ 10-12 $ estimados**. El corredor corta al pasar de **15 $**
-  acumulados.
-- **GPT vía `codex exec`** (suscripción, sin coste de API), solo la sonda C y los brazos
-  `summary`, `fresh_lookup` y `hybrid_lookup`: 18 episodios, unas 1.100 llamadas, unas 3 h en
-  serie. Limitación declarada: Codex añade ~21k tokens de prompt de sistema propio en cada
-  llamada, así que es otra condición, no el mismo arnés. Sin coste efectivo para este modelo.
+- **Claude Haiku 5.5 vía `claude -p`** (suscripción, sin coste de API). Medido el 5-nov-2026:
+  con `--setting-sources "" --strict-mcp-config --disable-slash-commands --tools ""
+  --system-prompt …` el arnés añade solo ~776 tokens, y el JSON de salida trae
+  `cache_creation_input_tokens`, `cache_read_input_tokens` y el coste a precio de lista.
+  `--bare` no sirve: no usa el login de la suscripción. Los 6 brazos (4 nuevos + 2
+  referencias). Sonda C: 3 seeds × 2 repeticiones × 6 = 36 episodios. Sonda A: 10 × 6 = 60.
+- **GPT vía `codex exec`** (suscripción), solo la sonda C y los brazos `summary`,
+  `fresh_lookup` y `hybrid_lookup`: 18 episodios, unas 1.100 llamadas de ~10 s. Limitación
+  declarada: Codex añade ~21k tokens de prompt de sistema propio por llamada.
+- Si la contabilidad de caché por suscripción resulta poco fiable en el piloto, plan B:
+  OpenRouter con tope de gasto.
 - Una corrida cada vez, nunca dos en paralelo, lanzada con `exec` (ver README).
 
 ## Qué haría cambiar la conclusión
