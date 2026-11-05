@@ -46,8 +46,10 @@ el thinking adaptativo se lo comia, el CLI devolvia error y el resumen quedaba v
 (piloto, seed 4, paso 30): el brazo perdia la ocupacion por el tope. 2: el resumen usa el
 mismo tope que la decision."""
 HORIZONTE = 50
-K_POR_SONDA = {"A": 40, "C": 10}
-SEEDS_POR_SONDA = {"A": [0, 3, 6], "C": [4, 10, 6]}
+# C: k=14 y seeds 17, 6, 10 salen de experiments/barrido_sonda_c.py: con k=10 el aviso
+# (paso 10) y el paso decisivo (11) caian antes de la primera compactacion.
+K_POR_SONDA = {"A": 40, "C": 14}
+SEEDS_POR_SONDA = {"A": [0, 3, 6], "C": [17, 6, 10]}
 MODELO_POR_CLIENTE = {"claude-cli": "claude-haiku-5-5", "codex-cli": CODEX_MODELO}
 
 FABRICAS = {
@@ -64,6 +66,45 @@ def construir_env(sonda: str, seed: int, k: int) -> Warehouse:
         return Warehouse(horizon=HORIZONTE, seed=seed, invalidation_k=k)
     # Estricto, como la sonda L1 v3: el hecho importa por primera vez en t+k.
     return Warehouse(horizon=HORIZONTE, seed=seed, latent_k=k, latent_estricto=True)
+
+
+class ConCacheIdeal:
+    """Envuelve un cliente y anota en cada Completion una ESTIMACION de la cache que
+    habria servido una cache de prefijo ideal (`cache_ideal`).
+
+    Por que estimar: `claude -p` manda el prompt de usuario en un solo bloque, asi que
+    solo cachea el system; la historia acumulada se reescribe entera en cada paso (en el
+    piloto, `cache_read` fijo en ~2.000-2.260 y `cache_creation` creciendo de 1.983 a
+    10.794 tokens en el paso 14). El coste medido por el CLI no es comparable con lo
+    medido por API. La estimacion supone que se habria servido de cache la fraccion del
+    prompt que coincide caracter a caracter con la llamada anterior del MISMO system (las
+    de resumen tienen otro): es una cota optimista, sin minimo cacheable ni puntos de
+    corte por bloque."""
+
+    def __init__(self, cliente) -> None:
+        self.cliente = cliente
+        self.provider = getattr(cliente, "provider", "")
+        self._previo: dict[str, str] = {}
+
+    def complete(self, system, user, max_tokens=None, cache_prefix=None):
+        import os
+        from dataclasses import replace
+        c = self.cliente.complete(system, user, max_tokens, cache_prefix)
+        prefijo = "".join(cache_prefix) if isinstance(cache_prefix, list) else (cache_prefix or "")
+        texto = system + "\n" + prefijo + user
+        previo = self._previo.get(system, "")
+        comun = len(os.path.commonprefix([texto, previo])) if previo else 0
+        self._previo[system] = texto
+        total = c.prompt_tokens + c.cache_read + c.cache_write
+        return replace(c, cache_ideal=round(total * comun / len(texto)) if texto else 0)
+
+
+def entrada_estimada(c) -> float:
+    """Entrada efectiva ESTIMADA de una llamada con cache de prefijo ideal: lo comun con
+    la llamada anterior a 0,1x y el resto escrito a 1,25x (multiplicadores de Anthropic)."""
+    total = c.prompt_tokens + c.cache_read + c.cache_write
+    ideal = getattr(c, "cache_ideal", 0)
+    return ideal * 0.10 + (total - ideal) * 1.25
 
 
 def aviso(env: Warehouse, sonda: str) -> tuple[int, str]:
@@ -100,7 +141,9 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
            "cache_write": 0, "salida": 0, "thinking": 0, "coste_lista_usd": 0.0,
            "segundos_llamadas": 0.0, "consultas": 0, "pasos_con_consulta": 0,
            "consultas_portantes": 0, "consultas_con_id_del_aviso": 0,
-           "consultas_tras_aviso": 0}
+           "consultas_tras_aviso": 0, "cache_ideal_estimada": 0,
+           "entrada_efectiva_estimada": 0.0, "salida_max_llamada": 0}
+    textos_consulta: list[str] = []
     modelos: set[str] = set()
     inicio = time.monotonic()
     if traza is not None:
@@ -160,6 +203,13 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
         tot["consultas_portantes"] += sum(portantes)
         tot["consultas_con_id_del_aviso"] += sum(con_id)
         tot["consultas_tras_aviso"] += len(consultas) if obs.step > paso_aviso else 0
+        tot["cache_ideal_estimada"] += sum(getattr(c, "cache_ideal", 0) for c in completions)
+        tot["entrada_efectiva_estimada"] += sum(entrada_estimada(c) for c in completions)
+        # Con thinking por defecto, la salida de una llamada es lo que hay que vigilar
+        # frente al tope: si se acerca, el tope empieza a truncar decisiones.
+        tot["salida_max_llamada"] = max([tot["salida_max_llamada"]]
+                                        + [c.output_tokens for c in completions])
+        textos_consulta += [c.consulta for c in consultas]
         modelos.update(c.model_version for c in completions if getattr(c, "model_version", ""))
         resultados.append(StepResult(step=obs.step, actionable=obs.actionable, correct=correcta,
                                      prompt_tokens=0, output_tokens=0))
@@ -206,6 +256,8 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
             "compactaciones": list(getattr(rt, "compactaciones", [])),
             "sin_accion_tras_consultas": getattr(rt, "sin_accion_tras_consultas", 0),
             "resumenes_truncados": getattr(rt, "resumenes_truncados", 0),
+            "truncadas_decision": tot["truncadas"] - getattr(rt, "resumenes_truncados", 0),
+            "textos_consulta": textos_consulta,
             "parches_invalidos": getattr(rt, "invalid_patches", 0),
             "modelos": sorted(modelos), "segundos": time.monotonic() - inicio,
             "pasos": len(resultados)}
@@ -230,7 +282,7 @@ def main() -> None:
     modelo = args.model or MODELO_POR_CLIENTE[args.client]
     k = args.k if args.k is not None else K_POR_SONDA[args.probe]
     seeds = args.seeds if args.seeds is not None else SEEDS_POR_SONDA[args.probe]
-    cliente = build_client(modelo, args.client, args.max_tokens)
+    cliente = ConCacheIdeal(build_client(modelo, args.client, args.max_tokens))
     print(f"suspension del sistema inhibida: {keep_system_awake()}", flush=True)
     print(f"cliente: {cliente.provider}  modelo: {modelo}  sonda {args.probe} k={k}", flush=True)
 

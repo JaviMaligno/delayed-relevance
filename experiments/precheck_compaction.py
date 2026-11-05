@@ -115,7 +115,7 @@ def suelos(sonda: str, seed: int, k: int) -> dict:
 def main() -> None:
     print(f"Compactaciones (antes de mostrar el paso): {COMPACTACIONES}, T={HORIZONTE}\n")
     problemas = []
-    for sonda, k, seeds in (("C", 10, [4, 10, 6]), ("A", 40, [0, 3, 6])):
+    for sonda, k, seeds in (("C", 14, [17, 6, 10]), ("A", 40, [0, 3, 6])):
         print(f"=== Sonda {sonda} (k={k}) ===")
         for seed in seeds:
             g = geometria(sonda, seed, k)

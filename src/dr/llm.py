@@ -46,6 +46,11 @@ class Completion:
     segundos: float = 0.0
     """Duracion de pared de la llamada, reintentos incluidos. Solo la rellenan los
     clientes de CLI: alli la latencia por llamada decide si una rejilla cabe en un dia."""
+    cache_ideal: int = 0
+    """ESTIMACION, no medida: tokens que una cache de prefijo ideal habria servido en esta
+    llamada (prefijo comun con la llamada anterior del mismo system). La rellena el
+    corredor de compactacion, porque `claude -p` manda el prompt en un solo bloque y no
+    cachea la historia acumulada (piloto del 5-nov-2026)."""
 
 
 @dataclass
@@ -764,9 +769,11 @@ class ClaudeCliClient:
         )
 
 
-CODEX_MODELO = "gpt-6.1-sol"
-"""El modelo del `config.toml` del usuario. Hay que pedirlo explicito porque el
-cliente ignora ese fichero (ver `CodexCliClient`)."""
+CODEX_MODELO = "gpt-6-luna"
+"""El modelo de la rejilla: el ligero de Woolford, y mas barato. Hay que pedirlo
+explicito porque el cliente ignora el `config.toml` del usuario (ver `CodexCliClient`).
+Comprobado el 5-nov-2026 que el id existe: `gpt-6-luna` contesta y un id inventado da
+`turn.failed` ("model is not supported when using Codex with a ChatGPT account")."""
 
 
 class CodexCliClient:

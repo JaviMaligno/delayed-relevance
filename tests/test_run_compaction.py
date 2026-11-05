@@ -50,3 +50,38 @@ def test_geometria_de_la_sonda_a_tiene_compactaciones_de_por_medio():
     g = geometria("A", 3, 40)
     assert g["aviso"] == 6 and g["dependientes"] == [46]
     assert g["entre"][46] == [15, 30, 45]
+
+
+def test_cache_ideal_estima_el_prefijo_comun_con_la_llamada_anterior_del_mismo_system():
+    from experiments.run_compaction import ConCacheIdeal, entrada_estimada
+
+    class Fijo:
+        provider = "x"
+
+        def complete(self, system, user, max_tokens=None, cache_prefix=None):
+            return Completion(text="", prompt_tokens=100, output_tokens=1)
+
+    c = ConCacheIdeal(Fijo())
+    primera = c.complete("S", "aaaa", cache_prefix=["H\n"])
+    otra = c.complete("Summarise", "zzzz")                 # otro system: no rompe la cadena
+    segunda = c.complete("S", "bbbb", cache_prefix=["H\n", "aaaa\n"])
+    assert primera.cache_ideal == 0 and otra.cache_ideal == 0
+    texto = "S\nH\naaaa\nbbbb"
+    assert segunda.cache_ideal == round(100 * len("S\nH\naaaa") / len(texto))
+    esperada = segunda.cache_ideal * 0.1 + (100 - segunda.cache_ideal) * 1.25
+    assert entrada_estimada(segunda) == esperada
+
+
+def test_episodio_guarda_el_texto_de_las_consultas():
+    env = construir_env("C", 4, 10)
+    d = episodio(env, FreshLookupRuntime(Guion(), env.spec()), "C")
+    assert d["textos_consulta"] == ["correction_notice"]
+    assert d["truncadas_decision"] == 0 and d["salida_max_llamada"] == 5
+
+
+def test_la_configuracion_elegida_de_la_sonda_c_pone_una_compactacion_de_por_medio():
+    from experiments.barrido_sonda_c import evaluar
+    for seed in (17, 6, 10):
+        r = evaluar(seed, 14)
+        assert r["valida"] and r["aviso"] == 14 and r["compactacion"] == 15
+        assert r["decisivo"] >= 15

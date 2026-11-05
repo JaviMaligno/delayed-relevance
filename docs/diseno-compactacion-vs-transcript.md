@@ -39,13 +39,67 @@ Las dos del bloque 1, porque cubren los dos ejes del debate:
 - **Sonda A, relevancia diferida, `k=40`**: un detalle literal (estantería en cuarentena) leído
   40 pasos antes de usarlo, con 2 o 3 compactaciones de por medio. Es el caso que el resumen
   pierde. Métrica: acierto en el paso dependiente.
-- **Sonda C, invalidación retroactiva**: un aviso corrige una colocación pasada. Seeds 4, 10 y 6
-  (22 pasos dependientes por repetición). Métrica: pasos dependientes con la corrección aplicada.
-  Hay que comprobar, sin llamar a la API, que al menos una compactación cae entre el aviso y los
-  pasos dependientes en cada seed; si no, se mueve la cadencia y se declara.
+- **Sonda C, invalidación retroactiva**: un aviso corrige una colocación pasada.
+  **`invalidation_k=14`, seeds 17, 6 y 10.** Métrica: pasos dependientes con la corrección aplicada.
+
+### Por qué k=14 y seeds 17, 6, 10 (y no k=10 con 4, 10, 6)
+
+Con k=10 el aviso llega en el paso 10 y el paso decisivo —el primer `Store` posterior, el único
+paso dependiente si el agente acierta— en el 11: **antes de la primera compactación, en las
+tres seeds** (`experiments/precheck_compaction.py`). Los 22 dependientes del bloque 1 son los de
+la cascada del agente sordo, que solo existe si el agente ya falló el paso 11. Con esa
+configuración la sonda no probaba la compactación al aplicar la corrección; en la seed 6, ni
+siquiera en la cascada (sus dependientes son 11–14).
+
+La cadencia de 15 no se mueve. Se barrieron gratis `invalidation_k` 1–40 y seeds 0–19
+(`experiments/barrido_sonda_c.py`): 72 configuraciones cumplen aviso < compactación ≤ paso
+decisivo con la trayectoria perfecta. Como el aviso siempre corrige la primera colocación (paso
+0), la colocación original y el aviso quedan ambos antes de la compactación. Se eligieron las
+tres con más pasos dependientes en la cascada tras la compactación, con un único k:
+
+| seed | colocación | aviso | compactación | paso decisivo | cascada del sordo tras compactar | suelo del sordo |
+|---|---|---|---|---|---|---|
+| 17 | 0 | 14 | 15 | 15 | 14 de 14 | 0,533 |
+| 6 | 0 | 14 | 15 | 16 | 12 de 12 | 0,657 |
+| 10 | 0 | 14 | 15 | 17 | 6 de 6 | 0,838 |
+
+32 pasos dependientes por repetición si el brazo falla, todos con la compactación de por medio.
+La seed 4 empata con la 10 (6 pasos); se prefirió la 10 porque su paso decisivo cae dos pasos
+después de la compactación y no uno.
+
+**Suelo de `fresh_lookup` en C, con trampa.** El agente perfecto que nunca consulta saca
+0,867 / 0,629 / 0,784 de score, pero **acierta el paso decisivo en las tres seeds por
+accidente**: al olvidarlo todo cree vacía la estantería 0, que es justo la que el aviso corrige.
+En C, el acierto de `fresh_lookup` en el paso decisivo no distingue "consultó y aplicó la
+corrección" de "lo olvidó todo"; hay que leerlo junto a las consultas portantes y al score.
 
 Además, por brazo: **tasa de consulta** (pasos con al menos un `Lookup`), consultas que
-devuelven la línea portante, truncamientos, pasos sin acción y coste efectivo con caché.
+devuelven la línea portante (la observación del aviso; las que solo traen su id en una línea del
+propio agente se cuentan aparte), **forma de las consultas** (palabras por consulta y proporción
+con un identificador: estantería, SKU o `notice_id`), truncamientos (de decisión y de resumen
+por separado), pasos sin acción y coste.
+
+### Coste: medido por el CLI y estimado con caché ideal
+
+`claude -p` manda el prompt de usuario como **un único bloque**, así que solo cachea el system:
+la historia acumulada se reescribe entera en cada paso. Medido en el piloto: `cache_read` fijo en
+~2.000–2.260 tokens y `cache_creation` creciendo de 1.983 a 10.794 tokens en el paso 14, escrito
+además a caché de 1 h. El coste que mide el CLI no es comparable con lo medido por API en el
+bloque 1, y no se va a OpenRouter. El reporte da dos columnas:
+
+- **`coste_lista_usd`**: medido por el CLI, a precio de lista.
+- **Entrada efectiva ESTIMADA** con caché de prefijo ideal: en cada llamada, la parte del prompt
+  que coincide con la llamada anterior del mismo system se cuenta a 0,1x y el resto a 1,25x. Es
+  una estimación optimista (sin mínimo cacheable ni cortes por bloque), etiquetada como tal.
+
+### Thinking de Haiku 5.5
+
+Se mantiene el comportamiento por defecto de `claude -p`, que es el uso real: Haiku 5.5 **piensa**
+(en el piloto, entre el 50 % y el 90 % de la salida). Se registra por llamada
+(`thinking_tokens`). El tope de salida es 8.192 tanto para decidir como para resumir: con 1.200
+en el resumen (lo heredado de `MemoryRuntime`) el thinking se comía el presupuesto y el resumen
+llegaba vacío. En el piloto ninguna decisión se truncó; la mayor salida de una decisión fue de
+1.243 tokens.
 
 ## Antes de gastar (gratis)
 
@@ -63,11 +117,11 @@ devuelven la línea portante, truncamientos, pasos sin acción y coste efectivo 
   `cache_creation_input_tokens`, `cache_read_input_tokens` y el coste a precio de lista.
   `--bare` no sirve: no usa el login de la suscripción. Los 6 brazos (4 nuevos + 2
   referencias). Sonda C: 3 seeds × 2 repeticiones × 6 = 36 episodios. Sonda A: 10 × 6 = 60.
-- **GPT vía `codex exec`** (suscripción), solo la sonda C y los brazos `summary`,
-  `fresh_lookup` y `hybrid_lookup`: 18 episodios, unas 1.100 llamadas de ~10 s. Limitación
-  declarada: Codex añade ~21k tokens de prompt de sistema propio por llamada.
-- Si la contabilidad de caché por suscripción resulta poco fiable en el piloto, plan B:
-  OpenRouter con tope de gasto.
+- **GPT vía `codex exec`** (suscripción), modelo **`gpt-6-luna`** (el ligero de Woolford, más
+  barato; comprobado que el id existe), solo la sonda C y los brazos `summary`, `fresh_lookup` y
+  `hybrid_lookup`: 18 episodios. Limitación declarada: Codex añade su propio prompt de sistema
+  (~17.500 tokens medidos con `--ignore-user-config`, que quita los MCP del usuario), y su JSON no
+  dice qué modelo contesta.
 - Una corrida cada vez, nunca dos en paralelo, lanzada con `exec` (ver README).
 
 ## Qué haría cambiar la conclusión
