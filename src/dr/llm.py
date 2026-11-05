@@ -642,6 +642,16 @@ def entorno_de_suscripcion(**extra: str) -> dict:
     return entorno
 
 
+def _directorio_vacio(nombre: str, tempfile) -> str:
+    """Directorio de trabajo del CLI: fijo y reutilizado. Uno nuevo por instancia
+    dejaba decenas en %TEMP% (cada test que construye un cliente creaba otro). Solo
+    contiene el `system.txt` del cliente de Claude; en una corrida hay un proceso a
+    la vez, asi que no se pisan."""
+    ruta = os.path.join(tempfile.gettempdir(), nombre)
+    os.makedirs(ruta, exist_ok=True)
+    return ruta
+
+
 def _con_segundos(completion: Completion, segundos: float) -> Completion:
     from dataclasses import replace
     return replace(completion, segundos=segundos)
@@ -679,7 +689,7 @@ class ClaudeCliClient:
         self.reintentos = reintentos
         self.provider = "claude-cli"
         self.ejecutable = shutil.which(ejecutable) or ejecutable
-        self._dir = tempfile.mkdtemp(prefix="dr-claude-cli-")
+        self._dir = _directorio_vacio("dr-claude-cli", tempfile)
 
     def _argumentos(self, fichero_system: str) -> list[str]:
         return [self.ejecutable, "-p", "--setting-sources", "", "--strict-mcp-config",
@@ -792,7 +802,7 @@ class CodexCliClient:
         self.esfuerzo = esfuerzo
         self.provider = "codex-cli"
         self.ejecutable = shutil.which(ejecutable) or ejecutable
-        self._dir = tempfile.mkdtemp(prefix="dr-codex-cli-")
+        self._dir = _directorio_vacio("dr-codex-cli", tempfile)
 
     def _argumentos(self) -> list[str]:
         argumentos = [self.ejecutable, "exec", "--skip-git-repo-check", "-s", "read-only",
