@@ -1,0 +1,167 @@
+{
+  "summary:s4:r0": {
+    "aciertos": 1,
+    "dependientes": 1,
+    "metrica": 1.0,
+    "primer_dependiente": "correcta",
+    "correcta": 1,
+    "sorda": 0,
+    "otra": 0,
+    "sin_accion": 1,
+    "score": 0.6206896551724138,
+    "truncadas": 1,
+    "llamadas": 53,
+    "prompt": 124,
+    "cache_read": 132727,
+    "cache_write": 370554,
+    "salida": 23257,
+    "thinking": 16810,
+    "coste_lista_usd": 0.08707897,
+    "segundos_llamadas": 222.99374710011762,
+    "consultas": 0,
+    "pasos_con_consulta": 0,
+    "consultas_portantes": 0,
+    "consultas_tras_aviso": 0,
+    "entrada_efectiva": 476589.2,
+    "paso_aviso": 10,
+    "pasos_dependientes": [
+      11
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "parches_invalidos": 0,
+    "modelos": [
+      "claude-haiku-5-5"
+    ],
+    "segundos": 223.10948869999265,
+    "pasos": 50
+  },
+  "fresh_lookup:s4:r0": {
+    "aciertos": 1,
+    "dependientes": 2,
+    "metrica": 0.5,
+    "primer_dependiente": "sorda",
+    "correcta": 1,
+    "sorda": 1,
+    "otra": 0,
+    "sin_accion": 0,
+    "score": 0.9310344827586207,
+    "truncadas": 0,
+    "llamadas": 60,
+    "prompt": 120,
+    "cache_read": 132278,
+    "cache_write": 352145,
+    "salida": 22676,
+    "thinking": 18880,
+    "coste_lista_usd": 0.08310178,
+    "segundos_llamadas": 223.9855241003097,
+    "consultas": 10,
+    "pasos_con_consulta": 6,
+    "consultas_portantes": 1,
+    "consultas_tras_aviso": 10,
+    "entrada_efectiva": 453529.05,
+    "paso_aviso": 10,
+    "pasos_dependientes": [
+      11,
+      13
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "parches_invalidos": 0,
+    "modelos": [
+      "claude-haiku-5-5"
+    ],
+    "segundos": 224.09536530001787,
+    "pasos": 50
+  },
+  "hybrid_lookup:s4:r0": {
+    "aciertos": 1,
+    "dependientes": 1,
+    "metrica": 1.0,
+    "primer_dependiente": "correcta",
+    "correcta": 1,
+    "sorda": 0,
+    "otra": 0,
+    "sin_accion": 0,
+    "score": 1.0,
+    "truncadas": 0,
+    "llamadas": 50,
+    "prompt": 100,
+    "cache_read": 110789,
+    "cache_write": 451585,
+    "salida": 15027,
+    "thinking": 11368,
+    "coste_lista_usd": 0.09894839,
+    "segundos_llamadas": 164.54365339991637,
+    "consultas": 0,
+    "pasos_con_consulta": 0,
+    "consultas_portantes": 0,
+    "consultas_tras_aviso": 0,
+    "entrada_efectiva": 575660.15,
+    "paso_aviso": 10,
+    "pasos_dependientes": [
+      11
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "parches_invalidos": 0,
+    "modelos": [
+      "claude-haiku-5-5"
+    ],
+    "segundos": 164.64122139994288,
+    "pasos": 50
+  },
+  "summary_lookup:s4:r0": {
+    "aciertos": 1,
+    "dependientes": 1,
+    "metrica": 1.0,
+    "primer_dependiente": "correcta",
+    "correcta": 1,
+    "sorda": 0,
+    "otra": 0,
+    "sin_accion": 0,
+    "score": 1.0,
+    "truncadas": 2,
+    "llamadas": 60,
+    "prompt": 142,
+    "cache_read": 149377,
+    "cache_write": 456894,
+    "salida": 31251,
+    "thinking": 26402,
+    "coste_lista_usd": 0.10851227000000004,
+    "segundos_llamadas": 259.941005599685,
+    "consultas": 7,
+    "pasos_con_consulta": 5,
+    "consultas_portantes": 0,
+    "consultas_tras_aviso": 7,
+    "entrada_efectiva": 586197.2,
+    "paso_aviso": 10,
+    "pasos_dependientes": [
+      11
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "parches_invalidos": 0,
+    "modelos": [
+      "claude-haiku-5-5"
+    ],
+    "segundos": 260.0517641000333,
+    "pasos": 50
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "summary:s4:r0": {
+    "aciertos": 1,
+    "dependientes": 1,
+    "metrica": 1.0,
+    "primer_dependiente": "correcta",
+    "correcta": 1,
+    "sorda": 0,
+    "otra": 0,
+    "sin_accion": 0,
+    "score": 1.0,
+    "truncadas": 0,
+    "llamadas": 53,
+    "prompt": 106,
+    "cache_read": 101102,
+    "cache_write": 357031,
+    "salida": 19821,
+    "thinking": 12634,
+    "coste_lista_usd": 0.08233831999999999,
+    "segundos_llamadas": 192.55500509985723,
+    "consultas": 0,
+    "pasos_con_consulta": 0,
+    "consultas_portantes": 0,
+    "consultas_con_id_del_aviso": 0,
+    "consultas_tras_aviso": 0,
+    "entrada_efectiva": 456504.95,
+    "paso_aviso": 10,
+    "pasos_dependientes": [
+      11
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "resumenes_truncados": 0,
+    "parches_invalidos": 0,
+    "modelos": [
+      "claude-haiku-5-5"
+    ],
+    "segundos": 192.63748320000013,
+    "pasos": 50
+  }
+}
