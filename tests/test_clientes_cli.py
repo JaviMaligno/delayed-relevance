@@ -141,6 +141,27 @@ def test_codex_compone_system_y_user_por_stdin(monkeypatch):
     assert a[a.index("-s") + 1] == "read-only"
 
 
+def test_el_subproceso_no_hereda_claves_de_api(monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-no")
+    monkeypatch.setenv("ANTHROPIC_FOUNDRY_RESOURCE", "r")
+    monkeypatch.setenv("CLAUDE_CODE_USE_FOUNDRY", "1")
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-no")
+    monkeypatch.setenv("CODEX_HOME", "C:/codex")
+    vistos = {}
+
+    def falso(argumentos, entrada, timeout, cwd=None, env=None):
+        vistos.setdefault("envs", []).append(env)
+        return 0, (json.dumps(CLAUDE_OK) if "-p" in argumentos else "\n".join(CODEX_OK)), ""
+
+    monkeypatch.setattr(llm, "ejecutar_cli", falso)
+    ClaudeCliClient().complete("s", "u")
+    CodexCliClient().complete("s", "u")
+    for env in vistos["envs"]:
+        assert not any(k.upper().startswith(("ANTHROPIC_", "OPENAI_", "CLAUDE_CODE_USE"))
+                       for k in env)
+    assert vistos["envs"][1]["CODEX_HOME"] == "C:/codex"
+
+
 def test_build_client_enruta_los_cli():
     assert build_client("claude-haiku-5-5", "claude-cli").provider == "claude-cli"
     assert build_client("gpt-6.1-sol", "codex-cli").provider == "codex-cli"

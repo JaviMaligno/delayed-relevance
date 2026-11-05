@@ -623,6 +623,25 @@ def _con_reintentos(nombre: str, llamada, reintentos: int):
     raise RuntimeError("inalcanzable")
 
 
+_PREFIJOS_FUERA = ("ANTHROPIC_", "CLAUDE", "OPENAI_", "CODEX_")
+
+
+def entorno_de_suscripcion(**extra: str) -> dict:
+    """Entorno del subproceso sin credenciales de API ni ajustes heredados.
+
+    Con `ANTHROPIC_API_KEY` en el entorno (el `.env` del repo la tiene), `claude -p`
+    usaria la clave y cobraria por API en vez de usar la suscripcion; con
+    `ANTHROPIC_FOUNDRY_*` o `CLAUDE_CODE_USE_*` iria a otro proveedor. Tambien se
+    quitan las variables `CLAUDE*` que hereda un proceso lanzado desde una sesion de
+    Claude Code (esfuerzo, thinking adaptativo): cambiarian la condicion medida segun
+    desde donde se lance la corrida. Lo mismo para `OPENAI_*` y `CODEX_*` con codex."""
+    # `CODEX_HOME` se conserva: es donde codex guarda el login.
+    entorno = {k: v for k, v in os.environ.items()
+               if not k.upper().startswith(_PREFIJOS_FUERA) or k.upper() == "CODEX_HOME"}
+    entorno.update(extra)
+    return entorno
+
+
 def _con_segundos(completion: Completion, segundos: float) -> Completion:
     from dataclasses import replace
     return replace(completion, segundos=segundos)
@@ -677,8 +696,8 @@ class ClaudeCliClient:
         fichero = os.path.join(self._dir, "system.txt")
         with open(fichero, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(system)
-        entorno = {**os.environ,
-                   "CLAUDE_CODE_MAX_OUTPUT_TOKENS": str(max_tokens or self.max_tokens)}
+        entorno = entorno_de_suscripcion(
+            CLAUDE_CODE_MAX_OUTPUT_TOKENS=str(max_tokens or self.max_tokens))
         inicio = time.monotonic()
 
         def llamada() -> Completion:
@@ -807,7 +826,7 @@ class CodexCliClient:
 
         def llamada() -> Completion:
             codigo, salida, error = ejecutar_cli(self._argumentos(), prompt, self.timeout,
-                                                 cwd=self._dir)
+                                                 cwd=self._dir, env=entorno_de_suscripcion())
             return self._leer(salida.splitlines(), self.model, codigo, error)
 
         completion = _con_reintentos("codex exec", llamada, self.reintentos)
