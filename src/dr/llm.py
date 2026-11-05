@@ -38,6 +38,14 @@ class Completion:
 
     Se pide un ID que puede ser un alias o un preview, y el que responde puede no ser
     el que el paper evaluo. Registrarlo es lo que permite declararlo despues."""
+    cost_usd: float = 0.0
+    """Coste a precio de lista que declara el proveedor, si lo declara (`claude -p`).
+
+    Con suscripcion no se paga por llamada, pero el precio de lista es la unica forma
+    de comparar el coste de los brazos con lo medido por API. Cero si no se conoce."""
+    segundos: float = 0.0
+    """Duracion de pared de la llamada, reintentos incluidos. Solo la rellenan los
+    clientes de CLI: alli la latencia por llamada decide si una rejilla cabe en un dia."""
 
 
 @dataclass
@@ -544,11 +552,319 @@ def es_desbordamiento_de_contexto(error: Exception) -> bool:
     return "http 400" in mensaje and "token" in mensaje
 
 
+CLI_TIMEOUT = 300
+"""Segundos por llamada a un CLI. Una respuesta de decision tarda de 3 a 15 s; un
+proceso colgado no puede bloquear la rejilla para siempre."""
+CLI_REINTENTOS = 5
+
+
+class ErrorDeCli(RuntimeError):
+    """Fallo de un CLI que puede ser transitorio y se reintenta."""
+
+
+class SinLogin(RuntimeError):
+    """El CLI no tiene sesion. No se arregla esperando: hay que hacer login."""
+
+
+_MARCAS_SIN_LOGIN = ("not logged in", "please run /login", "invalid api key",
+                     "codex login", "authentication required", "oauth token has expired",
+                     "please log in", "401 unauthorized")
+
+
+def _es_sin_login(texto: str) -> bool:
+    texto = texto.lower()
+    return any(marca in texto for marca in _MARCAS_SIN_LOGIN)
+
+
+def _matar_arbol(proceso: subprocess.Popen) -> None:
+    """En Windows `kill()` solo mata al hijo directo; con un shim `.cmd` (codex) el
+    `node` nieto seguiria vivo gastando cuota. `taskkill /T` se lleva el arbol."""
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proceso.pid)],
+                       capture_output=True)
+    else:
+        proceso.kill()
+
+
+def ejecutar_cli(argumentos: list[str], entrada: str, timeout: float,
+                 cwd: str | None = None, env: dict | None = None) -> tuple[int, str, str]:
+    """Lanza un CLI con el prompt por stdin y devuelve (codigo, stdout, stderr).
+
+    El prompt va SIEMPRE por stdin: en Windows un argumento con saltos de linea o de
+    mas de ~32 KB se corta en silencio, y el modelo veria medio prompt sin que nada
+    falle. Aislado en una funcion para sustituirlo en los tests."""
+    proceso = subprocess.Popen(argumentos, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, cwd=cwd, env=env)
+    try:
+        salida, error = proceso.communicate(entrada.encode("utf-8"), timeout=timeout)
+    except subprocess.TimeoutExpired:
+        _matar_arbol(proceso)
+        proceso.communicate()
+        raise ErrorDeCli(f"{argumentos[0]} no respondio en {timeout:.0f} s")
+    return (proceso.returncode, salida.decode("utf-8", errors="replace"),
+            error.decode("utf-8", errors="replace"))
+
+
+def _con_reintentos(nombre: str, llamada, reintentos: int):
+    """Reintenta los fallos transitorios del CLI con espera creciente. La falta de
+    login no se reintenta: una rejilla que reintenta sin sesion parece viva y no lo
+    esta."""
+    espera = 5.0
+    for intento in range(reintentos):
+        try:
+            return llamada()
+        except ErrorDeCli as error:
+            if intento == reintentos - 1:
+                raise
+            print(f"  [{nombre}: reintento {intento + 1}/{reintentos - 1}] "
+                  f"{str(error)[:200]}, esperando {espera:.0f}s", flush=True)
+            time.sleep(espera)
+            espera = min(espera * 2, 120.0)
+    raise RuntimeError("inalcanzable")
+
+
+def _con_segundos(completion: Completion, segundos: float) -> Completion:
+    from dataclasses import replace
+    return replace(completion, segundos=segundos)
+
+
+class ClaudeCliClient:
+    """Claude por la suscripcion, a traves de `claude -p`. Sin clave de API.
+
+    Las banderas dejan el arnes casi vacio (medido el 5-nov-2026: ~776 tokens propios):
+    sin ajustes de usuario ni de proyecto, sin MCP, sin skills, sin herramientas y sin
+    guardar la sesion. `--bare` no sirve porque no usa el login de la suscripcion.
+
+    El system prompt va en un fichero temporal con `--system-prompt-file`: el spec del
+    Warehouse tiene saltos de linea, y como argumento en Windows se cortaria. El prompt
+    de usuario (prefijo + user) va por stdin como UN solo mensaje: el CLI no deja
+    marcar puntos de corte de cache dentro de el. Si eso impide cachear la historia
+    acumulada, se mide en el piloto, no se arregla con trucos.
+
+    El tope de salida se pasa con `CLAUDE_CODE_MAX_OUTPUT_TOKENS`. Al alcanzarlo, el
+    CLI no devuelve el texto parcial sino un error; se cuenta como respuesta truncada
+    y vacia, que es lo que el runner ve como paso sin accion.
+
+    Se ejecuta desde un directorio temporal vacio para que ningun CLAUDE.md del
+    directorio de trabajo entre en el contexto.
+    """
+
+    def __init__(self, model: str = "claude-haiku-5-5", max_tokens: int = 8192,
+                 timeout: float = CLI_TIMEOUT, reintentos: int = CLI_REINTENTOS,
+                 ejecutable: str = "claude") -> None:
+        import shutil
+        import tempfile
+        self.model = model
+        self.max_tokens = max_tokens
+        self.timeout = timeout
+        self.reintentos = reintentos
+        self.provider = "claude-cli"
+        self.ejecutable = shutil.which(ejecutable) or ejecutable
+        self._dir = tempfile.mkdtemp(prefix="dr-claude-cli-")
+
+    def _argumentos(self, fichero_system: str) -> list[str]:
+        return [self.ejecutable, "-p", "--setting-sources", "", "--strict-mcp-config",
+                "--disable-slash-commands", "--tools", "", "--no-session-persistence",
+                "--output-format", "json", "--model", self.model,
+                "--system-prompt-file", fichero_system]
+
+    def complete(self, system: str, user: str, max_tokens: int | None = None,
+                 cache_prefix: str | list[str] | None = None) -> Completion:
+        if isinstance(cache_prefix, list):
+            prefijo = "".join(cache_prefix)
+        else:
+            prefijo = cache_prefix or ""
+        fichero = os.path.join(self._dir, "system.txt")
+        with open(fichero, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(system)
+        entorno = {**os.environ,
+                   "CLAUDE_CODE_MAX_OUTPUT_TOKENS": str(max_tokens or self.max_tokens)}
+        inicio = time.monotonic()
+
+        def llamada() -> Completion:
+            codigo, salida, error = ejecutar_cli(self._argumentos(fichero), prefijo + user,
+                                                 self.timeout, cwd=self._dir, env=entorno)
+            return self._leer_salida(codigo, salida, error)
+
+        completion = _con_reintentos("claude -p", llamada, self.reintentos)
+        return _con_segundos(completion, time.monotonic() - inicio)
+
+    @staticmethod
+    def _leer_salida(codigo: int, salida: str, error: str) -> Completion:
+        try:
+            datos = json.loads(salida)
+        except json.JSONDecodeError:
+            if _es_sin_login(salida) or _es_sin_login(error):
+                raise SinLogin("claude -p no tiene sesion: ejecuta `claude` y haz /login "
+                               f"({(error or salida).strip()[:200]})")
+            raise ErrorDeCli(f"claude -p salio con {codigo} sin JSON: "
+                             f"{(error or salida).strip()[:300]}")
+        if datos.get("is_error") and _es_sin_login(str(datos.get("result", ""))):
+            raise SinLogin("claude -p no tiene sesion: ejecuta `claude` y haz /login "
+                           f"({str(datos.get('result'))[:200]})")
+        return ClaudeCliClient._leer(datos)
+
+    @staticmethod
+    def _leer(datos: dict) -> Completion:
+        """JSON de `claude -p --output-format json` -> Completion, con la semantica de la
+        API: `input_tokens` es la entrada NO cacheada y la cache va aparte."""
+        uso = datos.get("usage") or {}
+        texto = datos.get("result") or ""
+        truncada = datos.get("stop_reason") == "max_tokens"
+        if datos.get("is_error"):
+            if "output token maximum" in texto:
+                # El CLI no entrega el texto parcial: el paso queda sin accion, que es
+                # lo mismo que veria el runner con una respuesta cortada antes de
+                # `Action:`. Se marca truncada para poder separarlo en el informe.
+                texto, truncada = "", True
+            else:
+                raise ErrorDeCli(f"claude -p devolvio error: {texto[:300]}")
+        modelos = datos.get("modelUsage") or {}
+        modelo = next((m.get("canonicalModel") or nombre for nombre, m in modelos.items()), "")
+        detalles = uso.get("output_tokens_details") or {}
+        return Completion(
+            text=texto,
+            prompt_tokens=uso.get("input_tokens", 0) or 0,
+            output_tokens=uso.get("output_tokens", 0) or 0,
+            cache_read=uso.get("cache_read_input_tokens", 0) or 0,
+            cache_write=uso.get("cache_creation_input_tokens", 0) or 0,
+            truncated=truncada,
+            thinking_tokens=detalles.get("thinking_tokens", 0) or 0,
+            model_version=modelo,
+            cost_usd=float(datos.get("total_cost_usd") or 0.0),
+        )
+
+
+CODEX_MODELO = "gpt-6.1-sol"
+"""El modelo del `config.toml` del usuario. Hay que pedirlo explicito porque el
+cliente ignora ese fichero (ver `CodexCliClient`)."""
+
+
+class CodexCliClient:
+    """GPT por la suscripcion de ChatGPT, a traves de `codex exec`. Sin clave de API.
+
+    `codex exec` es un agente, no una API de completions: no tiene system prompt
+    separado ni tope de salida. El system y el user van concatenados por stdin con
+    marcadores, y la respuesta es el ultimo `agent_message`. Codex anade su propio
+    prompt de sistema (~18k tokens medidos); es una limitacion declarada del diseno.
+
+    `--ignore-user-config` quita los MCP y plugins del usuario. `-c mcp_servers={}` NO
+    bastaba (medido el 5-nov-2026: seguian arrancando servidores MCP, 21.040 tokens de
+    entrada y errores de OAuth en stderr; con `--ignore-user-config`, 18.235 y sin
+    errores). Al ignorar la config tambien se pierde el modelo por defecto, asi que se
+    pide explicito con `-m`.
+
+    El JSON no declara que modelo contesto: `model_version` lleva el pedido, marcado
+    como tal para que nadie lo lea como confirmado.
+
+    Se ejecuta desde un directorio temporal vacio y con sandbox de solo lectura: el
+    agente no tiene nada que leer ni puede escribir.
+    """
+
+    def __init__(self, model: str = CODEX_MODELO, max_tokens: int = 8192,
+                 timeout: float = CLI_TIMEOUT, reintentos: int = CLI_REINTENTOS,
+                 esfuerzo: str | None = None, ejecutable: str = "codex") -> None:
+        import shutil
+        import tempfile
+        self.model = model
+        self.max_tokens = max_tokens  # sin efecto: codex exec no tiene tope de salida
+        self.timeout = timeout
+        self.reintentos = reintentos
+        self.esfuerzo = esfuerzo
+        self.provider = "codex-cli"
+        self.ejecutable = shutil.which(ejecutable) or ejecutable
+        self._dir = tempfile.mkdtemp(prefix="dr-codex-cli-")
+
+    def _argumentos(self) -> list[str]:
+        argumentos = [self.ejecutable, "exec", "--skip-git-repo-check", "-s", "read-only",
+                      "--json", "--ephemeral", "--ignore-user-config", "--ignore-rules",
+                      "-m", self.model]
+        if self.esfuerzo:
+            argumentos += ["-c", f"model_reasoning_effort={self.esfuerzo}"]
+        return argumentos + ["-"]
+
+    @staticmethod
+    def componer(system: str, user: str) -> str:
+        """Sin canal de sistema, los dos textos van en uno con marcadores que no pueden
+        confundirse con un evento del entorno."""
+        return ("You are answering a single request. Reply with text only; do not run "
+                "commands or use tools.\n\n"
+                "===== BEGIN SYSTEM INSTRUCTIONS =====\n"
+                f"{system}\n"
+                "===== END SYSTEM INSTRUCTIONS =====\n\n"
+                "===== BEGIN USER MESSAGE =====\n"
+                f"{user}\n"
+                "===== END USER MESSAGE =====\n")
+
+    def complete(self, system: str, user: str, max_tokens: int | None = None,
+                 cache_prefix: str | list[str] | None = None) -> Completion:
+        if isinstance(cache_prefix, list):
+            prefijo = "".join(cache_prefix)
+        else:
+            prefijo = cache_prefix or ""
+        prompt = self.componer(system, prefijo + user)
+        inicio = time.monotonic()
+
+        def llamada() -> Completion:
+            codigo, salida, error = ejecutar_cli(self._argumentos(), prompt, self.timeout,
+                                                 cwd=self._dir)
+            return self._leer(salida.splitlines(), self.model, codigo, error)
+
+        completion = _con_reintentos("codex exec", llamada, self.reintentos)
+        return _con_segundos(completion, time.monotonic() - inicio)
+
+    @staticmethod
+    def _leer(lineas: list[str], modelo: str, codigo: int = 0, error: str = "") -> Completion:
+        """JSONL de `codex exec --json` -> Completion.
+
+        `input_tokens` de OpenAI INCLUYE los cacheados; se normaliza a la semantica de
+        Anthropic (entrada no cacheada aparte), como en Gemini, para que
+        `coste_efectivo` no cuente la cache dos veces. Se asume, como en la API de
+        OpenAI, que `output_tokens` ya incluye el razonamiento; va ademas aparte."""
+        texto, uso, fallo = None, None, None
+        for linea in lineas:
+            linea = linea.strip()
+            if not linea.startswith("{"):
+                continue
+            try:
+                evento = json.loads(linea)
+            except json.JSONDecodeError:
+                continue
+            tipo = evento.get("type")
+            item = evento.get("item") or {}
+            if tipo == "item.completed" and item.get("type") == "agent_message":
+                texto = item.get("text", "")
+            elif tipo == "turn.completed":
+                uso = evento.get("usage") or {}
+            elif tipo in ("turn.failed", "error"):
+                fallo = json.dumps(evento)[:300]
+        if fallo is not None or uso is None:
+            detalle = fallo or error.strip()[-300:]
+            if _es_sin_login(detalle):
+                raise SinLogin(f"codex no tiene sesion: ejecuta `codex login` ({detalle})")
+            raise ErrorDeCli(f"codex exec sin turno completo (codigo {codigo}): {detalle}")
+        cacheados = uso.get("cached_input_tokens", 0) or 0
+        return Completion(
+            text=texto or "",
+            prompt_tokens=(uso.get("input_tokens", 0) or 0) - cacheados,
+            output_tokens=uso.get("output_tokens", 0) or 0,
+            cache_read=cacheados,
+            cache_write=uso.get("cache_write_input_tokens", 0) or 0,
+            thinking_tokens=uso.get("reasoning_output_tokens", 0) or 0,
+            model_version=f"pedido:{modelo}",
+        )
+
+
 def build_client(model: str, provider: str = "auto", max_tokens: int = 2048,
                  thinking_budget: int | None = None):
     """Un solo punto donde se decide el cliente, para que los corredores no tengan
     que saber de proveedores. El nombre del modelo basta: `gemini-*` va a Gemini y
-    todo lo demas a Anthropic, salvo que se fuerce `--provider`."""
+    todo lo demas a Anthropic, salvo que se fuerce `--provider`. Los CLIs por
+    suscripcion (`claude-cli`, `codex-cli`) solo se usan si se piden."""
+    if provider == "claude-cli":
+        return ClaudeCliClient(model=model, max_tokens=max_tokens)
+    if provider == "codex-cli":
+        return CodexCliClient(model=model, max_tokens=max_tokens)
     if provider == "vertex":
         return GeminiClient(model=model, max_tokens=max_tokens,
                             thinking_budget=thinking_budget, backend="vertex")
