@@ -15,6 +15,19 @@ de Memory del paper ronda los 6.400 tokens a T=25, asi que sus resumenes tampoco
 son cortos."""
 
 
+# Sin nombrar el dominio: el runtime no lo conoce, y los proximos entornos (Software
+# Repository, tau-Bench) no son un almacen. Constante de modulo para que los brazos de
+# compactacion (`compaction.py`) resuman con EXACTAMENTE el mismo prompt.
+PROMPT_RESUMEN = (
+    "Summarise the execution so far for an operator who must keep acting and "
+    "will no longer see the raw history. Preserve every fact that a later "
+    "decision could depend on, especially the current value of anything you "
+    "or the environment changed, and anything that was undone. Drop "
+    "decorative metadata. Be factual, not narrative. "
+    "Stay under 400 words so your summary is never cut off."
+)
+
+
 class MemoryRuntime:
     """Resumen acumulado en lenguaje natural mas una ventana de 3 pasos."""
 
@@ -46,16 +59,7 @@ class MemoryRuntime:
         if not dropped:
             return []
         summary_completion = self.client.complete(
-            # Sin nombrar el dominio: el runtime no lo conoce, y los proximos entornos
-            # (Software Repository, tau-Bench) no son un almacen.
-            system=(
-                "Summarise the execution so far for an operator who must keep acting and "
-                "will no longer see the raw history. Preserve every fact that a later "
-                "decision could depend on, especially the current value of anything you "
-                "or the environment changed, and anything that was undone. Drop "
-                "decorative metadata. Be factual, not narrative. "
-                "Stay under 400 words so your summary is never cut off."
-            ),
+            system=PROMPT_RESUMEN,
             user=f"Previous summary:\n{self.summary}\n\nNewly dropped turns:\n" + "\n".join(dropped),
             max_tokens=self.summary_max_tokens,
         )
