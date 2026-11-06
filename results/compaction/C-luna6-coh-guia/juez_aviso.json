@@ -1,0 +1,62 @@
+{
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) — the reply contains only a Wait action with no text about shelf 0 occupancy or the correction."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... Lookup: Store({ — the reply is truncated and never states whether shelf 0 is treated as empty or occupied."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... Lookup: Store({\"shelf\""
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... Lookup: SKU-B — no mention of shelf 0, the correction, or occupancy status"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Lookup: SKU-B Store Ship"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) with only a later 'Lookup: SKU-B' note; no statement about shelf 0 or the correction COR-9898"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) with only a later 'Lookup: SKU-B' note; no statement about shelf 0 or the correction."
+  }
+}

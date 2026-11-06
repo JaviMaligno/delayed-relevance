@@ -1,0 +1,92 @@
+{
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... Lookup: Store("
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... Lookup: Store("
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) ... [summary] Lookup: SKU-B Store"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) with only a later 'Lookup: SKU-B' in the history summary; no statement about shelf 0 or the correction."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) — the reply contains only a Wait action with no text indicating whether shelf 0 is now treated as empty or occupied."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({}) — the reply contains only a Wait action with no statement about shelf 0 occupancy or the correction."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s10_r0.jsonl": {
+    "clave": "summary:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 supersedes step 8: PAL-6823 (SKU-D, 10 units, lot L-2142) was never put away. Shelf 0 is confirmed empty, and the stock was removed."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s10_r1.jsonl": {
+    "clave": "summary:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0: SKU-D is empty. The correction notice supersedes the earlier putaway record and confirms the 10 units were removed because putaway never completed."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s17_r0.jsonl": {
+    "clave": "summary:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Step 14's confirmed correction supersedes that record: putaway never completed, the shelf is empty, and the stock was removed."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s17_r1.jsonl": {
+    "clave": "summary:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "correction COR-3619 confirms that putaway never completed and shelf 0 is empty. That stock was removed from the recorded state."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s6_r0.jsonl": {
+    "clave": "summary:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "SKU-D's 15 units were initially recorded on shelf 0, but a confirmed correction says putaway never completed and the shelf is now empty. Treat that stock as removed."
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_summary_s6_r1.jsonl": {
+    "clave": "summary:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "A correction notice superseded the SKU-D receipt at step 4: its putaway never completed, the shelf is now empty, and 15 units were removed. No SKU-D stock remains from that receipt."
+  }
+}

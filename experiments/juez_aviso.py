@@ -41,16 +41,25 @@ def casos(directorio: Path):
                       r"_s(\d+)_r(\d+)\.jsonl$", f.name)
         if not m:
             continue
-        for linea in open(f, encoding="utf-8"):
-            p = json.loads(linea)
+        filas = [json.loads(linea) for linea in open(f, encoding="utf-8")]
+        for i, p in enumerate(filas):
             obs = p.get("observation") or ""
             if obs.startswith("EVENT correction_notice"):
+                # Luna solo contesta `Action: ...`, pero el resumen de compactacion que
+                # escribe en el paso siguiente es texto visible y dice si da el aviso por
+                # bueno. Va al juez como parte del registro del agente.
+                siguiente = filas[i + 1] if i + 1 < len(filas) else {}
+                otras = (siguiente.get("raw") or {}).get("respuestas") or []
+                resumen = otras[0] if siguiente.get("compactado") and len(otras) > 1 else ""
                 resp = ((p.get("raw") or {}).get("respuestas") or [""])[-1]
                 # Codex no escribe razonamiento visible; su resumen va aparte. Se le pasa
                 # al juez como parte de la respuesta, sin decirle de que modelo viene.
                 razon = ((p.get("razonamiento") or [""]) or [""])[-1]
                 if razon:
                     resp = f"[internal reasoning summary]\n{razon}\n\n[visible reply]\n{resp}"
+                if resumen:
+                    resp += ("\n\n[summary of its own history the agent wrote at the next "
+                             f"step]\n{resumen}")
                 yield f.name, f"{m.group(1)}:s{m.group(2)}:r{m.group(3)}", obs.split("\n")[0], resp
                 break
 

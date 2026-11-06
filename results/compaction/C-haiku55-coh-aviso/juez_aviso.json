@@ -1,0 +1,182 @@
+{
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 clears shelf 0, which now holds nothing."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty and shelf 1 is empty, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Per it, shelf 0 is empty, and all shelves are empty after the step 9, 10 and 12 shipments."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty, and no pallets remain in stock."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so the warehouse now holds shelves 1 through 6."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty (PAL-8850 was never put away). The correction is authoritative"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice says shelf 0 is empty, so occupancy is now: 0 empty, 1 empty, 2 holding SKU-A."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 empties shelf 0 (SKU-D removed)."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice says shelf 0 is empty and its stock was removed, so the warehouse is now empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "shelf 0 is empty and PAL-7271 was never put away. The warehouse is empty"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so SKU-D is no longer stored there."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so the warehouse is consistent with my records. Correction notices need no action."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s10_r0.jsonl": {
+    "clave": "react:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 says shelf 0 is empty, so occupancy is now shelf 2 (SKU-A) only."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s10_r1.jsonl": {
+    "clave": "react:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 empties shelf 0 (SKU-D never completed). Current occupancy: shelves 0 and 1 empty, shelf 2 holds SKU-A."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s17_r0.jsonl": {
+    "clave": "react:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty per the correction, so the warehouse is empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s17_r1.jsonl": {
+    "clave": "react:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice needs no action, and it leaves every shelf empty, so I'm waiting."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s6_r0.jsonl": {
+    "clave": "react:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice shows shelf 0 is empty, so the warehouse now reflects that."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_react_s6_r1.jsonl": {
+    "clave": "react:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so the step-4 put-away never completed."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s10_r0.jsonl": {
+    "clave": "skillstate:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice is authoritative... shelf 0 is empty. I remove that entry from the occupancy map. state_patch: {\"shelf_contents\": {\"0\": null}}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s10_r1.jsonl": {
+    "clave": "skillstate:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 (SKU-D, L-2142) was never put away and is now empty, so I'm removing it from the occupancy map. state_patch: {\"shelf_contents\": {\"0\": null}}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s17_r0.jsonl": {
+    "clave": "skillstate:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "I'll clear shelf 0 in the state. ... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s17_r1.jsonl": {
+    "clave": "skillstate:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is empty, so I remove its entry. ... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s6_r0.jsonl": {
+    "clave": "skillstate:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "I'll remove shelf 0 from the occupancy map. ... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_skillstate_s6_r1.jsonl": {
+    "clave": "skillstate:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "I'll delete shelf 0 from the state. ... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s10_r0.jsonl": {
+    "clave": "summary_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice says shelf 0 is empty, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s10_r1.jsonl": {
+    "clave": "summary_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 is authoritative: shelf 0 is empty, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s17_r0.jsonl": {
+    "clave": "summary_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "All shelves are now empty, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s17_r1.jsonl": {
+    "clave": "summary_lookup:s17:r1",
+    "verdict": "REJECTED",
+    "evidence": "\"the warehouse state is unchanged from my records. A correction notice needs no action of its own.\""
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s6_r0.jsonl": {
+    "clave": "summary_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so the event needs no action."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_lookup_s6_r1.jsonl": {
+    "clave": "summary_lookup:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice makes shelf 0 empty, which matters for future put-aways."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s10_r0.jsonl": {
+    "clave": "summary:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 empties shelf 0 (SKU-D), so shelf 2 (SKU-A) is the only occupied shelf."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s10_r1.jsonl": {
+    "clave": "summary:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 is authoritative: shelf 0 (SKU-D) is empty. Shelves 0 and 1 are empty, and shelf 2 holds SKU-A."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s17_r0.jsonl": {
+    "clave": "summary:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-3619 says PAL-7271 was never put away, so shelf 0 is empty. All shelves are now empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s17_r1.jsonl": {
+    "clave": "summary:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-3619 supersedes step 13: shelf 0 is empty and PAL-7271 is not in stock. Shelves 0, 1 and 2 are all empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s6_r0.jsonl": {
+    "clave": "summary:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now the lowest empty shelf for the next put-away."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_aviso_summary_s6_r1.jsonl": {
+    "clave": "summary:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so occupancy is now 1=SKU-B, 2=SKU-H, 3=SKU-B, 4=SKU-A, 5=SKU-C, 6=SKU-J."
+  }
+}

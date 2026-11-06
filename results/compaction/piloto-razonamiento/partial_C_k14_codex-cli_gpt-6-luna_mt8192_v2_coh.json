@@ -1,0 +1,50 @@
+{
+  "summary:s17:r0": {
+    "aciertos": 1,
+    "dependientes": 1,
+    "metrica": 1.0,
+    "primer_dependiente": "correcta",
+    "correcta": 1,
+    "sorda": 0,
+    "otra": 0,
+    "sin_accion": 0,
+    "score": 0.7,
+    "truncadas": 0,
+    "llamadas": 53,
+    "prompt": 333054,
+    "cache_read": 813440,
+    "cache_write": 0,
+    "salida": 3038,
+    "thinking": 1326,
+    "coste_lista_usd": 0.0,
+    "segundos_llamadas": 393.3385028000048,
+    "consultas": 0,
+    "pasos_con_consulta": 0,
+    "consultas_portantes": 0,
+    "consultas_con_id_del_aviso": 0,
+    "consultas_tras_aviso": 0,
+    "cache_ideal_estimada": 863080,
+    "entrada_efectiva_estimada": 440575.49999999994,
+    "salida_max_llamada": 459,
+    "entrada_efectiva": 414398.0,
+    "paso_aviso": 14,
+    "pasos_dependientes": [
+      15
+    ],
+    "compactaciones": [
+      15,
+      30,
+      45
+    ],
+    "sin_accion_tras_consultas": 0,
+    "resumenes_truncados": 0,
+    "truncadas_decision": 0,
+    "textos_consulta": [],
+    "parches_invalidos": 0,
+    "modelos": [
+      "pedido:gpt-6-luna"
+    ],
+    "segundos": 393.4664858999895,
+    "pasos": 50
+  }
+}

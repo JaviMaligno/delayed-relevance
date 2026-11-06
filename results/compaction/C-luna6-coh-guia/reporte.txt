@@ -1,0 +1,19 @@
+
+partial_C_k14_codex-cli_gpt-6-luna_mt8192_v2_coh_guia.json  (sonda C)
+
+brazo           eps          metrica (IC95 Wilson)               1er dep.  score  consulta  portantes sin acc. trunc. USD lista/ep entr. ESTIM./ep cache_read/ep   s/ep s/llamada
+fresh_lookup      6       3/16  18.8% [ 6.6- 43.0] 2/5  40.0% [11.8- 76.9]  0.700     19.0%    7/74           0      0       0.0000          434464       1128619    445       7.1
+hybrid_lookup     6        5/6  83.3% [43.6- 97.0] 5/6  83.3% [43.6- 97.0]  0.774     11.0%    6/35           0      0       0.0000          358028        935744    424       7.6
+
+consultas que solo traian el id del aviso (en una linea del agente) y resumenes truncados:
+  fresh_lookup    con_id=7 resumenes_truncados=0
+  hybrid_lookup   con_id=6 resumenes_truncados=0
+
+forma de las consultas (palabras por consulta; con identificador = numero de estanteria, SKU o notice_id):
+  fresh_lookup    n=74 palabras={1: 57, 2: 11, 3: 3, 4: 3} con identificador=43/74 (58%)
+  hybrid_lookup   n=35 palabras={1: 33, 2: 2} con identificador=33/35 (94%)
+
+modelos que contestaron: ['pedido:gpt-6-luna']
+consulta = pasos con al menos un Lookup; portantes = consultas cuya respuesta traia la observacion del aviso.
+USD lista = coste a precio de lista MEDIDO por el CLI (sin cachear la historia: claude -p manda un solo bloque).
+entr. ESTIM. = ESTIMACION de tokens de entrada equivalentes con cache de prefijo ideal (comun con la llamada anterior a 0,1x, resto a 1,25x); no es una medida.

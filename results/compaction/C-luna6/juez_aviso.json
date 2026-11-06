@@ -12,22 +12,22 @@
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s17_r0.jsonl": {
     "clave": "fresh_lookup:s17:r0",
     "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "evidence": "Action: Wait({}) ... Lookup: EVENT — the reply contains no statement about shelf occupancy or the correction."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s17_r1.jsonl": {
     "clave": "fresh_lookup:s17:r1",
     "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "evidence": "Action: Wait({}) ... Lookup: Store( — the reply is truncated and never states whether shelf 0 is treated as empty or occupied."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s6_r0.jsonl": {
     "clave": "fresh_lookup:s6:r0",
     "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "evidence": "Action: Wait({}) ... Lookup: sku=SKU-B"
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s6_r1.jsonl": {
     "clave": "fresh_lookup:s6:r1",
     "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "evidence": "Action: Wait({}) ... Lookup: sku=SKU-B"
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s10_r0.jsonl": {
     "clave": "hybrid_lookup:s10:r0",
@@ -61,32 +61,32 @@
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s10_r0.jsonl": {
     "clave": "summary:s10:r0",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "The correction is confirmed and supersedes the earlier record: putaway never completed, the shelf is empty, and the stock was removed."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s10_r1.jsonl": {
     "clave": "summary:s10:r1",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "the correction notice confirms step 0's putaway never completed. Shelf 0 is empty and the 2 units of SKU-J from lot L-8906 were removed; this supersedes the earlier storage record."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s17_r0.jsonl": {
     "clave": "summary:s17:r0",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "a confirmed correction notice said putaway never completed and the shelf is now empty. Treat those units as removed; the correction supersedes the original receipt."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s17_r1.jsonl": {
     "clave": "summary:s17:r1",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "A later confirmed correction (step 14) says that putaway never completed and shelf 0 is now empty; that stock was removed. Treat the earlier storage record as superseded."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s6_r0.jsonl": {
     "clave": "summary:s6:r0",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "A later confirmed correction (step 14) says this putaway never completed and shelf 0 is now empty; the stock was removed, and the notice supersedes step 0."
   },
   "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s6_r1.jsonl": {
     "clave": "summary:s6:r1",
-    "verdict": "UNCLEAR",
-    "evidence": "Action: Wait({})"
+    "verdict": "ACCEPTED",
+    "evidence": "A later confirmed correction notice (step 14) says putaway never completed, shelf 0 is now empty, and that stock was removed. Treat that receipt as unavailable."
   }
 }

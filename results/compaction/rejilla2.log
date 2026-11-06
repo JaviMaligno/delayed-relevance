@@ -1,0 +1,759 @@
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+summary:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 198s modelos=['claude-haiku-5-5']
+summary:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 202s modelos=['claude-haiku-5-5']
+summary:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 226s modelos=['claude-haiku-5-5']
+summary:s6:r1 metrica=1/1 score=0.97 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 228s modelos=['claude-haiku-5-5']
+summary:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 227s modelos=['claude-haiku-5-5']
+summary:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 232s modelos=['claude-haiku-5-5']
+fresh_lookup:s17:r0 metrica=0/14 score=0.53 consultas=7 portantes=0 sin_accion=0 truncadas=0 llamadas=57 218s modelos=['claude-haiku-5-5']
+fresh_lookup:s17:r1 metrica=1/1 score=0.97 consultas=10 portantes=0 sin_accion=0 truncadas=0 llamadas=60 242s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r0 metrica=1/1 score=1.00 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=55 221s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r1 metrica=1/2 score=0.94 consultas=7 portantes=1 sin_accion=0 truncadas=0 llamadas=57 242s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r0 metrica=0/6 score=0.78 consultas=6 portantes=0 sin_accion=0 truncadas=0 llamadas=56 222s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r1 metrica=0/6 score=0.57 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=55 213s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 155s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r1 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 164s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 173s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 174s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 169s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 179s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 193s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r1 metrica=1/1 score=1.00 consultas=2 portantes=0 sin_accion=0 truncadas=0 llamadas=55 201s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r0 metrica=0/12 score=0.66 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 205s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r1 metrica=1/1 score=0.97 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=54 221s modelos=['claude-haiku-5-5']
+summary_lookup:s10:r0 metrica=1/1 score=0.84 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=58 247s modelos=['claude-haiku-5-5']
+summary_lookup:s10:r1 metrica=1/1 score=0.78 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=54 264s modelos=['claude-haiku-5-5']
+react:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 211s modelos=['claude-haiku-5-5']
+react:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 213s modelos=['claude-haiku-5-5']
+=== relanzada Fri Nov  6 13:42:07 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 26 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 244s modelos=['claude-haiku-5-5']
+react:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 230s modelos=['claude-haiku-5-5']
+react:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 236s modelos=['claude-haiku-5-5']
+react:s10:r1 metrica=1/2 score=0.97 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 308s modelos=['claude-haiku-5-5']
+skillstate:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 189s modelos=['claude-haiku-5-5']
+skillstate:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 210s modelos=['claude-haiku-5-5']
+skillstate:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 221s modelos=['claude-haiku-5-5']
+skillstate:s6:r1 metrica=0/12 score=0.66 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 208s modelos=['claude-haiku-5-5']
+skillstate:s10:r0 metrica=1/1 score=0.97 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 213s modelos=['claude-haiku-5-5']
+skillstate:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 220s modelos=['claude-haiku-5-5']
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+fresh_lookup:s17:r0 metrica=1/1 score=0.73 consultas=6 portantes=0 sin_accion=0 truncadas=0 llamadas=56 246s modelos=['claude-haiku-5-5']
+fresh_lookup:s17:r1 metrica=0/14 score=0.53 consultas=9 portantes=0 sin_accion=0 truncadas=0 llamadas=59 244s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r0 metrica=1/2 score=0.86 consultas=13 portantes=2 sin_accion=0 truncadas=0 llamadas=63 308s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r1 metrica=1/1 score=0.97 consultas=9 portantes=1 sin_accion=0 truncadas=0 llamadas=59 278s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r0 metrica=0/6 score=0.84 consultas=10 portantes=1 sin_accion=0 truncadas=0 llamadas=60 274s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r1 metrica=0/6 score=0.78 consultas=7 portantes=0 sin_accion=0 truncadas=0 llamadas=57 255s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r0 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 199s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 165s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 199s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 210s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r0 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 263s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r1 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 224s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r0 metrica=1/1 score=1.00 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 213s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r1 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=54 215s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r0 metrica=1/1 score=0.97 consultas=2 portantes=0 sin_accion=0 truncadas=0 llamadas=55 244s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r1 metrica=1/1 score=1.00 consultas=2 portantes=1 sin_accion=0 truncadas=0 llamadas=55 246s modelos=['claude-haiku-5-5']
+summary_lookup:s10:r0 metrica=1/1 score=1.00 consultas=4 portantes=1 sin_accion=0 truncadas=0 llamadas=57 255s modelos=['claude-haiku-5-5']
+summary_lookup:s10:r1 metrica=1/1 score=1.00 consultas=4 portantes=0 sin_accion=0 truncadas=0 llamadas=57 244s modelos=['claude-haiku-5-5']
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+fresh_lookup:s0:r0 metrica=0/1 score=0.97 consultas=13 portantes=0 sin_accion=0 truncadas=0 llamadas=63 273s modelos=['claude-haiku-5-5']
+fresh_lookup:s0:r1 metrica=0/1 score=0.97 consultas=10 portantes=0 sin_accion=0 truncadas=0 llamadas=60 272s modelos=['claude-haiku-5-5']
+fresh_lookup:s0:r2 metrica=0/1 score=0.97 consultas=8 portantes=0 sin_accion=0 truncadas=0 llamadas=58 240s modelos=['claude-haiku-5-5']
+fresh_lookup:s3:r0 metrica=0/1 score=0.97 consultas=8 portantes=0 sin_accion=0 truncadas=0 llamadas=58 241s modelos=['claude-haiku-5-5']
+fresh_lookup:s3:r1 metrica=0/0 score=0.79 consultas=9 portantes=2 sin_accion=0 truncadas=0 llamadas=59 240s modelos=['claude-haiku-5-5']
+fresh_lookup:s3:r2 metrica=0/1 score=0.97 consultas=8 portantes=1 sin_accion=0 truncadas=0 llamadas=58 241s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r0 metrica=0/0 score=0.86 consultas=18 portantes=2 sin_accion=0 truncadas=0 llamadas=68 333s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r1 metrica=0/0 score=0.77 consultas=12 portantes=2 sin_accion=0 truncadas=0 llamadas=62 287s modelos=['claude-haiku-5-5']
+=== relanzada Fri Nov  6 16:11:58 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 36 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 (hecho)
+react:s6:r1 (hecho)
+react:s10:r0 (hecho)
+react:s10:r1 (hecho)
+skillstate:s17:r0 (hecho)
+skillstate:s17:r1 (hecho)
+skillstate:s6:r0 (hecho)
+skillstate:s6:r1 (hecho)
+skillstate:s10:r0 (hecho)
+skillstate:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 18 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+reanudando: 8 episodios ya completados
+fresh_lookup:s0:r0 (hecho)
+fresh_lookup:s0:r1 (hecho)
+fresh_lookup:s0:r2 (hecho)
+fresh_lookup:s3:r0 (hecho)
+fresh_lookup:s3:r1 (hecho)
+fresh_lookup:s3:r2 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s6:r2 metrica=0/0 score=0.80 consultas=15 portantes=1 sin_accion=0 truncadas=0 llamadas=65 313s modelos=['claude-haiku-5-5']
+fresh_lookup:s8:r0 metrica=0/1 score=0.97 consultas=9 portantes=0 sin_accion=0 truncadas=0 llamadas=59 265s modelos=['claude-haiku-5-5']
+fresh_lookup:s8:r1 metrica=1/1 score=1.00 consultas=13 portantes=2 sin_accion=0 truncadas=0 llamadas=63 260s modelos=['claude-haiku-5-5']
+fresh_lookup:s8:r2 metrica=1/1 score=1.00 consultas=12 portantes=1 sin_accion=0 truncadas=0 llamadas=62 246s modelos=['claude-haiku-5-5']
+hybrid_lookup:s0:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 243s modelos=['claude-haiku-5-5']
+hybrid_lookup:s0:r1 metrica=1/1 score=1.00 consultas=2 portantes=0 sin_accion=0 truncadas=0 llamadas=52 176s modelos=['claude-haiku-5-5']
+hybrid_lookup:s0:r2 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 179s modelos=['claude-haiku-5-5']
+hybrid_lookup:s3:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 184s modelos=['claude-haiku-5-5']
+hybrid_lookup:s3:r1 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 179s modelos=['claude-haiku-5-5']
+hybrid_lookup:s3:r2 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 182s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r0 metrica=1/1 score=1.00 consultas=1 portantes=1 sin_accion=0 truncadas=0 llamadas=51 195s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r1 metrica=1/1 score=1.00 consultas=1 portantes=1 sin_accion=0 truncadas=0 llamadas=51 196s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r2 metrica=1/1 score=1.00 consultas=2 portantes=1 sin_accion=0 truncadas=0 llamadas=52 195s modelos=['claude-haiku-5-5']
+hybrid_lookup:s8:r0 metrica=1/1 score=0.97 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 189s modelos=['claude-haiku-5-5']
+hybrid_lookup:s8:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 177s modelos=['claude-haiku-5-5']
+hybrid_lookup:s8:r2 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 181s modelos=['claude-haiku-5-5']
+summary_lookup:s0:r0 metrica=1/1 score=0.97 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=54 217s modelos=['claude-haiku-5-5']
+summary_lookup:s0:r1 metrica=0/0 score=0.81 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 224s modelos=['claude-haiku-5-5']
+summary_lookup:s0:r2 metrica=1/1 score=1.00 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 228s modelos=['claude-haiku-5-5']
+summary_lookup:s3:r0 metrica=1/1 score=0.94 consultas=6 portantes=0 sin_accion=0 truncadas=0 llamadas=59 279s modelos=['claude-haiku-5-5']
+summary_lookup:s3:r1 metrica=1/1 score=0.97 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 244s modelos=['claude-haiku-5-5']
+summary_lookup:s3:r2 metrica=0/1 score=0.94 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 221s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r0 metrica=1/1 score=1.00 consultas=2 portantes=0 sin_accion=0 truncadas=0 llamadas=55 236s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r1 metrica=1/1 score=0.97 consultas=4 portantes=0 sin_accion=0 truncadas=0 llamadas=57 262s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r2 metrica=1/1 score=1.00 consultas=7 portantes=2 sin_accion=0 truncadas=0 llamadas=60 265s modelos=['claude-haiku-5-5']
+summary_lookup:s8:r0 metrica=1/1 score=0.97 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 234s modelos=['claude-haiku-5-5']
+=== relanzada Fri Nov  6 17:50:27 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 36 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 (hecho)
+react:s6:r1 (hecho)
+react:s10:r0 (hecho)
+react:s10:r1 (hecho)
+skillstate:s17:r0 (hecho)
+skillstate:s17:r1 (hecho)
+skillstate:s6:r0 (hecho)
+skillstate:s6:r1 (hecho)
+skillstate:s10:r0 (hecho)
+skillstate:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 18 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+reanudando: 34 episodios ya completados
+fresh_lookup:s0:r0 (hecho)
+fresh_lookup:s0:r1 (hecho)
+fresh_lookup:s0:r2 (hecho)
+fresh_lookup:s3:r0 (hecho)
+fresh_lookup:s3:r1 (hecho)
+fresh_lookup:s3:r2 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s6:r2 (hecho)
+fresh_lookup:s8:r0 (hecho)
+fresh_lookup:s8:r1 (hecho)
+fresh_lookup:s8:r2 (hecho)
+hybrid_lookup:s0:r0 (hecho)
+hybrid_lookup:s0:r1 (hecho)
+hybrid_lookup:s0:r2 (hecho)
+hybrid_lookup:s3:r0 (hecho)
+hybrid_lookup:s3:r1 (hecho)
+hybrid_lookup:s3:r2 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s6:r2 (hecho)
+hybrid_lookup:s8:r0 (hecho)
+hybrid_lookup:s8:r1 (hecho)
+hybrid_lookup:s8:r2 (hecho)
+summary_lookup:s0:r0 (hecho)
+summary_lookup:s0:r1 (hecho)
+summary_lookup:s0:r2 (hecho)
+summary_lookup:s3:r0 (hecho)
+summary_lookup:s3:r1 (hecho)
+summary_lookup:s3:r2 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s6:r2 (hecho)
+summary_lookup:s8:r0 (hecho)
+summary_lookup:s8:r1 metrica=0/0 score=0.94 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=58 249s modelos=['claude-haiku-5-5']
+summary_lookup:s8:r2 metrica=1/1 score=0.97 consultas=2 portantes=0 sin_accion=0 truncadas=0 llamadas=55 235s modelos=['claude-haiku-5-5']
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+summary:s17:r0 metrica=1/1 score=0.73 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 298s modelos=['pedido:gpt-6-luna']
+summary:s17:r1 metrica=1/14 score=0.33 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 314s modelos=['pedido:gpt-6-luna']
+summary:s6:r0 metrica=0/7 score=0.46 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 297s modelos=['pedido:gpt-6-luna']
+summary:s6:r1 metrica=1/1 score=0.63 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 310s modelos=['pedido:gpt-6-luna']
+summary:s10:r0 metrica=2/8 score=0.70 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 337s modelos=['pedido:gpt-6-luna']
+summary:s10:r1 metrica=0/0 score=0.51 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 458s modelos=['pedido:gpt-6-luna']
+=== relanzada Fri Nov  6 18:40:27 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 36 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 (hecho)
+react:s6:r1 (hecho)
+react:s10:r0 (hecho)
+react:s10:r1 (hecho)
+skillstate:s17:r0 (hecho)
+skillstate:s17:r1 (hecho)
+skillstate:s6:r0 (hecho)
+skillstate:s6:r1 (hecho)
+skillstate:s10:r0 (hecho)
+skillstate:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 18 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+reanudando: 36 episodios ya completados
+fresh_lookup:s0:r0 (hecho)
+fresh_lookup:s0:r1 (hecho)
+fresh_lookup:s0:r2 (hecho)
+fresh_lookup:s3:r0 (hecho)
+fresh_lookup:s3:r1 (hecho)
+fresh_lookup:s3:r2 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s6:r2 (hecho)
+fresh_lookup:s8:r0 (hecho)
+fresh_lookup:s8:r1 (hecho)
+fresh_lookup:s8:r2 (hecho)
+hybrid_lookup:s0:r0 (hecho)
+hybrid_lookup:s0:r1 (hecho)
+hybrid_lookup:s0:r2 (hecho)
+hybrid_lookup:s3:r0 (hecho)
+hybrid_lookup:s3:r1 (hecho)
+hybrid_lookup:s3:r2 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s6:r2 (hecho)
+hybrid_lookup:s8:r0 (hecho)
+hybrid_lookup:s8:r1 (hecho)
+hybrid_lookup:s8:r2 (hecho)
+summary_lookup:s0:r0 (hecho)
+summary_lookup:s0:r1 (hecho)
+summary_lookup:s0:r2 (hecho)
+summary_lookup:s3:r0 (hecho)
+summary_lookup:s3:r1 (hecho)
+summary_lookup:s3:r2 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s6:r2 (hecho)
+summary_lookup:s8:r0 (hecho)
+summary_lookup:s8:r1 (hecho)
+summary_lookup:s8:r2 (hecho)
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+reanudando: 6 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 metrica=1/1 score=0.63 consultas=10 portantes=0 sin_accion=2 truncadas=0 llamadas=60 415s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s17:r1 metrica=1/1 score=0.80 consultas=10 portantes=1 sin_accion=0 truncadas=0 llamadas=60 403s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s6:r0 metrica=1/2 score=0.69 consultas=8 portantes=0 sin_accion=0 truncadas=0 llamadas=58 377s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s6:r1 metrica=0/6 score=0.60 consultas=12 portantes=0 sin_accion=0 truncadas=0 llamadas=62 399s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s10:r0 metrica=0/0 score=0.54 consultas=9 portantes=0 sin_accion=0 truncadas=0 llamadas=59 367s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s10:r1 metrica=0/0 score=0.81 consultas=9 portantes=1 sin_accion=0 truncadas=0 llamadas=59 366s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s17:r0 metrica=1/1 score=0.83 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 353s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s17:r1 metrica=1/1 score=0.80 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 291s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s6:r0 metrica=0/1 score=0.57 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 403s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s6:r1 metrica=1/1 score=0.54 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 389s modelos=['pedido:gpt-6-luna']
+=== relanzada Fri Nov  6 19:48:33 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 36 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 (hecho)
+react:s6:r1 (hecho)
+react:s10:r0 (hecho)
+react:s10:r1 (hecho)
+skillstate:s17:r0 (hecho)
+skillstate:s17:r1 (hecho)
+skillstate:s6:r0 (hecho)
+skillstate:s6:r1 (hecho)
+skillstate:s10:r0 (hecho)
+skillstate:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 18 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+reanudando: 36 episodios ya completados
+fresh_lookup:s0:r0 (hecho)
+fresh_lookup:s0:r1 (hecho)
+fresh_lookup:s0:r2 (hecho)
+fresh_lookup:s3:r0 (hecho)
+fresh_lookup:s3:r1 (hecho)
+fresh_lookup:s3:r2 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s6:r2 (hecho)
+fresh_lookup:s8:r0 (hecho)
+fresh_lookup:s8:r1 (hecho)
+fresh_lookup:s8:r2 (hecho)
+hybrid_lookup:s0:r0 (hecho)
+hybrid_lookup:s0:r1 (hecho)
+hybrid_lookup:s0:r2 (hecho)
+hybrid_lookup:s3:r0 (hecho)
+hybrid_lookup:s3:r1 (hecho)
+hybrid_lookup:s3:r2 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s6:r2 (hecho)
+hybrid_lookup:s8:r0 (hecho)
+hybrid_lookup:s8:r1 (hecho)
+hybrid_lookup:s8:r2 (hecho)
+summary_lookup:s0:r0 (hecho)
+summary_lookup:s0:r1 (hecho)
+summary_lookup:s0:r2 (hecho)
+summary_lookup:s3:r0 (hecho)
+summary_lookup:s3:r1 (hecho)
+summary_lookup:s3:r2 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s6:r2 (hecho)
+summary_lookup:s8:r0 (hecho)
+summary_lookup:s8:r1 (hecho)
+summary_lookup:s8:r2 (hecho)
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+reanudando: 16 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 metrica=0/7 score=0.62 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 381s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s10:r1 metrica=0/0 score=0.70 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 456s modelos=['pedido:gpt-6-luna']
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+fresh_lookup:s17:r0 metrica=1/1 score=0.63 consultas=12 portantes=1 sin_accion=0 truncadas=0 llamadas=62 426s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s17:r1 metrica=1/9 score=0.60 consultas=11 portantes=1 sin_accion=0 truncadas=0 llamadas=61 416s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s6:r0 metrica=0/2 score=0.74 consultas=9 portantes=1 sin_accion=0 truncadas=0 llamadas=59 435s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s6:r1 metrica=0/3 score=0.69 consultas=19 portantes=2 sin_accion=0 truncadas=0 llamadas=69 521s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s10:r0 metrica=1/1 score=0.73 consultas=12 portantes=1 sin_accion=0 truncadas=0 llamadas=62 445s modelos=['pedido:gpt-6-luna']
+fresh_lookup:s10:r1 metrica=0/0 score=0.81 consultas=11 portantes=1 sin_accion=0 truncadas=0 llamadas=61 425s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s17:r0 metrica=1/1 score=0.67 consultas=6 portantes=3 sin_accion=0 truncadas=0 llamadas=56 423s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s17:r1 metrica=1/1 score=0.77 consultas=6 portantes=1 sin_accion=0 truncadas=0 llamadas=56 414s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s6:r0 metrica=1/1 score=0.71 consultas=8 portantes=1 sin_accion=0 truncadas=0 llamadas=58 466s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s6:r1 metrica=0/1 score=0.69 consultas=6 portantes=1 sin_accion=0 truncadas=0 llamadas=56 447s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s10:r0 metrica=1/1 score=0.92 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=55 437s modelos=['pedido:gpt-6-luna']
+hybrid_lookup:s10:r1 metrica=1/1 score=0.89 consultas=4 portantes=0 sin_accion=0 truncadas=0 llamadas=54 358s modelos=['pedido:gpt-6-luna']
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+summary:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 194s modelos=['claude-haiku-5-5']
+summary:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 194s modelos=['claude-haiku-5-5']
+summary:s6:r0 metrica=1/1 score=0.97 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 206s modelos=['claude-haiku-5-5']
+summary:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 203s modelos=['claude-haiku-5-5']
+summary:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 219s modelos=['claude-haiku-5-5']
+summary:s10:r1 metrica=1/1 score=0.76 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 206s modelos=['claude-haiku-5-5']
+fresh_lookup:s17:r0 metrica=1/14 score=0.57 consultas=6 portantes=0 sin_accion=0 truncadas=0 llamadas=56 213s modelos=['claude-haiku-5-5']
+fresh_lookup:s17:r1 metrica=0/14 score=0.53 consultas=6 portantes=0 sin_accion=0 truncadas=0 llamadas=56 199s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r0 metrica=1/1 score=0.91 consultas=4 portantes=1 sin_accion=0 truncadas=0 llamadas=54 203s modelos=['claude-haiku-5-5']
+fresh_lookup:s6:r1 metrica=0/12 score=0.66 consultas=8 portantes=0 sin_accion=0 truncadas=0 llamadas=58 254s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r0 metrica=1/1 score=0.97 consultas=5 portantes=0 sin_accion=0 truncadas=0 llamadas=55 206s modelos=['claude-haiku-5-5']
+fresh_lookup:s10:r1 metrica=0/6 score=0.78 consultas=7 portantes=0 sin_accion=0 truncadas=0 llamadas=57 218s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 152s modelos=['claude-haiku-5-5']
+hybrid_lookup:s17:r1 metrica=1/1 score=1.00 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=51 151s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 165s modelos=['claude-haiku-5-5']
+hybrid_lookup:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 177s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 181s modelos=['claude-haiku-5-5']
+hybrid_lookup:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 166s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r0 metrica=1/1 score=0.97 consultas=1 portantes=0 sin_accion=0 truncadas=0 llamadas=54 188s modelos=['claude-haiku-5-5']
+summary_lookup:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 187s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r0 metrica=1/1 score=0.91 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 224s modelos=['claude-haiku-5-5']
+summary_lookup:s6:r1 metrica=1/1 score=0.74 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=53 222s modelos=['claude-haiku-5-5']
+summary_lookup:s10:r0 metrica=1/1 score=1.00 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 229s modelos=['claude-haiku-5-5']
+=== relanzada Fri Nov  6 22:46:01 HGMT 2026 ===
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 36 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+react:s17:r0 (hecho)
+react:s17:r1 (hecho)
+react:s6:r0 (hecho)
+react:s6:r1 (hecho)
+react:s10:r0 (hecho)
+react:s10:r1 (hecho)
+skillstate:s17:r0 (hecho)
+skillstate:s17:r1 (hecho)
+skillstate:s6:r0 (hecho)
+skillstate:s6:r1 (hecho)
+skillstate:s10:r0 (hecho)
+skillstate:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 18 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+reanudando: 36 episodios ya completados
+fresh_lookup:s0:r0 (hecho)
+fresh_lookup:s0:r1 (hecho)
+fresh_lookup:s0:r2 (hecho)
+fresh_lookup:s3:r0 (hecho)
+fresh_lookup:s3:r1 (hecho)
+fresh_lookup:s3:r2 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s6:r2 (hecho)
+fresh_lookup:s8:r0 (hecho)
+fresh_lookup:s8:r1 (hecho)
+fresh_lookup:s8:r2 (hecho)
+hybrid_lookup:s0:r0 (hecho)
+hybrid_lookup:s0:r1 (hecho)
+hybrid_lookup:s0:r2 (hecho)
+hybrid_lookup:s3:r0 (hecho)
+hybrid_lookup:s3:r1 (hecho)
+hybrid_lookup:s3:r2 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s6:r2 (hecho)
+hybrid_lookup:s8:r0 (hecho)
+hybrid_lookup:s8:r1 (hecho)
+hybrid_lookup:s8:r2 (hecho)
+summary_lookup:s0:r0 (hecho)
+summary_lookup:s0:r1 (hecho)
+summary_lookup:s0:r2 (hecho)
+summary_lookup:s3:r0 (hecho)
+summary_lookup:s3:r1 (hecho)
+summary_lookup:s3:r2 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s6:r2 (hecho)
+summary_lookup:s8:r0 (hecho)
+summary_lookup:s8:r1 (hecho)
+summary_lookup:s8:r2 (hecho)
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+reanudando: 18 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: codex-cli  modelo: gpt-6-luna  sonda C k=14
+reanudando: 12 episodios ya completados
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+reanudando: 23 episodios ya completados
+summary:s17:r0 (hecho)
+summary:s17:r1 (hecho)
+summary:s6:r0 (hecho)
+summary:s6:r1 (hecho)
+summary:s10:r0 (hecho)
+summary:s10:r1 (hecho)
+fresh_lookup:s17:r0 (hecho)
+fresh_lookup:s17:r1 (hecho)
+fresh_lookup:s6:r0 (hecho)
+fresh_lookup:s6:r1 (hecho)
+fresh_lookup:s10:r0 (hecho)
+fresh_lookup:s10:r1 (hecho)
+hybrid_lookup:s17:r0 (hecho)
+hybrid_lookup:s17:r1 (hecho)
+hybrid_lookup:s6:r0 (hecho)
+hybrid_lookup:s6:r1 (hecho)
+hybrid_lookup:s10:r0 (hecho)
+hybrid_lookup:s10:r1 (hecho)
+summary_lookup:s17:r0 (hecho)
+summary_lookup:s17:r1 (hecho)
+summary_lookup:s6:r0 (hecho)
+summary_lookup:s6:r1 (hecho)
+summary_lookup:s10:r0 (hecho)
+summary_lookup:s10:r1 metrica=1/1 score=0.97 consultas=3 portantes=0 sin_accion=0 truncadas=0 llamadas=56 237s modelos=['claude-haiku-5-5']
+react:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 210s modelos=['claude-haiku-5-5']
+react:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 207s modelos=['claude-haiku-5-5']
+react:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 227s modelos=['claude-haiku-5-5']
+react:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 221s modelos=['claude-haiku-5-5']
+react:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 214s modelos=['claude-haiku-5-5']
+react:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 219s modelos=['claude-haiku-5-5']
+skillstate:s17:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 164s modelos=['claude-haiku-5-5']
+skillstate:s17:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 165s modelos=['claude-haiku-5-5']
+skillstate:s6:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 168s modelos=['claude-haiku-5-5']
+skillstate:s6:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 172s modelos=['claude-haiku-5-5']
+skillstate:s10:r0 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 181s modelos=['claude-haiku-5-5']
+skillstate:s10:r1 metrica=1/1 score=1.00 consultas=0 portantes=0 sin_accion=0 truncadas=0 llamadas=50 172s modelos=['claude-haiku-5-5']
+REJILLA 2 TERMINADA

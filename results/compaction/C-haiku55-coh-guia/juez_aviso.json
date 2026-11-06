@@ -1,0 +1,92 @@
+{
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Occupancy is now shelf 2 (SKU-A) only, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty per the correction (COR-2087)"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice (step 14) says the step 13 putaway never completed and shelf 0 is empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "All shelves are now empty, so the next inbound pallet goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "The correction notice says shelf 0 is empty, which matches my occupancy map: shelf 0 is free"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "That changes my occupancy map: shelf 0 is the lowest empty shelf for the next inbound pallet."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 says shelf 0 is empty: the SKU-D putaway at step 8 never completed... so the next putaway goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-2087 says shelf 0 is empty and SKU-D was removed, so occupancy is now shelf 2 (SKU-A) only."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-3619 shows shelf 0 is empty after the step 13 putaway failed... so the warehouse is empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelves 0, 1 and 2 are now all empty, so the notice needs no Store, Ship or Move."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 clears shelf 0 (SKU-D removed), so shelf 0 is now the lowest empty shelf."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 says shelf 0 is empty, so shelf 0 is now the lowest empty shelf for the next put-away."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s10_r0.jsonl": {
+    "clave": "summary_lookup:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelves 0 and 1 are empty and shelf 2 holds SKU-A. The next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s10_r1.jsonl": {
+    "clave": "summary_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Current occupancy: shelf 2 holds SKU-A, and shelves 0 and 1 are empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s17_r0.jsonl": {
+    "clave": "summary_lookup:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-3619 confirms shelf 0 is empty, so my occupancy map matches the warehouse: all shelves are empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s17_r1.jsonl": {
+    "clave": "summary_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "the step 14 correction confirms shelf 0 was never actually filled... All shelves are now empty"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s6_r0.jsonl": {
+    "clave": "summary_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "shelf 0 (SKU-D, PAL-8850) is confirmed empty, so the next put-away goes to shelf 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh_guia_summary_lookup_s6_r1.jsonl": {
+    "clave": "summary_lookup:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now the lowest empty shelf for the next put-away."
+  }
+}
