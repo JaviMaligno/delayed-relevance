@@ -104,6 +104,7 @@ class Warehouse:
         ruido: int = 0,
         latent_estricto: bool = False,
         aviso_declarado: bool = False,
+        aviso_coherente: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -131,6 +132,9 @@ class Warehouse:
         # claim"): sin la bandera, la sonda C mide si el modelo cree el aviso; con ella,
         # si lo conserva tras compactar. Por defecto desactivado: el bloque 1 no lo tenia.
         self.aviso_declarado = aviso_declarado
+        # `aviso_coherente`: ver _plant_invalidation. Por defecto desactivado para poder
+        # replicar el bloque 1 tal como se midio.
+        self.aviso_coherente = aviso_coherente
         self.latent_control = latent_control
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
@@ -259,6 +263,24 @@ class Warehouse:
         )
         self.quarantine_notice_text = self.script[paso_aviso].text
 
+    def _ocupante_canonico(self, estanteria: int, hasta: int) -> str | None:
+        """SKU que ocupa `estanteria` justo antes del paso `hasta` con la politica
+        correcta, o None si esta vacia."""
+        ocupadas: dict[int, str] = {}
+        for obs in self.script[:hasta]:
+            if "inbound_pallet" in obs.text:
+                i = 0
+                while i in ocupadas:
+                    i += 1
+                ocupadas[i] = event_field(obs.text, "sku") or ""
+            elif "outbound_order" in obs.text:
+                sku = event_field(obs.text, "sku") or ""
+                for i in sorted(ocupadas):
+                    if ocupadas[i] == sku:
+                        del ocupadas[i]
+                        break
+        return ocupadas.get(estanteria)
+
     def _plant_invalidation(self, k: int) -> None:
         """Sonda C: invalidacion retroactiva, con metrica de PROMEDIO y no de evento.
 
@@ -281,11 +303,28 @@ class Warehouse:
         self.invalidated_shelf = estanteria
         self.invalidation_from = paso_store + k
         rng = random.Random(self.seed * 6271 + k)
+        corregido = paso_store
+        identidad = ""
+        if self.aviso_coherente:
+            # El aviso original corrige la colocacion de `paso_store`, pero en todas las
+            # seeds medidas ese pale se envio despues y la estanteria se relleno con
+            # otro: el aviso contradice la historia y el entorno borra un pale distinto.
+            # Coherente = corrige la ULTIMA colocacion en esa estanteria antes del aviso,
+            # nombrando el pale. El estado verdadero y los pasos dependientes no cambian:
+            # solo el texto.
+            ultimo = max(p for p, s in puntos if s == estanteria and p < self.invalidation_from)
+            if self._ocupante_canonico(estanteria, self.invalidation_from) is None:
+                raise ValueError(f"seed {self.seed} k={k}: la estanteria {estanteria} ya esta "
+                                 "vacia al llegar el aviso; no hay correccion coherente")
+            texto = self.script[ultimo].text
+            corregido = ultimo
+            identidad = (f"| pallet_id={event_field(texto, 'pallet_id')} "
+                         f"| sku={event_field(texto, 'sku')} | lot={event_field(texto, 'lot')} ")
         self.script[self.invalidation_from] = Observation(
             step=self.invalidation_from,
             text=(
                 f"EVENT correction_notice | notice_id=COR-{rng.randint(1000, 9999)} "
-                f"| corrects_step={paso_store} | shelf={estanteria} "
+                f"| corrects_step={corregido} | shelf={estanteria} {identidad}"
                 f"| finding=putaway_never_completed | shelf_is_now=empty "
                 f"| stock_removed=true | confidence=confirmed\n"
                 f"  raised_by=cycle_count_team_{rng.randint(10, 99)} "

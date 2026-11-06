@@ -1,3 +1,4 @@
+import pytest
 """Corredor y precheck de compactacion, sin modelo."""
 from dr.llm import Completion
 from dr.runtimes.compaction import FreshLookupRuntime
@@ -95,3 +96,24 @@ def test_aviso_declarado_solo_cambia_el_spec_y_no_el_guion():
     assert "correction_notice - an audit finding" in decl.spec()
     assert [o.text for o in base.script] == [o.text for o in decl.script]
     assert base.invalidation_from == decl.invalidation_from
+
+
+@pytest.mark.parametrize("seed", [17, 6, 10])
+def test_aviso_coherente_corrige_el_pale_que_hay_y_no_cambia_lo_medido(seed):
+    from experiments.run_compaction import construir_env
+    base = construir_env("C", seed, 14)
+    coh = construir_env("C", seed, 14, aviso_coherente=True)
+    t = coh.invalidation_from
+    assert t == base.invalidation_from and coh.invalidated_shelf == base.invalidated_shelf
+    aviso = coh.script[t].text
+    # Corrige la ultima colocacion en esa estanteria, y nombra el pale que hay en ella.
+    paso = int(aviso.split("corrects_step=")[1].split()[0])
+    colocado = coh.script[paso].text
+    assert "inbound_pallet" in colocado
+    for campo in ("pallet_id", "sku", "lot"):
+        valor = colocado.split(f"{campo}=")[1].split()[0]
+        assert f"{campo}={valor}" in aviso
+    assert coh._ocupante_canonico(coh.invalidated_shelf, t) is not None
+    # Solo cambia el texto del aviso: el resto del guion, identico.
+    assert [o.text for i, o in enumerate(base.script) if i != t] == \
+           [o.text for i, o in enumerate(coh.script) if i != t]

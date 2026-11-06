@@ -62,10 +62,11 @@ FABRICAS = {
 }
 
 
-def construir_env(sonda: str, seed: int, k: int, aviso_declarado: bool = False) -> Warehouse:
+def construir_env(sonda: str, seed: int, k: int, aviso_declarado: bool = False,
+                  aviso_coherente: bool = False) -> Warehouse:
     if sonda == "C":
         return Warehouse(horizon=HORIZONTE, seed=seed, invalidation_k=k,
-                         aviso_declarado=aviso_declarado)
+                         aviso_declarado=aviso_declarado, aviso_coherente=aviso_coherente)
     # Estricto, como la sonda L1 v3: el hecho importa por primera vez en t+k.
     return Warehouse(horizon=HORIZONTE, seed=seed, latent_k=k, latent_estricto=True)
 
@@ -279,11 +280,13 @@ def main() -> None:
     p.add_argument("--out", default="results/compaction")
     p.add_argument("--aviso-declarado", action="store_true",
                    help="sonda C: declara correction_notice en EVENT TYPES como autoritativo")
+    p.add_argument("--aviso-coherente", action="store_true",
+                   help="sonda C: el aviso corrige la ULTIMA colocacion en la estanteria")
     p.add_argument("--guia-consulta", action="store_true",
                    help="brazos *_lookup: anade cuando y como consultar (GUIA_CONSULTA)")
     args = p.parse_args()
-    if args.aviso_declarado and args.probe != "C":
-        p.error("--aviso-declarado solo tiene efecto en la sonda C")
+    if (args.aviso_declarado or args.aviso_coherente) and args.probe != "C":
+        p.error("--aviso-declarado y --aviso-coherente solo tienen efecto en la sonda C")
 
     # Sin load_env a proposito: los CLIs usan la suscripcion y el .env solo trae claves
     # de API, que aqui no deben llegar a ningun sitio.
@@ -299,6 +302,7 @@ def main() -> None:
     # El tope de salida y k cambian lo medido: van en el nombre del checkpoint para que
     # una corrida con otro ajuste no lea como hecho lo medido con este.
     nombre = (f"{args.probe}_k{k}_{args.client}_{modelo}_mt{args.max_tokens}_v{VERSION}"
+              + ("_coh" if args.aviso_coherente else "")
               + ("_aviso" if args.aviso_declarado else "")
               + ("_guia" if args.guia_consulta else ""))
     ruta = out / f"partial_{nombre}.json"
@@ -313,7 +317,8 @@ def main() -> None:
                     if clave in hechos:
                         print(f"{clave} (hecho)", flush=True)
                         continue
-                    env = construir_env(args.probe, seed, k, args.aviso_declarado)
+                    env = construir_env(args.probe, seed, k, args.aviso_declarado,
+                                        args.aviso_coherente)
                     traza = out / "trazas" / f"{nombre}_{brazo}_s{seed}_r{rep}.jsonl"
                     rt = FABRICAS[brazo](cliente, env, args.max_tokens, args.guia_consulta)
                     d = episodio(env, rt, args.probe, traza, {
@@ -322,6 +327,7 @@ def main() -> None:
                         "cliente": args.client, "modelo": modelo,
                         "max_tokens": args.max_tokens, "horizonte": HORIZONTE,
                         "aviso_declarado": args.aviso_declarado,
+                        "aviso_coherente": args.aviso_coherente,
                         "guia_consulta": args.guia_consulta})
                     hechos[clave] = d
                     ruta.write_text(json.dumps(hechos, indent=2), encoding="utf-8")
