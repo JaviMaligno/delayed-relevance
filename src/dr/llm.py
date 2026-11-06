@@ -38,6 +38,11 @@ class Completion:
 
     Se pide un ID que puede ser un alias o un preview, y el que responde puede no ser
     el que el paper evaluo. Registrarlo es lo que permite declararlo despues."""
+    razonamiento: str = ""
+    """Resumen del razonamiento interno, si el proveedor lo devuelve (Codex, con
+    `model_reasoning_summary`). Los GPT no exponen el razonamiento crudo y no escriben
+    razonamiento en el texto visible: sin esto, lo unico que queda es `Action: ...` y no
+    se puede saber por que el agente hizo lo que hizo (medido el 6-nov-2026)."""
     cost_usd: float = 0.0
     """Coste a precio de lista que declara el proveedor, si lo declara (`claude -p`).
 
@@ -799,7 +804,8 @@ class CodexCliClient:
 
     def __init__(self, model: str = CODEX_MODELO, max_tokens: int = 8192,
                  timeout: float = CLI_TIMEOUT, reintentos: int = CLI_REINTENTOS,
-                 esfuerzo: str | None = None, ejecutable: str = "codex") -> None:
+                 esfuerzo: str | None = None, ejecutable: str = "codex",
+                 resumen_razonamiento: str | None = "detailed") -> None:
         import shutil
         import tempfile
         self.model = model
@@ -807,6 +813,10 @@ class CodexCliClient:
         self.timeout = timeout
         self.reintentos = reintentos
         self.esfuerzo = esfuerzo
+        # Sin pedirlo, `codex exec --json` (con --ignore-user-config) no emite ningun
+        # item `reasoning`; con `detailed` o `concise`, si (medido el 6-nov-2026,
+        # codex-cli 0.166.0). Las corridas de Luna anteriores a esto no lo tienen.
+        self.resumen_razonamiento = resumen_razonamiento
         self.provider = "codex-cli"
         self.ejecutable = shutil.which(ejecutable) or ejecutable
         self._dir = _directorio_vacio("dr-codex-cli", tempfile)
@@ -817,6 +827,8 @@ class CodexCliClient:
                       "-m", self.model]
         if self.esfuerzo:
             argumentos += ["-c", f"model_reasoning_effort={self.esfuerzo}"]
+        if self.resumen_razonamiento:
+            argumentos += ["-c", f"model_reasoning_summary={self.resumen_razonamiento}"]
         return argumentos + ["-"]
 
     @staticmethod
@@ -858,6 +870,7 @@ class CodexCliClient:
         `coste_efectivo` no cuente la cache dos veces. Se asume, como en la API de
         OpenAI, que `output_tokens` ya incluye el razonamiento; va ademas aparte."""
         texto, uso, fallo = None, None, None
+        razonamiento: list[str] = []
         for linea in lineas:
             linea = linea.strip()
             if not linea.startswith("{"):
@@ -870,6 +883,8 @@ class CodexCliClient:
             item = evento.get("item") or {}
             if tipo == "item.completed" and item.get("type") == "agent_message":
                 texto = item.get("text", "")
+            elif tipo == "item.completed" and item.get("type") == "reasoning":
+                razonamiento.append(item.get("text", ""))
             elif tipo == "turn.completed":
                 uso = evento.get("usage") or {}
             elif tipo in ("turn.failed", "error"):
@@ -887,6 +902,7 @@ class CodexCliClient:
             cache_read=cacheados,
             cache_write=uso.get("cache_write_input_tokens", 0) or 0,
             thinking_tokens=uso.get("reasoning_output_tokens", 0) or 0,
+            razonamiento="\n".join(t for t in razonamiento if t),
             model_version=f"pedido:{modelo}",
         )
 

@@ -104,6 +104,23 @@ def test_claude_reintenta_un_fallo_transitorio(monkeypatch):
     assert ClaudeCliClient().complete("s", "u").cache_write == 785
 
 
+def test_codex_guarda_el_resumen_de_razonamiento_y_lo_pide():
+    lineas = CODEX_OK[:2] + [
+        '{"type":"item.completed","item":{"id":"item_0","type":"reasoning",'
+        '"text":"**Doubting the notice**"}}',
+        '{"type":"item.completed","item":{"id":"item_1","type":"reasoning",'
+        '"text":"**Keeping shelf occupied**"}}',
+    ] + CODEX_OK[2:]
+    c = CodexCliClient._leer(lineas, "m")
+    assert c.text == "OK-42"
+    assert c.razonamiento == "**Doubting the notice**\n**Keeping shelf occupied**"
+    assert CodexCliClient._leer(CODEX_OK, "m").razonamiento == ""
+    a = CodexCliClient()._argumentos()
+    assert "model_reasoning_summary=detailed" in a
+    assert not any("reasoning_summary" in x
+                   for x in CodexCliClient(resumen_razonamiento=None)._argumentos())
+
+
 def test_codex_lee_mensaje_y_normaliza_la_cache():
     c = CodexCliClient._leer(CODEX_OK, "gpt-6.1-sol")
     assert c.text == "OK-42"

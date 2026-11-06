@@ -228,6 +228,7 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
                                    "portante": p, "lineas": c.lineas}
                                   for c, p in zip(consultas, portantes)],
                     "raw": {"respuestas": [c.text for c in completions]},
+                    "razonamiento": [getattr(c, "razonamiento", "") for c in completions],
                     "observation": obs.text,
                     "prompt_tokens": sum(c.prompt_tokens for c in completions),
                     "output_tokens": sum(c.output_tokens for c in completions),

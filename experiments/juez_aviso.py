@@ -46,6 +46,11 @@ def casos(directorio: Path):
             obs = p.get("observation") or ""
             if obs.startswith("EVENT correction_notice"):
                 resp = ((p.get("raw") or {}).get("respuestas") or [""])[-1]
+                # Codex no escribe razonamiento visible; su resumen va aparte. Se le pasa
+                # al juez como parte de la respuesta, sin decirle de que modelo viene.
+                razon = ((p.get("razonamiento") or [""]) or [""])[-1]
+                if razon:
+                    resp = f"[internal reasoning summary]\n{razon}\n\n[visible reply]\n{resp}"
                 yield f.name, f"{m.group(1)}:s{m.group(2)}:r{m.group(3)}", obs.split("\n")[0], resp
                 break
 
