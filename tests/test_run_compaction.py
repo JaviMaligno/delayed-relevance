@@ -85,3 +85,13 @@ def test_la_configuracion_elegida_de_la_sonda_c_pone_una_compactacion_de_por_med
         r = evaluar(seed, 14)
         assert r["valida"] and r["aviso"] == 14 and r["compactacion"] == 15
         assert r["decisivo"] >= 15
+
+
+def test_aviso_declarado_solo_cambia_el_spec_y_no_el_guion():
+    from experiments.run_compaction import construir_env
+    base = construir_env("C", 17, 14)
+    decl = construir_env("C", 17, 14, aviso_declarado=True)
+    assert "correction_notice" not in base.spec()
+    assert "correction_notice - an audit finding" in decl.spec()
+    assert [o.text for o in base.script] == [o.text for o in decl.script]
+    assert base.invalidation_from == decl.invalidation_from

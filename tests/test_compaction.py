@@ -215,3 +215,15 @@ def test_pedido_de_consulta_tolera_markdown():
     assert pedido_de_consulta("`Lookup: SKU-D lot`") == "SKU-D lot"
     assert pedido_de_consulta("Action: Wait({})") is None
     assert palabras_de('"Shelf=12", SKU-D') == ["shelf=12", "sku-d"]
+
+
+def test_la_guia_de_consulta_solo_aparece_con_la_bandera():
+    for guia in (False, True):
+        for brazo, clase in BRAZOS.items():
+            cliente = GuionCliente([WAIT])
+            clase(cliente, "ESPEC", guia_consulta=guia).act(_obs(0))
+            system, _ = cliente.calls[0]
+            con_guia = "WHEN AND HOW TO LOOK UP" in system
+            assert con_guia == (guia and brazo.endswith("lookup"))
+            # Sin nombrar el tipo de aviso: la guia no da la respuesta.
+            assert "correction_notice" not in system

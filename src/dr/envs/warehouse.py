@@ -103,6 +103,7 @@ class Warehouse:
         sin_telemetria: bool = False,
         ruido: int = 0,
         latent_estricto: bool = False,
+        aviso_declarado: bool = False,
     ) -> None:
         """`latent_k` activa la sonda de relevancia diferida.
 
@@ -125,6 +126,11 @@ class Warehouse:
         # ya colocado, el hecho cambia la accion por PRIMERA vez justo en t+k. Por
         # defecto desactivado: lo ya medido no se mueve.
         self.latent_estricto = latent_estricto
+        # `aviso_declarado` declara `correction_notice` en EVENT TYPES como autoritativo.
+        # Haiku 5.5 descartaba el aviso por no ser un tipo definido ("can't verify its
+        # claim"): sin la bandera, la sonda C mide si el modelo cree el aviso; con ella,
+        # si lo conserva tras compactar. Por defecto desactivado: el bloque 1 no lo tenia.
+        self.aviso_declarado = aviso_declarado
         self.latent_control = latent_control
         self.oracle_schema = oracle_schema
         self.hatch_schema = hatch_schema
@@ -649,6 +655,10 @@ class Warehouse:
             + ("" if self.sin_telemetria else
                "  telemetry      - a status reading from equipment or facilities.\n"
                "      No load-bearing fields. Telemetry never requires an action.\n")
+            + ("  correction_notice - an audit finding that corrects an earlier record. It\n"
+               "      is authoritative: from that step on, treat the warehouse as the notice\n"
+               "      describes it. It needs no action of its own.\n"
+               if self.aviso_declarado else "")
             + ("  maintenance_required - a shelf must be cleared for maintenance work.\n"
                "      Load-bearing field: shelf.\n" if self.apendice_b else "")
             + "\n"

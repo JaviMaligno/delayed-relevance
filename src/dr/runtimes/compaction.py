@@ -57,7 +57,22 @@ class Consulta:
     lineas: list[str] = field(default_factory=list)
 
 
-def _contexto_de_consulta(brazo: str) -> str:
+GUIA_CONSULTA = (
+    "\nWHEN AND HOW TO LOOK UP\n"
+    "After a compaction you no longer see the earlier events. Before an action that "
+    "depends on the state of the warehouse, look up whatever could have changed or "
+    "undone that state and is not in your current context: events outside the routine "
+    "procedure, and the history of the specific shelf or SKU you are about to use. "
+    "Search with specific words such as a shelf number, a SKU, an event type or an id; "
+    "a single generic word only returns the most recent matches. If the lines you get "
+    "disagree, the most recent step is the current fact."
+)
+"""Guia de uso, al nivel de PROMPT_RESUMEN ("anything you or the environment changed, and
+anything that was undone"): el resumen recibia el que conservar y la consulta solo la
+mecanica. Sin nombrar el tipo de aviso, para no dar la respuesta."""
+
+
+def _contexto_de_consulta(brazo: str, guia: bool = False) -> str:
     """Lo que el modelo debe saber de la herramienta. Se anade al spec, en el system,
     para que forme parte del prefijo cacheable y sea identico en todos los pasos."""
     tras = ("the earlier history is replaced by a written summary, and the full detail is "
@@ -81,6 +96,7 @@ def _contexto_de_consulta(brazo: str) -> str:
         f"event. You may look up at most {MAX_CONSULTAS} times per step; after that you "
         "must reply with an action. A lookup is not an action and is not your answer for "
         "the step."
+        + (GUIA_CONSULTA if guia else "")
     )
 
 
@@ -99,8 +115,10 @@ class CompactingRuntime:
     consulta = False
 
     def __init__(self, client, spec: str, cadencia: int = CADENCIA,
-                 summary_max_tokens: int = SUMMARY_MAX_TOKENS) -> None:
+                 summary_max_tokens: int = SUMMARY_MAX_TOKENS,
+                 guia_consulta: bool = False) -> None:
         self.client = client
+        self.guia_consulta = guia_consulta
         self.spec = spec
         self.cadencia = cadencia
         self.summary_max_tokens = summary_max_tokens
@@ -131,7 +149,7 @@ class CompactingRuntime:
 
     def _system(self) -> str:
         texto = f"Instructions:\n{self.spec}"
-        return texto + (_contexto_de_consulta(self.brazo) if self.consulta else "")
+        return texto + (_contexto_de_consulta(self.brazo, self.guia_consulta) if self.consulta else "")
 
     def _prefijo(self) -> list[str]:
         # Troceado como ReAct: cada bloque es inmutable una vez escrito, que es lo que

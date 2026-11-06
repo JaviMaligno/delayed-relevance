@@ -1,0 +1,92 @@
+{
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s10_r0.jsonl": {
+    "clave": "summary:s10:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s10_r1.jsonl": {
+    "clave": "summary:s10:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s17_r0.jsonl": {
+    "clave": "summary:s17:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s17_r1.jsonl": {
+    "clave": "summary:s17:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s6_r0.jsonl": {
+    "clave": "summary:s6:r0",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_codex-cli_gpt-6-luna_mt8192_v2_summary_s6_r1.jsonl": {
+    "clave": "summary:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  }
+}

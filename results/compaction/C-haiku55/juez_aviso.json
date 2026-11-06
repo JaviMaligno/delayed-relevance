@@ -1,0 +1,182 @@
+{
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s10_r0.jsonl": {
+    "clave": "fresh_lookup:s10:r0",
+    "verdict": "REJECTED",
+    "evidence": "conflicts with my records (SKU-D stored at step 8)... I'm waiting and flagging the discrepancy for a cycle-count reconciliation."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s10_r1.jsonl": {
+    "clave": "fresh_lookup:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction notice COR-2087 says shelf 0 is empty, so occupancy is now shelf 0 empty, shelf 1 empty, shelf 2 holds SKU-A."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s17_r0.jsonl": {
+    "clave": "fresh_lookup:s17:r0",
+    "verdict": "REJECTED",
+    "evidence": "My records conflict with it... I'll flag that for reconciliation rather than change the map now."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s17_r1.jsonl": {
+    "clave": "fresh_lookup:s17:r1",
+    "verdict": "REJECTED",
+    "evidence": "It conflicts with my record that shelf 0 holds SKU-E from step 13, but I won't change occupancy on it alone."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s6_r0.jsonl": {
+    "clave": "fresh_lookup:s6:r0",
+    "verdict": "REJECTED",
+    "evidence": "It conflicts with my record that shelf 0 holds SKU-D (stored step 4), so I'm not changing occupancy on it. Flagging for reconciliation."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_fresh_lookup_s6_r1.jsonl": {
+    "clave": "fresh_lookup:s6:r1",
+    "verdict": "REJECTED",
+    "evidence": "its claim that shelf 0 is empty also conflicts with my record of SKU-D stored there at step 4, so I won't change my occupancy map on it."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s10_r0.jsonl": {
+    "clave": "hybrid_lookup:s10:r0",
+    "verdict": "REJECTED",
+    "evidence": "It conflicts with my record that shelf 0 holds SKU-D, so I'm flagging that discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s10_r1.jsonl": {
+    "clave": "hybrid_lookup:s10:r1",
+    "verdict": "REJECTED",
+    "evidence": "That conflicts with my occupancy map, and I can't verify it... I'll wait and flag the discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s17_r0.jsonl": {
+    "clave": "hybrid_lookup:s17:r0",
+    "verdict": "REJECTED",
+    "evidence": "Correction notice COR-3619 is not a defined event type and conflicts with my record: shelf 0 holds SKU-E from step 13. ... I'm waiting and flagging the discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s17_r1.jsonl": {
+    "clave": "hybrid_lookup:s17:r1",
+    "verdict": "REJECTED",
+    "evidence": "It conflicts with my record that SKU-E (L-1559) sits on shelf 0 from step 13. I'll flag this for reconciliation rather than change occupancy."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s6_r0.jsonl": {
+    "clave": "hybrid_lookup:s6:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "shelf 0 is reported empty after a confirmed recount, so it is the lowest empty shelf for the next put-away"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_hybrid_lookup_s6_r1.jsonl": {
+    "clave": "hybrid_lookup:s6:r1",
+    "verdict": "REJECTED",
+    "evidence": "I'll take no action and leave the discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s10_r0.jsonl": {
+    "clave": "react:s10:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "It reports shelf 0 as empty after a recount, so my occupancy map is now shelf 1 empty, shelf 2 holding SKU-A, and shelf 0 empty."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s10_r1.jsonl": {
+    "clave": "react:s10:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "The cycle count reports shelf 0 empty, so I'm updating my map: shelf 0 empty, shelf 1 empty, shelf 2 holds SKU-A."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s17_r0.jsonl": {
+    "clave": "react:s17:r0",
+    "verdict": "REJECTED",
+    "evidence": "Shelf 0 is now uncertain... The notice is not one of the defined event types, so I'll take no shelf action until the state is confirmed."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s17_r1.jsonl": {
+    "clave": "react:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty per the cycle-count correction, and shelves 1 and 2 were emptied by earlier shipments, so no stock is on hand."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s6_r0.jsonl": {
+    "clave": "react:s6:r0",
+    "verdict": "REJECTED",
+    "evidence": "it contradicts my occupancy record (shelf 0 holds SKU-D from step 4). It requires no put-away or shipment, so I'll wait."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_react_s6_r1.jsonl": {
+    "clave": "react:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Correction COR-9898 confirms shelf 0 is empty... 0 is free for the next put-away."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s10_r0.jsonl": {
+    "clave": "skillstate:s10:r0",
+    "verdict": "REJECTED",
+    "evidence": "I'm not applying its claim that shelf 0 is empty. Shelf 0 still holds SKU-D in my records"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s10_r1.jsonl": {
+    "clave": "skillstate:s10:r1",
+    "verdict": "REJECTED",
+    "evidence": "I won't alter shelf 0 on its say-so. ... occupancy unchanged, flagged for review"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s17_r0.jsonl": {
+    "clave": "skillstate:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "I'm clearing it from the occupancy map... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s17_r1.jsonl": {
+    "clave": "skillstate:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "so I'm clearing shelf 0 from the state ... \"shelf_contents\": {\"0\": null}"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s6_r0.jsonl": {
+    "clave": "skillstate:s6:r0",
+    "verdict": "REJECTED",
+    "evidence": "COR-9898 is not a defined event type and I can't verify its claim, so I won't change occupancy."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_skillstate_s6_r1.jsonl": {
+    "clave": "skillstate:s6:r1",
+    "verdict": "REJECTED",
+    "evidence": "I'm leaving the shelf map unchanged and waiting for verified input. Shelf 0 still holds SKU-D (15 units, lot L-8200)."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s10_r0.jsonl": {
+    "clave": "summary_lookup:s10:r0",
+    "verdict": "REJECTED",
+    "evidence": "I'm not acting on that claim. Flagging it for reconciliation."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s10_r1.jsonl": {
+    "clave": "summary_lookup:s10:r1",
+    "verdict": "REJECTED",
+    "evidence": "I'll keep my occupancy map unchanged and flag the discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s17_r0.jsonl": {
+    "clave": "summary_lookup:s17:r0",
+    "verdict": "REJECTED",
+    "evidence": "I'm leaving occupancy unchanged and flagging the discrepancy."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s17_r1.jsonl": {
+    "clave": "summary_lookup:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelves 0, 1 and 2 are all empty now."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s6_r0.jsonl": {
+    "clave": "summary_lookup:s6:r0",
+    "verdict": "REJECTED",
+    "evidence": "I can't verify it and will not change the occupancy map on its basis."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_lookup_s6_r1.jsonl": {
+    "clave": "summary_lookup:s6:r1",
+    "verdict": "UNCLEAR",
+    "evidence": "Action: Wait({})"
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s10_r0.jsonl": {
+    "clave": "summary:s10:r0",
+    "verdict": "REJECTED",
+    "evidence": "I'll flag that for reconciliation rather than change occupancy on this notice."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s10_r1.jsonl": {
+    "clave": "summary:s10:r1",
+    "verdict": "REJECTED",
+    "evidence": "It conflicts with my occupancy map (shelf 0 holds SKU-D from step 8). I'll hold state and flag the discrepancy for review."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s17_r0.jsonl": {
+    "clave": "summary:s17:r0",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelves are now all empty: the correction notice clears shelf 0, and every earlier pallet was shipped."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s17_r1.jsonl": {
+    "clave": "summary:s17:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "Shelf 0 is now empty per the correction, so the next put-away goes to 0."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s6_r0.jsonl": {
+    "clave": "summary:s6:r0",
+    "verdict": "REJECTED",
+    "evidence": "my ledger has SKU-D on shelf 0 from step 4... I'll wait and flag the conflict for reconciliation."
+  },
+  "C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_summary_s6_r1.jsonl": {
+    "clave": "summary:s6:r1",
+    "verdict": "ACCEPTED",
+    "evidence": "My occupancy map now has shelf 0 empty, so the next inbound pallet goes there."
+  }
+}
