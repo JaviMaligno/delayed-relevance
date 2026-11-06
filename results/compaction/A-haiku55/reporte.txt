@@ -1,0 +1,28 @@
+
+partial_A_k40_claude-cli_claude-haiku-5-5_mt8192_v2.json  (sonda A)
+
+brazo           eps          metrica (IC95 Wilson)               1er dep.  score  consulta  portantes sin acc. trunc. USD lista/ep entr. ESTIM./ep cache_read/ep   s/ep s/llamada
+react            12      10/12  83.3% [55.2- 95.3]                      -  0.986      0.0%    0/0            0      0       0.1997          178614        100845    249       5.0
+skillstate       12       1/12   8.3% [ 1.5- 35.4]                      -  0.969      0.0%    0/0            0      0       0.0263           79023        101990    184       3.7
+summary          12       9/10  90.0% [59.6- 98.2]                      -  0.944      0.0%    0/0            0      0       0.0862          166965        100845    209       3.9
+fresh_lookup     12        3/8  37.5% [13.7- 69.4]                      -  0.904     10.7%    5/87           0      0       0.0809          131122        131853    229       4.0
+hybrid_lookup    12      12/12 100.0% [75.7-100.0]                      -  1.000      0.3%    0/2            0      0       0.0994          142492        114066    177       3.5
+summary_lookup   12      11/11 100.0% [74.1-100.0]                      -  0.976      1.3%    0/8            0      0       0.0870          169558        114565    273       5.1
+
+consultas que solo traian el id del aviso (en una linea del agente) y resumenes truncados:
+  summary         con_id=0 resumenes_truncados=0
+  fresh_lookup    con_id=6 resumenes_truncados=0
+  hybrid_lookup   con_id=0 resumenes_truncados=0
+  summary_lookup  con_id=0 resumenes_truncados=0
+  react           con_id=0 resumenes_truncados=0
+  skillstate      con_id=0 resumenes_truncados=0
+
+forma de las consultas (palabras por consulta; con identificador = numero de estanteria, SKU o notice_id):
+  fresh_lookup    n=87 palabras={1: 60, 2: 25, 3: 1, 4: 1} con identificador=51/87 (59%)
+  hybrid_lookup   n=2 palabras={1: 2} con identificador=0/2 (0%)
+  summary_lookup  n=8 palabras={1: 7, 2: 1} con identificador=4/8 (50%)
+
+modelos que contestaron: ['claude-haiku-5-5']
+consulta = pasos con al menos un Lookup; portantes = consultas cuya respuesta traia la observacion del aviso.
+USD lista = coste a precio de lista MEDIDO por el CLI (sin cachear la historia: claude -p manda un solo bloque).
+entr. ESTIM. = ESTIMACION de tokens de entrada equivalentes con cache de prefijo ideal (comun con la llamada anterior a 0,1x, resto a 1,25x); no es una medida.
