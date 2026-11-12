@@ -10,7 +10,8 @@ cd "$(dirname "$0")/.."
 export PYTHONPATH="src;."
 OUT=results/bloque1-coherente
 REPS=${REPS:-4}
-COMUN="--model claude-haiku-4-5 --provider claude-cli --seeds 4 10 6 --repeats $REPS --k 10 --max-tokens 8192 --out $OUT"
+MODEL=${MODEL:-claude-haiku-4-5}
+COMUN="--model $MODEL--provider claude-cli --seeds 4 10 6 --repeats $REPS --k 10 --max-tokens 8192 --out $OUT"
 for rt in skillstate react; do
   python experiments/diagnose_probeC.py $COMUN --runtimes $rt --aviso-coherente || exit 1
 done
