@@ -1,0 +1,223 @@
+=== lanzada Thu Nov 12 09:51:46 HGMT 2026 ===
+claude-haiku-4-5:skillstate:s4:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 10:35:30 HGMT 2026 ===
+claude-haiku-4-5:skillstate:s10:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [claude -p: reintento 1/4] claude -p devolvio error: You've hit your 5-hour limit · resets 12:40pm (Atlantic/Canary), esperando 5s
+  [claude -p: reintento 2/4] claude -p devolvio error: You've hit your 5-hour limit · resets 12:40pm (Atlantic/Canary), esperando 10s
+  [claude -p: reintento 3/4] claude -p devolvio error: You've hit your 5-hour limit · resets 12:40pm (Atlantic/Canary), esperando 20s
+  [claude -p: reintento 4/4] claude -p devolvio error: You've hit your 5-hour limit · resets 12:40pm (Atlantic/Canary), esperando 40s
+Traceback (most recent call last):
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 227, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 212, in main
+    d = episodio(cliente, seed, args.k, rt, traza=traza, aviso=aviso, condiciones={
+        "sonda": "L2", "version_sonda": VERSION_SONDA, "model": args.model,
+        "provider": cliente.provider, "runtime": rt, "seed": seed, "rep": rep,
+        "invalidation_k": args.k, "max_tokens": args.max_tokens,
+        "thinking_budget": args.thinking_budget, **aviso})
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 123, in episodio
+    accion, completions = rt.act(obs)
+                          ~~~~~~^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\runtimes\skillstate.py", line 88, in act
+    completion = self.client.complete(
+        system=f"Instructions:\n{self.spec}", user=self._prompt(observation)
+    )
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 728, in complete
+    completion = _con_reintentos("claude -p", llamada, self.reintentos)
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 625, in _con_reintentos
+    return llamada()
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 726, in llamada
+    return self._leer_salida(codigo, salida, error)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 744, in _leer_salida
+    return ClaudeCliClient._leer(datos)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 760, in _leer
+    raise ErrorDeCli(f"claude -p devolvio error: {texto[:300]}")
+dr.llm.ErrorDeCli: claude -p devolvio error: You've hit your 5-hour limit · resets 12:40pm (Atlantic/Canary)
+=== relanzada tras limite Thu Nov 12 12:46:12 HGMT 2026 ===
+claude-haiku-4-5:skillstate:s6:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r1:k10:mt8192_coh
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 13:42:43 HGMT 2026 ===
+claude-haiku-4-5:react:s10:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 14:28:27 HGMT 2026 ===
+claude-haiku-4-5:react:s6:r2:k10:mt8192_coh
+  dependientes=3 correcta=1 sorda=2 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 14:47:57 HGMT 2026 ===
+claude-haiku-4-5:react:s6:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s4:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s10:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [claude -p: reintento 1/4] claude -p devolvio error: You've hit your 5-hour limit · resets 5:40pm (Atlantic/Canary), esperando 5s
+  [claude -p: reintento 2/4] claude -p devolvio error: You've hit your 5-hour limit · resets 5:40pm (Atlantic/Canary), esperando 10s
+  [claude -p: reintento 3/4] claude -p devolvio error: You've hit your 5-hour limit · resets 5:40pm (Atlantic/Canary), esperando 20s
+  [claude -p: reintento 4/4] claude -p devolvio error: You've hit your 5-hour limit · resets 5:40pm (Atlantic/Canary), esperando 40s
+Traceback (most recent call last):
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 227, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 212, in main
+    d = episodio(cliente, seed, args.k, rt, traza=traza, aviso=aviso, condiciones={
+        "sonda": "L2", "version_sonda": VERSION_SONDA, "model": args.model,
+        "provider": cliente.provider, "runtime": rt, "seed": seed, "rep": rep,
+        "invalidation_k": args.k, "max_tokens": args.max_tokens,
+        "thinking_budget": args.thinking_budget, **aviso})
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 123, in episodio
+    accion, completions = rt.act(obs)
+                          ~~~~~~^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\runtimes\skillstate.py", line 88, in act
+    completion = self.client.complete(
+        system=f"Instructions:\n{self.spec}", user=self._prompt(observation)
+    )
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 728, in complete
+    completion = _con_reintentos("claude -p", llamada, self.reintentos)
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 625, in _con_reintentos
+    return llamada()
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 726, in llamada
+    return self._leer_salida(codigo, salida, error)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 744, in _leer_salida
+    return ClaudeCliClient._leer(datos)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 760, in _leer
+    raise ErrorDeCli(f"claude -p devolvio error: {texto[:300]}")
+dr.llm.ErrorDeCli: claude -p devolvio error: You've hit your 5-hour limit · resets 5:40pm (Atlantic/Canary)
+=== relanzada tras limite Thu Nov 12 17:45:04 HGMT 2026 ===
+claude-haiku-4-5:skillstate:s6:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:skillstate:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r0:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 18:25:12 HGMT 2026 ===
+claude-haiku-4-5:react:s4:r2:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s4:r3:k10:mt8192
+  dependientes=11 correcta=0 sorda=11 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r0:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 18:57:15 HGMT 2026 ===
+claude-haiku-4-5:react:s10:r1:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r2:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s10:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r0:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+=== relanzada Thu Nov 12 19:43:41 HGMT 2026 ===
+claude-haiku-4-5:react:s6:r2:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-haiku-4-5:react:s6:r3:k10:mt8192
+  dependientes=4 correcta=0 sorda=4 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+BLOQUE 1 COHERENTE TERMINADO Thu Nov 12 19:59:23 HGMT 2026

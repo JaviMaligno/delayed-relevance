@@ -93,13 +93,29 @@ con Haiku 5.5:
 - con el aviso viejo, `skillstate` 2/38 y `react` 7/14;
 - con el aviso coherente y declarado, los dos 6/6.
 
-Con el aviso bien diseñado, la ventaja del estado explícito sobre la historia desaparece en
-esta sonda. El bloque 1 era Haiku 4.5, que aplicaba el aviso viejo sin cuestionarlo; habría
-que repetirlo con Haiku 4.5 y el aviso coherente para saber si su resultado se sostiene.
+### Repetición del bloque 1 con Haiku 4.5 (12-nov-2026)
+
+`experiments/rejilla_bloque1_coherente.sh`, resultados en `results/bloque1-coherente/`. Mismas
+condiciones que la L2 v2 (Haiku 4.5, seeds 4/10/6, k=10, tope 8192), 4 repeticiones, por
+`claude -p` en vez de Foundry. El aviso viejo va con el mismo cliente, para que el cambio de
+arnés no se lea como efecto del aviso. Medida primaria por episodio: la caja del primer paso
+dependiente, la misma de la corrección publicada.
+
+| Haiku 4.5 | aviso viejo: 1er dep. | aviso viejo: pasos | coherente: 1er dep. | coherente: pasos |
+|---|---|---|---|---|
+| `skillstate` | 12/12 | 12/12 | 12/12 | 12/12 |
+| `react` (historia) | 3/12 | 3/69 (66 sordas) | 10/12 | 12/15 |
+
+- **La suscripción reproduce el bloque 1**: con el aviso viejo, 12/12 frente a 3/12 (publicado
+  para Haiku: 24/24 frente a 1/24). El cambio de cliente no explica la diferencia.
+- **Con el aviso coherente, la historia pasa de 3/12 a 10/12.** La ventaja del estado
+  explícito baja de ~75 puntos a ~17, con IC que se solapan (n=12). La mayor parte de la
+  ventaja publicada venía del aviso que contradecía la historia: el brazo de historia veía que
+  el palé ya se había enviado y no aplicaba el aviso; el de estado no podía verlo.
 
 ## Pendiente
 
-1. Repetir el bloque 1 (Haiku 4.5) con `--aviso-coherente` para decidir si el artículo
-   publicado sobre SKILL.state necesita una corrección.
+1. Decidir con Javier la corrección de `when-the-fact-stops-being-true` (ya lleva una nota de
+   corrección: 70/72 frente a 10/72) y revisar `explicit-state-misremembers`, que cita el 93/93.
 2. Los episodios con 0/0 dependientes no cuentan ni a favor ni en contra; revisar si alguno
    oculta un fallo.
