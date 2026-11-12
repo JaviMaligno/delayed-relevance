@@ -93,13 +93,16 @@ def actualiza(creencia: dict, accion: Action) -> None:
 
 
 def episodio(cliente, seed: int, k: int, runtime: str, fabrica=None, traza=None,
-             condiciones: dict | None = None) -> dict:
-    env = Warehouse(horizon=50, seed=seed, invalidation_k=k)
+             condiciones: dict | None = None, aviso: dict | None = None) -> dict:
+    # `aviso`: aviso_coherente / aviso_declarado de Warehouse. Por defecto, el aviso
+    # original (corrige un pale que ya se habia enviado; ver resultados-compactacion.md).
+    aviso = aviso or {}
+    env = Warehouse(horizon=50, seed=seed, invalidation_k=k, **aviso)
     rt = fabrica(env) if fabrica is not None else RUNTIMES[runtime](cliente, env)
     env.reset()
     # Mundo de referencia: el mismo episodio ejecutando siempre la accion correcta. No
     # entra en la medida; sirve para comprobar que un paso fallido no repara el mundo.
-    ref = Warehouse(horizon=50, seed=seed, invalidation_k=k)
+    ref = Warehouse(horizon=50, seed=seed, invalidation_k=k, **aviso)
     ref.reset()
     # La creencia se congela ANTES de que el aviso vacie la estanteria y a partir de
     # ahi solo la mueven las acciones del propio agente: es su mundo si no oyo nada.
@@ -175,32 +178,42 @@ def main() -> None:
     p.add_argument("--max-tokens", type=int, default=600)
     p.add_argument("--thinking-budget", type=int, default=None)
     p.add_argument("--provider", default="auto",
-                   choices=["auto", "api", "foundry", "gemini", "vertex"])
+                   choices=["auto", "api", "foundry", "gemini", "vertex", "claude-cli",
+                            "codex-cli"])
+    p.add_argument("--aviso-coherente", action="store_true",
+                   help="el aviso corrige la ultima colocacion y nombra el pale")
+    p.add_argument("--aviso-declarado", action="store_true",
+                   help="correction_notice declarado en EVENT TYPES")
+    p.add_argument("--out", default="results")
     args = p.parse_args()
 
     load_env()
     keep_system_awake()
     cliente = build_client(args.model, args.provider, args.max_tokens,
                            thinking_budget=args.thinking_budget)
+    aviso = {"aviso_coherente": args.aviso_coherente, "aviso_declarado": args.aviso_declarado}
+    sufijo = ("_coh" if args.aviso_coherente else "") + ("_decl" if args.aviso_declarado else "")
     # Un agregado por proceso: dos procesos sobre el mismo JSON se pisarian.
-    ruta = Path("results") / (f"diagnose_probeC_v2_{args.model}_{'-'.join(args.runtimes)}"
-                              f"_s{'-'.join(map(str, args.seeds))}.json")
-    ruta.parent.mkdir(exist_ok=True)
+    salida = Path(args.out)
+    ruta = salida / (f"diagnose_probeC_v2_{args.model}_{'-'.join(args.runtimes)}"
+                     f"_s{'-'.join(map(str, args.seeds))}{sufijo}.json")
+    ruta.parent.mkdir(parents=True, exist_ok=True)
     hechos: dict = json.loads(ruta.read_text()) if ruta.exists() else {}
 
     for rt in args.runtimes:
         for seed in args.seeds:
             for rep in range(args.repeats):
-                clave = f"{args.model}:{rt}:s{seed}:r{rep}:k{args.k}:mt{args.max_tokens}"
+                clave = (f"{args.model}:{rt}:s{seed}:r{rep}:k{args.k}:mt{args.max_tokens}"
+                         f"{sufijo}")
                 if clave in hechos:
                     continue
-                traza = Path("results") / (f"l2v2_{args.model}_{rt}_s{seed}_r{rep}"
-                                           f"_k{args.k}_mt{args.max_tokens}.jsonl")
-                d = episodio(cliente, seed, args.k, rt, traza=traza, condiciones={
+                traza = salida / (f"l2v2_{args.model}_{rt}_s{seed}_r{rep}"
+                                  f"_k{args.k}_mt{args.max_tokens}{sufijo}.jsonl")
+                d = episodio(cliente, seed, args.k, rt, traza=traza, aviso=aviso, condiciones={
                     "sonda": "L2", "version_sonda": VERSION_SONDA, "model": args.model,
                     "provider": cliente.provider, "runtime": rt, "seed": seed, "rep": rep,
                     "invalidation_k": args.k, "max_tokens": args.max_tokens,
-                    "thinking_budget": args.thinking_budget})
+                    "thinking_budget": args.thinking_budget, **aviso})
                 hechos[clave] = d
                 ruta.write_text(json.dumps(hechos, indent=2))
                 print(f"{clave}\n  dependientes={d['dependientes']} correcta={d['correcta']} "
