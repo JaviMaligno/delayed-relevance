@@ -20,7 +20,7 @@ lectura preliminar, no una conclusión.
   Haiku 4.5 con historia completa acertaba el 0% a k=40; Haiku 5.5 el 83%. La sonda A ya casi
   no discrimina entre brazos con este modelo.
 - **Empezar de cero y consultar es el peor brazo**, con o sin guía. La guía hace las consultas
-  más específicas (con identificador, del 40% al 70%) pero no sube el acierto.
+  más específicas (con identificador, del 59% al 70%) pero no sube el acierto.
 - **`skillstate` al 8%** reproduce el bloque 1 (15% sin campo): el esquema solo tiene
   `shelf_contents` y `last_event`, y la cuarentena apuntada en `last_event` se sobrescribe.
 
