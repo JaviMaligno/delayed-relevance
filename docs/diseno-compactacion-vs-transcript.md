@@ -22,6 +22,7 @@ compactaciones, todos acumulan historia como ReAct.
 | `fresh_lookup` | nada: sesión limpia | sí |
 | `hybrid_lookup` | sus propias líneas de razonamiento y acción, literales; observaciones reducidas a una línea (Woolford) | sí |
 | `summary_lookup` | resumen (Cursor) | sí |
+| `fresh_ask` (13-nov) | nada: sesión limpia | pregunta en lenguaje natural; la contesta otra llamada al mismo modelo con el transcript entero (Woolford) |
 
 Referencias, corridas de nuevo con el modelo de este experimento (el bloque 1 usó Haiku 4.5):
 `react` (transcript entero en contexto, sin compactar) y `skillstate` (estado explícito).

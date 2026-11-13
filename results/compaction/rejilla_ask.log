@@ -1,0 +1,24 @@
+RAM libre: 3.08 GB
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda C k=14
+fresh_ask:s17:r0 metrica=1/1 score=1.00 consultas=4 portantes=3 sin_accion=0 truncadas=0 llamadas=58 232s modelos=['claude-haiku-5-5']
+fresh_ask:s17:r1 metrica=1/1 score=1.00 consultas=4 portantes=4 sin_accion=0 truncadas=0 llamadas=58 224s modelos=['claude-haiku-5-5']
+fresh_ask:s6:r0 metrica=1/2 score=0.97 consultas=9 portantes=7 sin_accion=0 truncadas=0 llamadas=68 339s modelos=['claude-haiku-5-5']
+fresh_ask:s6:r1 metrica=1/1 score=1.00 consultas=8 portantes=5 sin_accion=0 truncadas=0 llamadas=66 292s modelos=['claude-haiku-5-5']
+fresh_ask:s10:r0 metrica=1/2 score=0.97 consultas=5 portantes=5 sin_accion=0 truncadas=0 llamadas=60 261s modelos=['claude-haiku-5-5']
+fresh_ask:s10:r1 metrica=1/1 score=1.00 consultas=3 portantes=3 sin_accion=0 truncadas=0 llamadas=56 220s modelos=['claude-haiku-5-5']
+RAM libre: 2.38 GB
+RAM libre: 1.05 GB
+RAM libre: 1.88 GB
+RAM libre: 1.22 GB
+RAM libre: 1.93 GB
+RAM libre: 1.95 GB
+RAM libre: 1.94 GB
+RAM libre: 1.73 GB
+RAM libre: 1.45 GB
+RAM libre: 1.08 GB
+RAM libre: 1.11 GB
+RAM libre: 0.69 GB
+RAM libre: 1.19 GB
+RAM libre: 1 GB
+RAM libre: 1.49 GB

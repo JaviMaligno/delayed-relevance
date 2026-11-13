@@ -116,6 +116,75 @@ dependiente, la misma de la corrección publicada.
   ventaja publicada venía del aviso que contradecía la historia: el brazo de historia veía que
   el palé ya se había enviado y no aplicaba el aviso; el de estado no podía verlo.
 
+## `fresh_ask`: preguntar a quien lee el transcript entero (13-nov-2026)
+
+El artículo dejaba sin probar el lookup de Woolford, que delega la búsqueda en un subagente que
+lee toda la historia. `fresh_ask` es `fresh_lookup` con otra herramienta: tras compactar, sesión
+limpia; en vez de `Lookup: <palabras>`, el agente puede responder `Ask: <pregunta>`. Contesta
+otra llamada al mismo modelo (Haiku 5.5 por `claude -p`) con el transcript crudo entero y un
+system neutral (`PROMPT_RESPONDEDOR`: responder solo con el transcript, citar pasos y decir si
+eventos posteriores cambian los anteriores). Mismo tope de 2 por paso; nada en el prompt del
+agente nombra el aviso ni las correcciones. `experiments/rejilla_compaction_ask.sh`, resultados
+en `results/compaction/C-haiku55-coh-ask/`.
+
+### Sonda C, aviso coherente, sin guía ni aviso declarado, 6 episodios
+
+| brazo | 1er dependiente (por episodio) | pasos dependientes | consultas portantes |
+|---|---|---|---|
+| `fresh_ask` | **4/6** | **6/8** | 27/33 |
+| `fresh_lookup` | 2/6 | 3/30 | 1/40 |
+| `summary` | 6/6 | 6/6 | — |
+| `hybrid_lookup` | 6/6 | 6/6 | 0/1 |
+| `summary_lookup` | 5/6 | 5/17 | 0/9 |
+| `react` | 5/6 | 6/7 | — |
+| `skillstate` | 5/6 | 5/17 | — |
+
+Las filas que no son `fresh_ask` son las de `C-haiku55-coh`, ya medidas.
+
+- **La corrección llega sin pedirla.** El agente nunca pregunta «qué ha cambiado» ni «hubo
+  correcciones». De 33 preguntas (5,5 por episodio, entre 3 y 9), 30 son sobre el estado (qué
+  estantería está libre, dónde está un SKU, el mapa de ocupación) y 3 son repreguntas para
+  verificar una respuesta anterior, dos de ellas sobre la corrección que esa respuesta había
+  traído. Ninguna genérica. El respondedor, al reconstruir el estado, aplica el aviso y lo cita:
+  en los 6 episodios, la primera pregunta tras la compactación del paso 15 ya lo trae. 27 de
+  33 respuestas lo citan (heurística `respuesta_portante`: `notice_id` o paso del aviso;
+  comprobado que las 27 lo mencionan de forma explícita). Las 6 que no lo citan son preguntas
+  que el aviso no afecta (un SKU u otras estanterías).
+- **Los dos fallos ya no son de recuperación, sino de aceptación.** En s6 r0 la respuesta decía
+  que la estantería 0 estaba vacía por el aviso del paso 14; el agente contestó «the step 14
+  "correction" was a Wait, not a Ship» y colocó en la 1 (acción sorda). En s10 r0 el agente
+  repreguntó para verificar el aviso, el respondedor contestó que el cambio «rests only on the
+  notice's own fields», y el agente esperó (`Wait`) en vez de colocar. En los dos, el siguiente
+  paso dependiente ya fue correcto: no hay cascada (6/8 frente a 3/30).
+- **Coste**: 0,11 USD/episodio a precio de lista frente a 0,08 de `fresh_lookup`; cada pregunta
+  manda el transcript entero.
+
+Ejemplos literales:
+- s17 r0, paso 15, recién compactado. *Ask*: «What is the lowest-numbered empty shelf as of
+  step 15, after every Store and Ship through step 14? List each shelf's current occupant, with
+  its SKU and lot.» *Respuesta*: «Lowest-numbered empty shelf as of step 15: shelf 0. All
+  shelves (0, 1, and 2) are empty…», y en la lista de pasos: «Step 14: Correction notice
+  COR-3619 corrects step 13. It states the putaway never completed…»
+- s10 r1, paso 17. *Ask*: «Before step 17, which shelves held stock and which were empty? …»
+  *Respuesta*: «Occupancy after the last Store or Ship (step 12), before the correction: … Updated
+  after correction COR-2087 (step 14): Step 14 corrects step 8. Shelf 0 … was never put away…»
+
+Lectura: con n=6 es dirección, no conclusión (IC95 del primer dependiente, 30-90%). El mecanismo
+sí se ve claro: con palabras clave el agente tiene que saber qué buscar; con una pregunta sobre
+el estado, quien lee la historia entera trae la corrección por su cuenta.
+
+### Sonda A, k=40: pendiente
+
+No llegó a arrancar: el equipo se quedó sin memoria (≈1 GB libre) mientras la rejilla esperaba
+el umbral de 2,5 GB, y Claude Code mató el proceso. Para lanzarla (reanuda desde checkpoint):
+
+    cd <worktree> && PYTHONPATH="src;." python experiments/run_compaction.py --probe A --k 40 \
+      --seeds 0 3 6 8 --reps 3 --client claude-cli --model claude-haiku-5-5 \
+      --arms fresh_ask --out results/compaction/A-haiku55-ask
+
+Referencia: `fresh_lookup` 3/8 en la sonda A sin guía (12 episodios, 8 con el paso dependiente
+materializado).
+
 ## Pendiente
 
 1. Decidir con Javier la corrección de `when-the-fact-stops-being-true` (ya lleva una nota de

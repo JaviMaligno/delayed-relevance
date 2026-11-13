@@ -1,0 +1,16 @@
+
+partial_C_k14_claude-cli_claude-haiku-5-5_mt8192_v2_coh.json  (sonda C)
+
+brazo           eps          metrica (IC95 Wilson)               1er dep.  score  consulta  portantes sin acc. trunc. USD lista/ep entr. ESTIM./ep cache_read/ep   s/ep s/llamada
+fresh_ask         6        6/8  75.0% [40.9- 92.9] 4/6  66.7% [30.0- 90.3]  0.991     10.0%   27/33           0      0       0.1097          182768        125002    261       4.3
+
+consultas que solo traian el id del aviso (en una linea del agente) y resumenes truncados:
+  fresh_ask       con_id=21 resumenes_truncados=0
+
+forma de las consultas (palabras por consulta; con identificador = numero de estanteria, SKU o notice_id):
+  fresh_ask       n=33 palabras={21: 1, 23: 1, 24: 2, 25: 2, 27: 1, 28: 3, 29: 4, 30: 1, 31: 5, 32: 1, 34: 2, 37: 1, 38: 1, 39: 2, 40: 1, 41: 2, 45: 1, 53: 1, 55: 1} con identificador=33/33 (100%)
+
+modelos que contestaron: ['claude-haiku-5-5']
+consulta = pasos con al menos un Lookup; portantes = consultas cuya respuesta traia la observacion del aviso.
+USD lista = coste a precio de lista MEDIDO por el CLI (sin cachear la historia: claude -p manda un solo bloque).
+entr. ESTIM. = ESTIMACION de tokens de entrada equivalentes con cache de prefijo ideal (comun con la llamada anterior a 0,1x, resto a 1,25x); no es una medida.
