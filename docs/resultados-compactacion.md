@@ -189,6 +189,12 @@ Las filas que no son `fresh_ask` son las de la sonda A ya medidas. Con preguntas
 natural, la sesión limpia pasa de ser el único brazo que pierde el detalle a usarlo tan a menudo
 como el que nunca compacta. Dirección, no tasa (n=11).
 
+**Límite de `fresh_ask`.** Quien contesta lee el transcript entero en cada pregunta: la sesión
+del agente está limpia, la del lector no. En 50 pasos el historial cabe de sobra; en una sesión
+de verdad larga, justo cuando hace falta compactar, el lector se llenaría igual que el agente y
+tendría que trocear la historia (como un RLM) o resumirla, con lo que vuelve el problema de qué
+conservar. Lo medido es que funciona mientras el historial cabe en una sola lectura.
+
 ## Pendiente
 
 1. Decidir con Javier la corrección de `when-the-fact-stops-being-true` (ya lleva una nota de
