@@ -22,3 +22,23 @@ RAM libre: 0.69 GB
 RAM libre: 1.19 GB
 RAM libre: 1 GB
 RAM libre: 1.49 GB
+RAM libre: 1.16 GB
+RAM libre: 1 GB
+RAM libre: 2.14 GB
+RAM libre: 2.89 GB
+suspension del sistema inhibida: True
+cliente: claude-cli  modelo: claude-haiku-5-5  sonda A k=40
+fresh_ask:s0:r0 metrica=1/1 score=1.00 consultas=4 portantes=4 sin_accion=0 truncadas=0 llamadas=58 236s modelos=['claude-haiku-5-5']
+fresh_ask:s0:r1 metrica=1/1 score=1.00 consultas=5 portantes=4 sin_accion=0 truncadas=0 llamadas=60 254s modelos=['claude-haiku-5-5']
+fresh_ask:s0:r2 metrica=1/1 score=1.00 consultas=5 portantes=5 sin_accion=0 truncadas=0 llamadas=60 248s modelos=['claude-haiku-5-5']
+fresh_ask:s3:r0 metrica=0/1 score=0.85 consultas=5 portantes=5 sin_accion=0 truncadas=0 llamadas=60 248s modelos=['claude-haiku-5-5']
+fresh_ask:s3:r1 metrica=1/1 score=1.00 consultas=4 portantes=3 sin_accion=0 truncadas=0 llamadas=58 235s modelos=['claude-haiku-5-5']
+fresh_ask:s3:r2 metrica=1/1 score=0.97 consultas=4 portantes=4 sin_accion=0 truncadas=0 llamadas=58 270s modelos=['claude-haiku-5-5']
+  [claude -p: reintento 1/4] claude -p salio con 3221226505 sin JSON: , esperando 5s
+fresh_ask:s6:r0 metrica=1/1 score=1.00 consultas=8 portantes=3 sin_accion=0 truncadas=0 llamadas=66 328s modelos=['claude-haiku-5-5']
+fresh_ask:s6:r1 metrica=1/1 score=0.97 consultas=11 portantes=6 sin_accion=1 truncadas=0 llamadas=72 385s modelos=['claude-haiku-5-5']
+fresh_ask:s6:r2 metrica=1/1 score=0.94 consultas=8 portantes=3 sin_accion=0 truncadas=0 llamadas=66 323s modelos=['claude-haiku-5-5']
+fresh_ask:s8:r0 metrica=1/1 score=1.00 consultas=3 portantes=2 sin_accion=0 truncadas=0 llamadas=56 216s modelos=['claude-haiku-5-5']
+fresh_ask:s8:r1 metrica=0/0 score=0.97 consultas=3 portantes=3 sin_accion=1 truncadas=0 llamadas=56 239s modelos=['claude-haiku-5-5']
+fresh_ask:s8:r2 metrica=1/1 score=1.00 consultas=5 portantes=4 sin_accion=0 truncadas=0 llamadas=60 274s modelos=['claude-haiku-5-5']
+REJILLA ASK TERMINADA

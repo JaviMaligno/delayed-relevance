@@ -173,17 +173,21 @@ Lectura: con n=6 es dirección, no conclusión (IC95 del primer dependiente, 30-
 sí se ve claro: con palabras clave el agente tiene que saber qué buscar; con una pregunta sobre
 el estado, quien lee la historia entera trae la corrección por su cuenta.
 
-### Sonda A, k=40: pendiente
+### Sonda A, k=40 (13-nov-2026)
 
-No llegó a arrancar: el equipo se quedó sin memoria (≈1 GB libre) mientras la rejilla esperaba
-el umbral de 2,5 GB, y Claude Code mató el proceso. Para lanzarla (reanuda desde checkpoint):
+Semillas 0, 3, 6, 8 × 3 repeticiones, Haiku 5.5 por `claude -p`, sin guía; resultados en
+`results/compaction/A-haiku55-ask/`. El paso dependiente se materializa en 11 de 12 episodios.
 
-    cd <worktree> && PYTHONPATH="src;." python experiments/run_compaction.py --probe A --k 40 \
-      --seeds 0 3 6 8 --reps 3 --client claude-cli --model claude-haiku-5-5 \
-      --arms fresh_ask --out results/compaction/A-haiku55-ask
+| brazo | detalle usado en el paso dependiente | consultas portantes |
+|---|---|---|
+| `fresh_ask` | **10/11** | 46/64 |
+| `fresh_lookup` | 3/8 | 5/87 |
+| `summary` | 9/10 | — |
+| `react` | 10/12 | — |
 
-Referencia: `fresh_lookup` 3/8 en la sonda A sin guía (12 episodios, 8 con el paso dependiente
-materializado).
+Las filas que no son `fresh_ask` son las de la sonda A ya medidas. Con preguntas en lenguaje
+natural, la sesión limpia pasa de ser el único brazo que pierde el detalle a usarlo tan a menudo
+como el que nunca compacta. Dirección, no tasa (n=11).
 
 ## Pendiente
 
