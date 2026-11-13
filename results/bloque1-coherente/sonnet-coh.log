@@ -1,0 +1,22 @@
+=== cadena coh Thu Nov 12 22:40:41 HGMT 2026 ===
+claude-sonnet-5:react:s10:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0

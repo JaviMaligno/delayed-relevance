@@ -105,9 +105,12 @@ dependiente, la misma de la corrección publicada.
 |---|---|---|---|---|
 | `skillstate` | 12/12 | 12/12 | 12/12 | 12/12 |
 | `react` (historia) | 3/12 | 3/69 (66 sordas) | 10/12 | 12/15 |
+| Sonnet 5 `skillstate` | 12/12 | 12/12 | 12/12 | 12/12 |
+| Sonnet 5 `react` | 5/12 | 8/65 | 12/12 | 12/12 |
 
 - **La suscripción reproduce el bloque 1**: con el aviso viejo, 12/12 frente a 3/12 (publicado
   para Haiku: 24/24 frente a 1/24). El cambio de cliente no explica la diferencia.
+- **Sonnet 5 (13-nov-2026)**: aviso viejo 12/12 frente a 5/12 (publicado: 22/24 frente a 9/24); coherente, 12/12 los dos. La ventaja desaparece.
 - **Con el aviso coherente, la historia pasa de 3/12 a 10/12.** La ventaja del estado
   explícito baja de ~75 puntos a ~17, con IC que se solapan (n=12). La mayor parte de la
   ventaja publicada venía del aviso que contradecía la historia: el brazo de historia veía que

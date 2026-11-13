@@ -1,0 +1,96 @@
+=== sonnet lanzada Thu Nov 12 20:08:00 HGMT 2026 ===
+usage: diagnose_probeC.py [-h] [--model MODEL] [--runtimes [RUNTIMES ...]]
+                          [--seeds [SEEDS ...]] [--repeats REPEATS] [--k K]
+                          [--max-tokens MAX_TOKENS]
+                          [--thinking-budget THINKING_BUDGET]
+                          [--provider {auto,api,foundry,gemini,vertex,claude-cli,codex-cli}]
+                          [--aviso-coherente] [--aviso-declarado] [--out OUT]
+diagnose_probeC.py: error: unrecognized arguments: claude-cli
+=== sonnet lanzada Thu Nov 12 20:08:39 HGMT 2026 ===
+claude-sonnet-5:skillstate:s4:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=5
+claude-sonnet-5:skillstate:s4:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+claude-sonnet-5:skillstate:s4:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+  [claude -p: reintento 1/4] claude -p devolvio error: You've hit your 5-hour limit · resets 10:40pm (Atlantic/Canary), esperando 5s
+  [claude -p: reintento 2/4] claude -p devolvio error: You've hit your 5-hour limit · resets 10:40pm (Atlantic/Canary), esperando 10s
+  [claude -p: reintento 3/4] claude -p devolvio error: You've hit your 5-hour limit · resets 10:40pm (Atlantic/Canary), esperando 20s
+  [claude -p: reintento 4/4] claude -p devolvio error: You've hit your 5-hour limit · resets 10:40pm (Atlantic/Canary), esperando 40s
+Traceback (most recent call last):
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 227, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 212, in main
+    d = episodio(cliente, seed, args.k, rt, traza=traza, aviso=aviso, condiciones={
+        "sonda": "L2", "version_sonda": VERSION_SONDA, "model": args.model,
+        "provider": cliente.provider, "runtime": rt, "seed": seed, "rep": rep,
+        "invalidation_k": args.k, "max_tokens": args.max_tokens,
+        "thinking_budget": args.thinking_budget, **aviso})
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\experiments\diagnose_probeC.py", line 123, in episodio
+    accion, completions = rt.act(obs)
+                          ~~~~~~^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\runtimes\skillstate.py", line 88, in act
+    completion = self.client.complete(
+        system=f"Instructions:\n{self.spec}", user=self._prompt(observation)
+    )
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 728, in complete
+    completion = _con_reintentos("claude -p", llamada, self.reintentos)
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 625, in _con_reintentos
+    return llamada()
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 726, in llamada
+    return self._leer_salida(codigo, salida, error)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 744, in _leer_salida
+    return ClaudeCliClient._leer(datos)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "C:\Users\Usuario\GitHub\delayed-relevance-wt-compaction\src\dr\llm.py", line 760, in _leer
+    raise ErrorDeCli(f"claude -p devolvio error: {texto[:300]}")
+dr.llm.ErrorDeCli: claude -p devolvio error: You've hit your 5-hour limit · resets 10:40pm (Atlantic/Canary)
+=== sonnet relanzada (cuenta nueva) Thu Nov 12 21:49:28 HGMT 2026 ===
+claude-sonnet-5:skillstate:s4:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=5
+claude-sonnet-5:skillstate:s10:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=6
+claude-sonnet-5:skillstate:s10:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:skillstate:s10:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=4
+claude-sonnet-5:skillstate:s10:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=7
+claude-sonnet-5:skillstate:s6:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=2
+claude-sonnet-5:skillstate:s6:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=1
+claude-sonnet-5:skillstate:s6:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=5
+claude-sonnet-5:skillstate:s6:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=3
+=== sonnet relanzada Thu Nov 12 22:22:59 HGMT 2026 ===
+claude-sonnet-5:react:s4:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r1:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r2:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r3:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r0:k10:mt8192_coh
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0

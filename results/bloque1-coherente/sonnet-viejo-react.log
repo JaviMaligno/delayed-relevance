@@ -1,0 +1,37 @@
+claude-sonnet-5:react:s4:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r1:k10:mt8192
+  dependientes=2 correcta=1 sorda=1 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+  [claude -p: reintento 1/4] C:\Users\Usuario\.local\bin\claude.EXE no respondio en 300 s, esperando 5s
+claude-sonnet-5:react:s4:r2:k10:mt8192
+  dependientes=15 correcta=1 sorda=14 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s4:r3:k10:mt8192
+  dependientes=15 correcta=1 sorda=14 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r0:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r1:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r2:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s10:r3:k10:mt8192
+  dependientes=7 correcta=0 sorda=7 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r0:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r1:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r2:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
+claude-sonnet-5:react:s6:r3:k10:mt8192
+  dependientes=1 correcta=1 sorda=0 otra=0 sin_accion=0
+  truncadas=0/50 parches_invalidos=0
