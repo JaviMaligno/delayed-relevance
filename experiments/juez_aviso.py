@@ -37,7 +37,7 @@ SISTEMA = (
 
 def casos(directorio: Path):
     for f in sorted((directorio / "trazas").glob("*.jsonl")):
-        m = re.search(r"_(summary|fresh_lookup|hybrid_lookup|summary_lookup|react|skillstate)"
+        m = re.search(r"_(summary|fresh_lookup|fresh_ask|hybrid_lookup|summary_lookup|react|skillstate)"
                       r"_s(\d+)_r(\d+)\.jsonl$", f.name)
         if not m:
             continue

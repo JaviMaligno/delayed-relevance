@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import re
 import time
 from pathlib import Path
 
@@ -124,6 +125,18 @@ def es_portante(lineas: list[str], notice_id: str) -> bool:
     return bool(notice_id) and any("Observation:" in l and notice_id in l for l in lineas)
 
 
+def respuesta_portante(respuesta: str, notice_id: str, paso_aviso: int | None) -> bool:
+    """`fresh_ask`: la respuesta del respondedor trae el aviso. No hay lineas literales
+    que comparar, asi que basta con que cite su `notice_id` o el paso en que llego (el
+    respondedor cita pasos). Es una heuristica: el informe la contrasta leyendo las
+    respuestas."""
+    if notice_id and notice_id in respuesta:
+        return True
+    return paso_aviso is not None and re.search(
+        rf"\bsteps?\s+(?:\d+\s*(?:,|and|-|to)\s*)*{paso_aviso}\b", respuesta,
+        re.IGNORECASE) is not None
+
+
 def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
              condiciones: dict | None = None) -> dict:
     """Cruza el entorno con el runtime y mide la sonda. `rt` puede ser cualquier objeto
@@ -189,8 +202,11 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
         # de razonamiento del agente que cite su id: en el piloto, la unica consulta
         # "portante" era el agente citandose a si mismo. Las que solo traen el id se
         # cuentan aparte.
-        portantes = [es_portante(c.lineas, notice_id) for c in consultas]
-        con_id = [bool(notice_id) and any(notice_id in l for l in c.lineas) for c in consultas]
+        portantes = [respuesta_portante(c.respuesta, notice_id, paso_aviso)
+                     if getattr(c, "tipo", "lookup") == "ask"
+                     else es_portante(c.lineas, notice_id) for c in consultas]
+        con_id = [bool(notice_id) and any(notice_id in l for l in c.lineas + [c.respuesta])
+                  for c in consultas]
         tot["truncadas"] += sum(1 for c in completions if c.truncated)
         tot["sin_accion"] += accion is None
         tot["llamadas"] += len(completions)
@@ -225,7 +241,8 @@ def episodio(env: Warehouse, rt, sonda: str, traza: Path | None = None,
                     "sordo": sorda.render() if sorda is not None else None,
                     "ejecutado": rend, "correct": correcta,
                     "consultas": [{"consulta": c.consulta, "coincidencias": c.coincidencias,
-                                   "portante": p, "lineas": c.lineas}
+                                   "portante": p, "lineas": c.lineas,
+                                   "tipo": c.tipo, "respuesta": c.respuesta}
                                   for c, p in zip(consultas, portantes)],
                     "raw": {"respuestas": [c.text for c in completions]},
                     "razonamiento": [getattr(c, "razonamiento", "") for c in completions],

@@ -22,7 +22,8 @@ from pathlib import Path
 
 from dr.runtimes.compaction import palabras_de
 
-ORDEN = ["react", "skillstate", "summary", "fresh_lookup", "hybrid_lookup", "summary_lookup"]
+ORDEN = ["react", "skillstate", "summary", "fresh_lookup", "fresh_ask", "hybrid_lookup",
+         "summary_lookup"]
 
 
 def wilson(aciertos: int, n: int, z: float = 1.96) -> tuple[float, float]:

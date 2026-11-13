@@ -10,6 +10,11 @@ compactar y si pueden consultar el transcript crudo:
 | `fresh_lookup`   | nada: sesion limpia                                | si       |
 | `hybrid_lookup`  | sus lineas literales; observaciones a una linea    | si       |
 | `summary_lookup` | resumen                                            | si       |
+| `fresh_ask`      | nada: sesion limpia                                | pregunta |
+
+`fresh_ask` cambia solo la herramienta respecto a `fresh_lookup`: en vez de palabras, una
+pregunta en lenguaje natural que contesta OTRA llamada al mismo modelo con el transcript
+crudo entero delante (el lookup de Woolford delega en un subagente que lee toda la historia).
 """
 from __future__ import annotations
 
@@ -25,6 +30,16 @@ MAX_CONSULTAS = 2
 MAX_LINEAS = 8
 
 _PEDIDO_CONSULTA = re.compile(r"Lookup[*`\s]*:[*`\s]*(.+)", re.IGNORECASE)
+_PEDIDO_PREGUNTA = re.compile(r"\bAsk[*`\s]*:[*`\s]*(.+)", re.IGNORECASE)
+
+PROMPT_RESPONDEDOR = (
+    "You are given the full raw transcript of a warehouse agent's session. Answer the "
+    "question using only the transcript, concisely, citing step numbers. If later events "
+    "change earlier ones, say so."
+)
+"""Neutral a proposito: no nombra el tipo de aviso. La ultima frase es la que haria
+cualquier subagente de consulta razonable, y es lo que se quiere probar: si quien lee la
+historia entera trae la correccion sin que se la pidan."""
 
 
 def pedido_de_consulta(texto: str) -> str | None:
@@ -34,6 +49,15 @@ def pedido_de_consulta(texto: str) -> str | None:
     escriben los modelos en Markdown; si no, una consulta legitima se leeria como paso
     sin accion y el brazo perderia por formato, no por metodo."""
     pedidos = _PEDIDO_CONSULTA.findall(texto)
+    if not pedidos:
+        return None
+    return pedidos[-1].strip().strip("`*\"' ")
+
+
+def pedido_de_pregunta(texto: str) -> str | None:
+    """Pregunta de la ULTIMA linea `Ask: ...`, o None. Misma tolerancia a Markdown que
+    `pedido_de_consulta`."""
+    pedidos = _PEDIDO_PREGUNTA.findall(texto)
     if not pedidos:
         return None
     return pedidos[-1].strip().strip("`*\"' ")
@@ -55,6 +79,9 @@ class Consulta:
     consulta: str
     coincidencias: int
     lineas: list[str] = field(default_factory=list)
+    # `ask`: la consulta es una pregunta y `respuesta` el texto del respondedor.
+    tipo: str = "lookup"
+    respuesta: str = ""
 
 
 GUIA_CONSULTA = (
@@ -100,6 +127,24 @@ def _contexto_de_consulta(brazo: str, guia: bool = False) -> str:
     )
 
 
+def _contexto_de_pregunta() -> str:
+    """Como `_contexto_de_consulta` para `fresh_ask`: misma redaccion, otra herramienta."""
+    return (
+        "\n\nTRANSCRIPT QUESTIONS\n"
+        f"Your context is compacted every {CADENCIA} steps. After a compaction, the earlier "
+        "history is removed from your context and is only available through questions.\n"
+        "The raw transcript of every event you have received and every reply you have "
+        "given is kept verbatim and is never compacted. To ask about it, reply with a "
+        "single line\n"
+        "    Ask: <question>\n"
+        "instead of an action. The question, in natural language, goes to an assistant "
+        "that reads the whole raw transcript and answers it, citing step numbers. Then you "
+        "are asked again for the same event. You may ask at most "
+        f"{MAX_CONSULTAS} questions per step; after that you must reply with an action. "
+        "A question is not an action and is not your answer for the step."
+    )
+
+
 class CompactingRuntime:
     """Base comun: historia como ReAct, compactacion periodica y consulta opcional.
 
@@ -113,6 +158,10 @@ class CompactingRuntime:
 
     brazo = ""
     consulta = False
+    herramienta = "Lookup"
+    _ETIQUETA_PEDIDO = "Your lookup"
+    _TIPO_PEDIDO = "lookup"
+    _TIPO_RESULTADO = "resultado"
 
     def __init__(self, client, spec: str, cadencia: int = CADENCIA,
                  summary_max_tokens: int = SUMMARY_MAX_TOKENS,
@@ -149,14 +198,24 @@ class CompactingRuntime:
 
     def _system(self) -> str:
         texto = f"Instructions:\n{self.spec}"
-        return texto + (_contexto_de_consulta(self.brazo, self.guia_consulta) if self.consulta else "")
+        return texto + (self._contexto() if self.consulta else "")
+
+    def _contexto(self) -> str:
+        return _contexto_de_consulta(self.brazo, self.guia_consulta)
+
+    def _pedido(self, texto: str) -> str | None:
+        return pedido_de_consulta(texto)
+
+    def _consultar(self, paso: int, pedido: str) -> tuple[str, list[Completion]]:
+        """Resultado de la herramienta y las completions gastadas en producirlo."""
+        return self._buscar(paso, pedido), []
 
     def _prefijo(self) -> list[str]:
         # Troceado como ReAct: cada bloque es inmutable una vez escrito, que es lo que
         # permite cachear el prefijo con un cliente que marque puntos de corte.
         if self.compactaciones and self.consulta:
             cabecera = (f"History since the last compaction (step {self.compactaciones[-1]}; "
-                        "earlier steps only via Lookup):\n")
+                        f"earlier steps only via {self.herramienta}):\n")
         elif self.compactaciones:
             cabecera = f"History since the last compaction (step {self.compactaciones[-1]}):\n"
         else:
@@ -186,23 +245,25 @@ class CompactingRuntime:
         respuesta = ""
         for consultas_hechas in range(MAX_CONSULTAS + 1):
             user = (f"Latest Observation: {observation.render()}\n"
-                    + "".join(f"Your lookup: {q}\n{r}\n" for q, r in pares)
+                    + "".join(f"{self._ETIQUETA_PEDIDO}: {q}\n{r}\n" for q, r in pares)
                     + self._instruccion(consultas_hechas))
             completion = self.client.complete(system=self._system(), user=user,
                                               cache_prefix=self._prefijo())
             completions.append(completion)
             respuesta = completion.text
             accion = Action.parse(respuesta)
-            pedido = pedido_de_consulta(respuesta) if self.consulta else None
+            pedido = self._pedido(respuesta) if self.consulta else None
             if accion is not None or pedido is None or consultas_hechas >= MAX_CONSULTAS:
                 if accion is None and pedido is not None:
                     self.sin_accion_tras_consultas += 1
                 break
-            pares.append((pedido, self._buscar(observation.step, pedido)))
+            resultado, auxiliares = self._consultar(observation.step, pedido)
+            completions += auxiliares
+            pares.append((pedido, resultado))
         self.history.append(("obs", observation.render()))
         for pedido, resultado in pares:
-            self.history.append(("lookup", pedido))
-            self.history.append(("resultado", resultado))
+            self.history.append((self._TIPO_PEDIDO, pedido))
+            self.history.append((self._TIPO_RESULTADO, resultado))
         self.history.append(("respuesta", respuesta))
         self._al_transcript(observation.step, f"Reasoning & Action: {respuesta}")
         self.pasos += 1
@@ -250,7 +311,8 @@ class CompactingRuntime:
 
 
 _ETIQUETAS = {"obs": "Observation", "respuesta": "Reasoning & Action",
-              "lookup": "Lookup", "resultado": "Lookup result"}
+              "lookup": "Lookup", "resultado": "Lookup result",
+              "ask": "Ask", "respuesta_ask": "Ask answer"}
 
 
 class SummaryRuntime(CompactingRuntime):
@@ -294,6 +356,40 @@ class FreshLookupRuntime(CompactingRuntime):
         return []
 
 
+class FreshAskRuntime(FreshLookupRuntime):
+    """Como `fresh_lookup` (sesion limpia en cada compactacion), salvo la herramienta:
+    `Ask: <pregunta>`, que contesta otra llamada al MISMO cliente con el transcript crudo
+    entero (el mismo que busca `Lookup`) y la pregunta."""
+
+    brazo = "fresh_ask"
+    herramienta = "Ask"
+    _ETIQUETA_PEDIDO = "Your question"
+    _TIPO_PEDIDO = "ask"
+    _TIPO_RESULTADO = "respuesta_ask"
+
+    def _contexto(self) -> str:
+        return _contexto_de_pregunta()
+
+    def _pedido(self, texto: str) -> str | None:
+        return pedido_de_pregunta(texto)
+
+    def _instruccion(self, consultas_hechas: int) -> str:
+        if consultas_hechas >= MAX_CONSULTAS:
+            return (f"You have used your {MAX_CONSULTAS} questions for this step. Reply now "
+                    "with your reasoning and action (format 'Action: <cmd>'):")
+        return ("Generate your next reasoning and action (format 'Action: <cmd>'), or reply "
+                "'Ask: <question>' to ask about the raw transcript:")
+
+    def _consultar(self, paso: int, pedido: str) -> tuple[str, list[Completion]]:
+        transcript = "\n".join(f"step {p}: {linea}" for p, linea in self.transcript)
+        completion = self.client.complete(
+            system=PROMPT_RESPONDEDOR,
+            user=f"Transcript:\n{transcript}\n\nQuestion: {pedido}")
+        respuesta = completion.text.strip()
+        self.consultas.append(Consulta(paso, pedido, 0, [], tipo="ask", respuesta=respuesta))
+        return f"Answer to your question: {respuesta or '(no answer)'}", [completion]
+
+
 def una_linea(texto: str) -> str:
     """Primera linea de una observacion. En el Warehouse es la que lleva el tipo de
     evento y los campos portantes; lo que sigue es la cola de auditoria."""
@@ -335,4 +431,5 @@ BRAZOS = {
     "fresh_lookup": FreshLookupRuntime,
     "hybrid_lookup": HybridLookupRuntime,
     "summary_lookup": SummaryLookupRuntime,
+    "fresh_ask": FreshAskRuntime,
 }

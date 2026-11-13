@@ -227,3 +227,102 @@ def test_la_guia_de_consulta_solo_aparece_con_la_bandera():
             assert con_guia == (guia and brazo.endswith("lookup"))
             # Sin nombrar el tipo de aviso: la guia no da la respuesta.
             assert "correction_notice" not in system
+
+
+# --- fresh_ask: sesion limpia y pregunta en lenguaje natural a otra llamada -------------
+
+class ClienteConRespondedor(GuionCliente):
+    """Contesta aparte las llamadas del respondedor de `Ask` (las que reciben el
+    transcript entero), para que el guion de decisiones no dependa de ellas."""
+
+    def __init__(self, responses, respuesta="RESPUESTA-ASK"):
+        super().__init__(responses)
+        self.respuesta = respuesta
+        self.respondedor = []
+
+    def complete(self, system, user, max_tokens=None, cache_prefix=None):
+        if system.startswith("You are given the full raw transcript"):
+            self.respondedor.append((system, user))
+            return Completion(text=self.respuesta, prompt_tokens=1, output_tokens=1)
+        return super().complete(system, user, max_tokens, cache_prefix)
+
+
+def test_fresh_ask_registrado_y_explica_la_herramienta():
+    from dr.runtimes.compaction import FreshAskRuntime
+    assert BRAZOS["fresh_ask"] is FreshAskRuntime
+    cliente = ClienteConRespondedor([WAIT])
+    FreshAskRuntime(cliente, "ESPEC").act(_obs(0))
+    system, _ = cliente.calls[0]
+    assert "Ask: <question>" in system
+    assert "Lookup: <words>" not in system
+    # Sin nombrar el tipo de aviso ni insinuar que hubo correcciones.
+    assert "correction" not in system.lower()
+
+
+def test_tras_compactar_fresh_ask_no_ve_historia_previa():
+    from dr.runtimes.compaction import FreshAskRuntime
+    cliente = ClienteConRespondedor([WAIT] * 16)
+    rt = FreshAskRuntime(cliente, "ESPEC")
+    for paso in range(16):
+        rt.act(_obs(paso))
+    _, prompt = _decisiones(cliente)[-1]
+    for paso in range(15):
+        assert f"id=E{paso}\n" not in prompt and f"id=E{paso} " not in prompt
+    assert "id=E15" in prompt
+    assert "only via Ask" in prompt
+
+
+def test_ask_tolera_markdown():
+    from dr.runtimes.compaction import pedido_de_pregunta
+    assert pedido_de_pregunta("pienso\n**Ask:** What is on shelf 12?") == "What is on shelf 12?"
+    assert pedido_de_pregunta("`Ask: what happened to SKU-D?`") == "what happened to SKU-D?"
+    assert pedido_de_pregunta("Action: Wait({})") is None
+    assert pedido_de_pregunta("Lookup: shelf=12") is None
+
+
+def test_el_respondedor_recibe_el_transcript_entero_y_la_pregunta():
+    from dr.runtimes.compaction import FreshAskRuntime
+    cliente = ClienteConRespondedor([WAIT] * 46 + ["**Ask:** what is on shelf 7?", WAIT],
+                                    respuesta="Shelf 7 holds SKU-A since step 0.")
+    rt = FreshAskRuntime(cliente, "ESPEC")
+    for paso in range(46):
+        rt.act(_obs(paso))
+    accion, completions = rt.act(_obs(46))
+    assert accion is not None
+    # decision con pregunta + respuesta del respondedor + decision final
+    assert [c.text for c in completions] == ["**Ask:** what is on shelf 7?",
+                                             "Shelf 7 holds SKU-A since step 0.", WAIT]
+    assert len(cliente.respondedor) == 1
+    system, user = cliente.respondedor[0]
+    assert "If later events change earlier ones, say so." in system
+    # Todo el transcript, desde el paso 0 (ya compactado) hasta el evento actual.
+    assert "step 0: Observation: [step 0] EVENT telemetry | id=E0" in user
+    assert "cola0" in user and "id=E46" in user
+    assert "what is on shelf 7?" in user
+    # El agente recibe la respuesta como resultado de la herramienta.
+    _, repregunta = _decisiones(cliente)[-1]
+    assert "Shelf 7 holds SKU-A since step 0." in repregunta
+    c = rt.consultas[0]
+    assert c.tipo == "ask" and c.consulta == "what is on shelf 7?"
+    assert c.respuesta == "Shelf 7 holds SKU-A since step 0." and c.paso == 46
+
+
+def test_tope_de_dos_preguntas_por_paso():
+    from dr.runtimes.compaction import FreshAskRuntime
+    cliente = ClienteConRespondedor(["Ask: a?", "Ask: b?", "Ask: c?"])
+    rt = FreshAskRuntime(cliente, "ESPEC")
+    accion, completions = rt.act(_obs(0))
+    assert accion is None
+    assert len(completions) == 5                # 2 preguntas + 2 respuestas + la final
+    assert len(rt.consultas) == 2 and len(cliente.respondedor) == 2
+    assert rt.sin_accion_tras_consultas == 1
+    _, ultima = _decisiones(cliente)[-1]
+    assert "used your 2 questions" in ultima
+
+
+def test_fresh_ask_no_acepta_lookup():
+    from dr.runtimes.compaction import FreshAskRuntime
+    cliente = ClienteConRespondedor(["Lookup: shelf=7"])
+    rt = FreshAskRuntime(cliente, "ESPEC")
+    accion, completions = rt.act(_obs(0))
+    assert accion is None and len(completions) == 1 and rt.consultas == []
